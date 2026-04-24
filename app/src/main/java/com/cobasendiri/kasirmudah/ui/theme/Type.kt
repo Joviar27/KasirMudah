@@ -31,28 +31,34 @@ val KasirMudahTypograhpy = Typography(
     headlineLarge = baseline.headlineLarge.copy(fontFamily = poppinsFontFamily),
     headlineMedium = baseline.headlineMedium.copy(
         fontFamily = poppinsFontFamily,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        color = OnPrimary
     ), //28.sp
     headlineSmall = baseline.headlineSmall.copy(
         fontFamily = poppinsFontFamily,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        color = OnPrimary
     ), //24.sp
     titleLarge = baseline.titleLarge.copy(
         fontFamily = poppinsFontFamily,
-        fontWeight = FontWeight.SemiBold
+        fontWeight = FontWeight.SemiBold,
+        color = OnPrimary
     ),//24.sp
     titleMedium = baseline.titleMedium.copy(
         fontFamily = poppinsFontFamily,
-        fontWeight = FontWeight.SemiBold
+        fontWeight = FontWeight.SemiBold,
+        color = OnPrimary
     ),//16.sp
     titleSmall = baseline.titleSmall.copy(fontFamily = poppinsFontFamily),
     bodyLarge = baseline.bodyLarge.copy(
         fontFamily = poppinsFontFamily,
-        fontWeight = FontWeight.Medium
+        fontWeight = FontWeight.Medium,
+        color = OnPrimary
     ),//16.sp
     bodyMedium = baseline.bodyMedium.copy(
         fontFamily = poppinsFontFamily,
-        fontWeight = FontWeight.Medium
+        fontWeight = FontWeight.Medium,
+        color = OnPrimary
     ),//14.sp
     bodySmall = baseline.bodySmall.copy(fontFamily = poppinsFontFamily),
     labelLarge = baseline.labelLarge.copy(fontFamily = poppinsFontFamily),
