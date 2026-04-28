@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,13 +43,17 @@ import com.cobasendiri.kasirmudah.util.rawFormat
 
 @Composable
 fun InputField(
+    modifier: Modifier = Modifier,
     label: String,
-    value: String = "",
+    initialValue: String = "",
     maxCharacter: Int = 40,
     currencyMode: Boolean = false,
+    background: Color = Surface,
+    showTopLabel: Boolean = true,
     onValueChange: (String) -> Unit
 ) {
     var isFocused by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf(initialValue) }
 
     val borderColor by animateColorAsState(
         targetValue = if (isFocused) OnPrimaryVariant else Tertiary,
@@ -56,8 +61,8 @@ fun InputField(
 
     val focusManager = LocalFocusManager.current
 
-    Column {
-        if(isFocused){
+    Column(modifier) {
+        if(isFocused && showTopLabel){
             Text(
                 label,
                 style = KasirMudahTypograhpy.bodyMedium
@@ -69,7 +74,7 @@ fun InputField(
                 .onFocusChanged{
                     isFocused = it.isFocused
                 },
-            value = if(currencyMode) value.decimalFormat() else value,
+            value = if(currencyMode) searchQuery.decimalFormat() else searchQuery,
             textStyle = KasirMudahTypograhpy.bodyLarge,
             singleLine = true,
             maxLines = 1,
@@ -77,7 +82,7 @@ fun InputField(
                 Row(modifier = Modifier
                     .fillMaxWidth()
                     .height(IntrinsicSize.Max)
-                    .background(Surface, RoundedCornerShape(16.dp))
+                    .background(background, RoundedCornerShape(16.dp))
                     .border(1.dp, borderColor, RoundedCornerShape(16.dp)),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -98,7 +103,7 @@ fun InputField(
                         .padding(vertical = 16.dp)
                         .padding(start = 16.dp)
                     ){
-                        if (value.isEmpty()) {
+                        if (searchQuery.isEmpty()) {
                             Text(
                                 label,
                                 style = KasirMudahTypograhpy.bodyLarge
@@ -107,7 +112,7 @@ fun InputField(
                         }
                         innerTextField()
                     }
-                    if(currencyMode && value.isNotEmpty()){
+                    if(currencyMode && searchQuery.isNotEmpty()){
                         Text(
                             ",00",
                             style = KasirMudahTypograhpy.bodyLarge
@@ -118,7 +123,8 @@ fun InputField(
             onValueChange = {
                 val newValue = if(currencyMode) it.rawFormat() else it
                 if(it.length <= maxCharacter){
-                    onValueChange(newValue)
+                    searchQuery = newValue
+                    onValueChange(searchQuery)
                 }
             },
             keyboardOptions = KeyboardOptions(
@@ -145,8 +151,8 @@ fun InputFieldPrev() {
         .fillMaxWidth()
     ){
         InputField(
-            "Template Barang Pertama",
-            "Nama Barang",
+            label = "Template Barang Pertama",
+            initialValue = "Nama Barang",
             currencyMode = true
         ){}
     }
