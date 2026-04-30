@@ -33,10 +33,11 @@ import com.cobasendiri.kasirmudah.ui.theme.Secondary
 
 @Composable
 fun TotalItem(
+    modifier: Modifier = Modifier,
     totalAmount: String,
     onClickDone: () -> Unit
 ) {
-    Row(Modifier
+    Row(modifier
         .fillMaxWidth()
         .background(White, RoundedCornerShape(24.dp))
         .padding(vertical = 12.dp, horizontal = 16.dp),
@@ -93,6 +94,6 @@ fun TotalItemPrev() {
         .padding(16.dp)
         .fillMaxWidth()
     ){
-        TotalItem("Rp 500.000,00"){}
+        TotalItem(totalAmount = "Rp 500.000,00"){}
     }
 }
