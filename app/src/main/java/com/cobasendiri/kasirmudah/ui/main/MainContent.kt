@@ -62,7 +62,9 @@ fun MainContent(){
         NavHost(
             navController = navController,
             startDestination = Screen.Shop,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(
+                top = innerPadding.calculateTopPadding()
+            )
         ){
             composable<Screen.Shop>{
                 ShopScreen()
