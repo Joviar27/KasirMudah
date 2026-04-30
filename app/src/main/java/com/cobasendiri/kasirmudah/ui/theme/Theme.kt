@@ -8,7 +8,7 @@ fun KasirMudahTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        typography = KasirMudahTypograhpy,
+        typography = KasirMudahTypography,
         content = content
     )
 }

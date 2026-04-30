@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.R
-import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypograhpy
+import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
@@ -61,12 +61,12 @@ fun ShopItem(
         Column(Modifier.weight(1f)) {
             Text(
                 itemName,
-                style = KasirMudahTypograhpy.titleMedium
+                style = KasirMudahTypography.titleMedium
                     .copy(fontWeight = FontWeight.Bold)
             )
             Text(
                 itemDisplayPrice,
-                style = KasirMudahTypograhpy.bodyMedium
+                style = KasirMudahTypography.bodyMedium
             )
         }
         Counter {
@@ -114,7 +114,7 @@ fun Counter(
         ){
             Text(
                 count.toString(),
-                style = KasirMudahTypograhpy.bodyMedium
+                style = KasirMudahTypography.bodyMedium
             )
         }
         Box(Modifier.clip(CircleShape)

@@ -24,7 +24,7 @@ val poppinsFontFamily = FontFamily(
 
 val baseline = Typography()
 
-val KasirMudahTypograhpy = Typography(
+val KasirMudahTypography = Typography(
     displayLarge = baseline.displayLarge.copy(fontFamily = poppinsFontFamily),
     displayMedium = baseline.displayMedium.copy(fontFamily = poppinsFontFamily),
     displaySmall = baseline.displaySmall.copy(fontFamily = poppinsFontFamily),

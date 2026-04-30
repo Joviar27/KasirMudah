@@ -33,7 +33,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypograhpy
+import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Surface
@@ -65,7 +65,7 @@ fun InputField(
         if(isFocused && showTopLabel){
             Text(
                 label,
-                style = KasirMudahTypograhpy.bodyMedium
+                style = KasirMudahTypography.bodyMedium
             )
             Spacer(Modifier.height(4.dp))
         }
@@ -75,7 +75,7 @@ fun InputField(
                     isFocused = it.isFocused
                 },
             value = if(currencyMode) searchQuery.decimalFormat() else searchQuery,
-            textStyle = KasirMudahTypograhpy.bodyLarge,
+            textStyle = KasirMudahTypography.bodyLarge,
             singleLine = true,
             maxLines = 1,
             decorationBox = { innerTextField ->
@@ -90,7 +90,7 @@ fun InputField(
                         Text(
                             modifier = Modifier.padding(16.dp),
                             text = "Rp",
-                            style = KasirMudahTypograhpy.bodyLarge
+                            style = KasirMudahTypography.bodyLarge
                         )
                         VerticalDivider(
                             Modifier.fillMaxHeight(),
@@ -106,7 +106,7 @@ fun InputField(
                         if (searchQuery.isEmpty()) {
                             Text(
                                 label,
-                                style = KasirMudahTypograhpy.bodyLarge
+                                style = KasirMudahTypography.bodyLarge
                                     .copy(color = OnPrimary.copy(alpha = 0.5f))
                             )
                         }
@@ -115,7 +115,7 @@ fun InputField(
                     if(currencyMode && searchQuery.isNotEmpty()){
                         Text(
                             ",00",
-                            style = KasirMudahTypograhpy.bodyLarge
+                            style = KasirMudahTypography.bodyLarge
                         )
                     }
                 }

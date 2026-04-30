@@ -22,13 +22,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cobasendiri.kasirmudah.ui.theme.White
 import com.cobasendiri.kasirmudah.R
-import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypograhpy
+import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.Secondary
 
 @Composable
@@ -47,12 +46,12 @@ fun TotalItem(
         Column(Modifier.weight(3f)) {
             Text(
                 stringResource(R.string.total_item),
-                style = KasirMudahTypograhpy.bodyMedium
+                style = KasirMudahTypography.bodyMedium
             )
             Spacer(Modifier.height(2.dp))
             Text(
                 totalAmount,
-                style = KasirMudahTypograhpy.headlineSmall
+                style = KasirMudahTypography.headlineSmall
                     .copy(fontSize = calculateTotalFontSize(totalAmount))
             )
         }
@@ -67,7 +66,7 @@ fun TotalItem(
         ) {
             Text(
                 stringResource(R.string.done),
-                style = KasirMudahTypograhpy.titleMedium
+                style = KasirMudahTypography.titleMedium
             )
             Spacer(Modifier.height(4.dp))
             Image(
