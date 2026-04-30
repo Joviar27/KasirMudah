@@ -10,6 +10,7 @@ val Surface = Color(0xFFF8F8F5)
 val Primary = Color(0xFFC2EB3A)
 val Secondary = Color(0XFFE2DB14)
 val Tertiary = Color(0xFFD8D696)
+val TertiaryVariant = Color(0xFFF1F1E2)
 
 val OnPrimary = Color(0xFF3B3901)
 val OnPrimaryVariant = Color(0xFFA7A21C)

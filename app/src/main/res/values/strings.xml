@@ -4,4 +4,6 @@
     <!--  Shop Screen  -->
     <string name="total_item">Total Barang di Keranjang</string>
     <string name="done">Selesai</string>
+    <string name="setting">Pengaturan</string>
+    <string name="search">Cari Barang</string>
 </resources>
