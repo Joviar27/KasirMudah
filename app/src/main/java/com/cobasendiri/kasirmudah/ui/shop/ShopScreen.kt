@@ -24,7 +24,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,19 +58,33 @@ import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
+import com.cobasendiri.kasirmudah.util.decimalFormat
 
 @Composable
 fun ShopScreen(){
 
-    ShopContent(
-        state = ShopState(
+    var totalAmount by remember { mutableLongStateOf(0L) }
+
+    var initialShopState by remember { mutableStateOf<ShopState>(
+        ShopState(
             shopName = "Toko Madura A",
             date = "24 Januari 2026",
-            totalAmount = "Rp 575.000,00",
+            totalAmount = "Rp 0,00",
             shopItemList = generateDummyShopItem()
-        ),
-    ){
+        )
+    ) }
 
+    ShopContent(
+        state = initialShopState,
+    ){
+        when(it){
+            is ShopEvent.OnCountChange ->{
+                totalAmount += it.changedAmount
+                initialShopState = initialShopState.copy(
+                    totalAmount = "Rp ${totalAmount.toString().decimalFormat()},00"
+                )
+            }
+        }
     }
 }
 
@@ -237,8 +254,10 @@ fun ShopContent(
                     onClick = {
 
                     },
-                    onTotalChange = {
-
+                    onCountChange = {
+                        event.invoke(
+                            ShopEvent.OnCountChange(it)
+                        )
                     },
                     onEditColorClick = {
 

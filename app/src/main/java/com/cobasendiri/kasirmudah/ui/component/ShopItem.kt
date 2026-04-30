@@ -46,7 +46,7 @@ fun ShopItem(
     itemRawPrice: Long,
     onClick: () -> Unit,
     onEditColorClick: () -> Unit,
-    onTotalChange: (Long) -> Unit
+    onCountChange: (Long) -> Unit
 ) {
 
     Row(modifier.fillMaxWidth()
@@ -69,22 +69,24 @@ fun ShopItem(
                 style = KasirMudahTypography.bodyMedium
             )
         }
-        Counter {
-            onTotalChange.invoke(it*itemRawPrice)
-        }
+        Counter(
+            onIncrease = {
+                onCountChange.invoke(itemRawPrice)
+            },
+            onDecrease = {
+                onCountChange.invoke(itemRawPrice*-1)
+            }
+        )
     }
 }
 
 @Composable
 fun Counter(
     initialValue: Int = 0,
-    onValueChange: (Int) -> Unit
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit
 ){
     var count by remember { mutableIntStateOf(initialValue) }
-
-    val onCountChange = {
-        onValueChange.invoke(count)
-    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -97,7 +99,7 @@ fun Counter(
             .clickable{
                 if(count>0){
                     count--
-                    onCountChange.invoke()
+                    onDecrease.invoke()
                 }
             }
         ){
@@ -123,7 +125,7 @@ fun Counter(
             .padding(1.dp)
             .clickable{
                 count++
-                onCountChange.invoke()
+                onIncrease.invoke()
             }
         ){
             Image(
