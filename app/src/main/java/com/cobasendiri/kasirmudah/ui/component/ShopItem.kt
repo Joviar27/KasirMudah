@@ -19,11 +19,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,7 +50,8 @@ fun ShopItem(
 ) {
 
     Row(modifier.fillMaxWidth()
-        .background(White, RoundedCornerShape(24.dp))
+        .clip(RoundedCornerShape(24.dp))
+        .background(White)
         .clickable(onClick = onClick)
         .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -89,12 +90,15 @@ fun Counter(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ){
-        Box(Modifier.background(Color.Transparent)
+        Box(Modifier.clip(CircleShape)
+            .background(Color.Transparent)
             .border(1.dp, OnPrimaryVariant, CircleShape)
             .padding(1.dp)
             .clickable{
-                count--
-                onCountChange.invoke()
+                if(count>0){
+                    count--
+                    onCountChange.invoke()
+                }
             }
         ){
             Image(
@@ -113,7 +117,8 @@ fun Counter(
                 style = KasirMudahTypograhpy.bodyMedium
             )
         }
-        Box(Modifier.background(Color.Transparent)
+        Box(Modifier.clip(CircleShape)
+            .background(Color.Transparent)
             .border(1.dp, OnPrimaryVariant, CircleShape)
             .padding(1.dp)
             .clickable{
@@ -139,7 +144,8 @@ fun ColorCode(
         .padding(8.dp),
         contentAlignment = Alignment.TopEnd
     ){
-        Box(Modifier.background(OnPrimary, CircleShape)
+        Box(Modifier.clip(CircleShape)
+            .background(OnPrimary, CircleShape)
             .size(16.dp)
             .clickable(onClick = onEditClick),
             contentAlignment = Alignment.Center
