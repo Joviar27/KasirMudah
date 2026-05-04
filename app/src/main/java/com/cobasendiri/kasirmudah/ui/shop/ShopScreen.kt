@@ -24,7 +24,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +51,7 @@ import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.model.Shop
+import com.cobasendiri.kasirmudah.model.ShopAdded
 import com.cobasendiri.kasirmudah.ui.component.ShopItem
 import com.cobasendiri.kasirmudah.ui.component.TotalItem
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
@@ -55,19 +60,46 @@ import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
+import com.cobasendiri.kasirmudah.util.decimalFormat
 
 @Composable
 fun ShopScreen(){
 
-    ShopContent(
-        state = ShopState(
+    val addedItem = rememberSaveable { mutableListOf<ShopAdded>() }
+    var totalAmount by rememberSaveable { mutableLongStateOf(0L) }
+
+    var initialShopState by remember { mutableStateOf<ShopState>(
+        ShopState(
             shopName = "Toko Madura A",
             date = "24 Januari 2026",
-            totalAmount = "Rp 575.000,00",
+            totalAmount = "Rp 0,00",
             shopItemList = generateDummyShopItem()
-        ),
-    ){
+        )
+    ) }
 
+    ShopContent(
+        state = initialShopState,
+    ){ event ->
+        when(event){
+            is ShopEvent.OnItemIncrease ->{
+                totalAmount += event.itemPrice
+                addedItem.find { it.id == event.itemId }?.let {
+                    it.count += 1
+                } ?: run {
+                    addedItem.add(ShopAdded(event.itemId, 1))
+                }
+            }
+            is ShopEvent.OnItemDecrease ->{
+                totalAmount -= event.itemPrice
+                addedItem.find { it.id == event.itemId }?.let {
+                    it.count -= 1
+                    if(it.count==0) addedItem.remove(it)
+                }
+            }
+        }
+        initialShopState = initialShopState.copy(
+            totalAmount = "Rp ${totalAmount.toString().decimalFormat()},00"
+        )
     }
 }
 
@@ -231,14 +263,24 @@ fun ShopContent(
                 ShopItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     colorCode = it.colorCode,
+                    itemId = it.id,
                     itemName = it.name,
                     itemDisplayPrice = it.displayPrice,
                     itemRawPrice = it.rawPrice,
                     onClick = {
 
                     },
-                    onTotalChange = {
-
+                    onItemIncrease = {
+                        ShopEvent.OnItemIncrease(
+                            itemId = it.first,
+                            itemPrice = it.second
+                        ).let { event.invoke(it) }
+                    },
+                    onItemDecrease = {
+                        ShopEvent.OnItemDecrease(
+                            itemId = it.first,
+                            itemPrice = it.second
+                        ).let { event.invoke(it) }
                     },
                     onEditColorClick = {
 
