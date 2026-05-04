@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,12 +42,14 @@ import com.cobasendiri.kasirmudah.ui.theme.White
 fun ShopItem(
     modifier: Modifier = Modifier,
     colorCode: Color,
+    itemId: String,
     itemName: String,
     itemDisplayPrice: String,
     itemRawPrice: Long,
     onClick: () -> Unit,
     onEditColorClick: () -> Unit,
-    onCountChange: (Long) -> Unit
+    onItemIncrease: (Pair<String,Long>) -> Unit,
+    onItemDecrease: (Pair<String, Long>) -> Unit
 ) {
 
     Row(modifier.fillMaxWidth()
@@ -71,10 +74,14 @@ fun ShopItem(
         }
         Counter(
             onIncrease = {
-                onCountChange.invoke(itemRawPrice)
+                onItemIncrease.invoke(
+                    Pair(itemId, itemRawPrice)
+                )
             },
             onDecrease = {
-                onCountChange.invoke(itemRawPrice*-1)
+                onItemDecrease.invoke(
+                    Pair(itemId, itemRawPrice)
+                )
             }
         )
     }
@@ -86,7 +93,7 @@ fun Counter(
     onIncrease: () -> Unit,
     onDecrease: () -> Unit
 ){
-    var count by remember { mutableIntStateOf(initialValue) }
+    var count by rememberSaveable { mutableIntStateOf(initialValue) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -166,11 +173,13 @@ fun ShopItemPrev() {
     Box(Modifier.padding(16.dp)){
         ShopItem(
             colorCode = Tertiary,
+            itemId = "1",
             itemName = "Nama Item 1",
             itemDisplayPrice = "Rp 15.000,00",
             itemRawPrice = 15000,
             onClick = {},
             onEditColorClick = {},
+            onItemIncrease = {}
         ){}
     }
 }
