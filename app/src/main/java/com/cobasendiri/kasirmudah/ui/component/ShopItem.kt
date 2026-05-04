@@ -46,6 +46,7 @@ fun ShopItem(
     itemName: String,
     itemDisplayPrice: String,
     itemRawPrice: Long,
+    count: Int,
     onClick: () -> Unit,
     onEditColorClick: () -> Unit,
     onItemIncrease: (Pair<String,Long>) -> Unit,
@@ -73,6 +74,7 @@ fun ShopItem(
             )
         }
         Counter(
+            count = count,
             onIncrease = {
                 onItemIncrease.invoke(
                     Pair(itemId, itemRawPrice)
@@ -89,12 +91,10 @@ fun ShopItem(
 
 @Composable
 fun Counter(
-    initialValue: Int = 0,
+    count: Int = 0,
     onIncrease: () -> Unit,
     onDecrease: () -> Unit
 ){
-    var count by rememberSaveable { mutableIntStateOf(initialValue) }
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -105,7 +105,6 @@ fun Counter(
             .padding(1.dp)
             .clickable{
                 if(count>0){
-                    count--
                     onDecrease.invoke()
                 }
             }
@@ -131,7 +130,6 @@ fun Counter(
             .border(1.dp, OnPrimaryVariant, CircleShape)
             .padding(1.dp)
             .clickable{
-                count++
                 onIncrease.invoke()
             }
         ){
@@ -177,6 +175,7 @@ fun ShopItemPrev() {
             itemName = "Nama Item 1",
             itemDisplayPrice = "Rp 15.000,00",
             itemRawPrice = 15000,
+            count = 2,
             onClick = {},
             onEditColorClick = {},
             onItemIncrease = {}

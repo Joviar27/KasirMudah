@@ -13,5 +13,7 @@ data class Shop(
     //Raw value
     val rawPrice: Long,
 
-    val colorCode: Color
+    val colorCode: Color,
+
+    val count: Int
 )

@@ -5,6 +5,8 @@ interface ShopEvent {
 
     data object OnFinish: ShopEvent
 
+    data object OnReset: ShopEvent
+
     data class OnItemIncrease(
         val itemId: String,
         val itemPrice: Long
