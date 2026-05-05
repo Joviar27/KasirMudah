@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,13 +30,18 @@ import com.cobasendiri.kasirmudah.ui.theme.White
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.Secondary
+import com.cobasendiri.kasirmudah.util.decimalFormat
 
 @Composable
 fun TotalItem(
     modifier: Modifier = Modifier,
-    totalAmount: String,
+    totalAmount: Long,
     onClickDone: () -> Unit
 ) {
+    val formattedTotal = remember(totalAmount) {
+        "Rp ${totalAmount.toString().decimalFormat()},00"
+    }
+
     Row(modifier
         .fillMaxWidth()
         .background(White, RoundedCornerShape(24.dp))
@@ -50,9 +56,9 @@ fun TotalItem(
             )
             Spacer(Modifier.height(2.dp))
             Text(
-                totalAmount,
+                formattedTotal,
                 style = KasirMudahTypography.headlineSmall
-                    .copy(fontSize = calculateTotalFontSize(totalAmount))
+                    .copy(fontSize = calculateTotalFontSize(formattedTotal))
             )
         }
         Spacer(Modifier.width(8.dp))
@@ -93,6 +99,6 @@ fun TotalItemPrev() {
         .padding(16.dp)
         .fillMaxWidth()
     ){
-        TotalItem(totalAmount = "Rp 500.000,00"){}
+        TotalItem(totalAmount = 500000000L){}
     }
 }

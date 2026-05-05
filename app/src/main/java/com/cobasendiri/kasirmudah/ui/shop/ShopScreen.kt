@@ -25,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -62,7 +61,7 @@ import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
-import com.cobasendiri.kasirmudah.util.decimalFormat
+import kotlin.collections.find
 
 @Composable
 fun ShopScreen(
@@ -76,7 +75,7 @@ fun ShopScreen(
             shopName = "Toko Madura A",
             date = "24 Januari 2026",
             totalAmount = 0L,
-            shopItemList = generateDummyShopItem(),
+            shopItemList = generateDummyShopItemState(),
             isFloatingActionVisible = false
         )
     ) }
@@ -88,50 +87,56 @@ fun ShopScreen(
         when(event){
             is ShopEvent.OnItemIncrease ->{
                 //Temporary before viewmodel
-                val newList = dummyState.shopItemList.map {
-                    if(it.id == event.itemId){
-                        it.copy(count = it.count+1)
-                    }else it
+                addedItem.find {it.id == event.itemId}?.let {
+                    it.count += 1
+                }?: run {
+                    addedItem.add(ShopAdded(event.itemId,1))
                 }
-                val newTotalAmount = dummyState.totalAmount + event.itemPrice
 
                 dummyState = dummyState.copy(
-                    shopItemList = newList,
-                    totalAmount = newTotalAmount
+                    shopItemList = dummyState.shopItemList.map {
+                        if(it.shop.id == event.itemId){
+                            ShopItemState(
+                                shop = it.shop,
+                                count = addedItem.find { addedItem ->
+                                    addedItem.id == event.itemId
+                                }?.count ?: 0
+                            )
+                        }else it
+                    },
+                    totalAmount = addedItem.sumOf { addedItem ->
+                        val itemPrice = dummyState.shopItemList.find{it.shop.id == addedItem.id}?.shop?.price ?: 0
+                        addedItem.count * itemPrice
+                    },
+                    isFloatingActionVisible = addedItem.isNotEmpty()
                 )
-
-                addedItem.find { it.id == event.itemId }?.let {
-                    it.count += 1
-                } ?: run {
-                    addedItem.add(ShopAdded(event.itemId, 1))
-                    dummyState = dummyState.copy(
-                        isFloatingActionVisible = true
-                    )
-                }
             }
             is ShopEvent.OnItemDecrease ->{
                 //Temporary before viewmodel
-                 val newList = dummyState.shopItemList.map {
-                    if(it.id == event.itemId){
-                        it.copy(count = it.count-1)
-                    }else it
-                }
-                val newTotalAmount = dummyState.totalAmount - event.itemPrice
-
-                dummyState = dummyState.copy(
-                    shopItemList = newList,
-                    totalAmount = newTotalAmount
-                )
-
-                addedItem.find { it.id == event.itemId }?.let {
+                addedItem.find {it.id == event.itemId}?.let {
                     it.count -= 1
-                    if(it.count==0) {
+                    if(it.count<=0){
                         addedItem.remove(it)
-                        dummyState = dummyState.copy(
-                            isFloatingActionVisible = false
-                        )
                     }
                 }
+
+                dummyState = dummyState.copy(
+                    shopItemList = dummyState.shopItemList.map {
+                        if(it.shop.id == event.itemId){
+                            ShopItemState(
+                                shop = it.shop,
+                                count = addedItem.find { addedItem ->
+                                    addedItem.id == event.itemId
+                                }?.count ?: 0
+                            )
+                        }else it
+                    },
+                    totalAmount = addedItem.sumOf { addedItem ->
+                        val itemPrice = dummyState.shopItemList.find{it.shop.id == addedItem.id}?.shop?.price ?: 0
+                        addedItem.count * itemPrice
+                    },
+                    isFloatingActionVisible = addedItem.isNotEmpty()
+                )
             }
             is ShopEvent.OnReset ->{
                 //Temporary before viewmodel
@@ -160,9 +165,6 @@ fun ShopContent(
 ){
 
     val listState = rememberLazyListState()
-    val formattedTotal = remember(state.totalAmount) {
-        "Rp ${state.totalAmount.toString().decimalFormat()},00"
-    }
 
     val topColorAlpha by remember {
         derivedStateOf {
@@ -268,7 +270,7 @@ fun ShopContent(
                     )
                 }.padding(horizontal = 16.dp)){
                     Spacer(Modifier.height(24.dp))
-                    TotalItem(totalAmount = formattedTotal) {
+                    TotalItem(totalAmount = state.totalAmount) {
                         event.invoke(ShopEvent.OnFinish)
                     }
                     Spacer(Modifier.height(14.dp))
@@ -310,30 +312,27 @@ fun ShopContent(
             }
             items(
                 items = state.shopItemList,
-                key = { shop -> shop.id}
+                key = { shopItemState -> shopItemState.shop.id}
             ) {
                 Spacer(Modifier.height(16.dp))
                 ShopItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    colorCode = it.colorCode,
-                    itemId = it.id,
-                    itemName = it.name,
-                    itemDisplayPrice = it.displayPrice,
-                    itemRawPrice = it.rawPrice,
+                    colorCode = it.shop.colorCode,
+                    itemId = it.shop.id,
+                    itemName = it.shop.name,
+                    itemPrice = it.shop.price,
                     count = it.count,
                     onClick = {
 
                     },
                     onItemIncrease = {
                         ShopEvent.OnItemIncrease(
-                            itemId = it.first,
-                            itemPrice = it.second
+                            itemId = it
                         ).let { event.invoke(it) }
                     },
                     onItemDecrease = {
                         ShopEvent.OnItemDecrease(
-                            itemId = it.first,
-                            itemPrice = it.second
+                            itemId = it
                         ).let { event.invoke(it) }
                     },
                     onEditColorClick = {
@@ -369,22 +368,24 @@ fun ShopContentPreview(){
                 shopName = "Toko Madura A",
                 date = "24 Januari 2026",
                 totalAmount = 1575000L,
-                shopItemList = generateDummyShopItem(),
+                shopItemList = generateDummyShopItemState(),
                 isFloatingActionVisible = true
             ),
         ){}
     }
 }
 
-fun generateDummyShopItem(): List<Shop>{
+fun generateDummyShopItemState(): List<ShopItemState>{
     return List(20) {
-        Shop(
-            it.toString(),
-            "Nama item",
-            "Rp 15.000,00",
-            15000,
-            Tertiary,
-            0
+        ShopItemState(
+            shop = Shop(
+                it.toString(),
+                "Nama item",
+                15000,
+                Tertiary
+            ),
+            count = 0
         )
+
     }
 }

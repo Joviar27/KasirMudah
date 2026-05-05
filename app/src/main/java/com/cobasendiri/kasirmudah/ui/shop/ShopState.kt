@@ -6,6 +6,11 @@ data class ShopState(
     val shopName: String,
     val date: String,
     val totalAmount: Long,
-    val shopItemList: List<Shop>,
+    val shopItemList: List<ShopItemState>,
     val isFloatingActionVisible: Boolean
+)
+
+data class ShopItemState(
+    val shop: Shop,
+    val count: Int
 )

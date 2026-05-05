@@ -17,11 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +33,7 @@ import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.White
+import com.cobasendiri.kasirmudah.util.decimalFormat
 
 @Composable
 fun ShopItem(
@@ -44,14 +41,17 @@ fun ShopItem(
     colorCode: Color,
     itemId: String,
     itemName: String,
-    itemDisplayPrice: String,
-    itemRawPrice: Long,
+    itemPrice: Long,
     count: Int,
     onClick: () -> Unit,
     onEditColorClick: () -> Unit,
-    onItemIncrease: (Pair<String,Long>) -> Unit,
-    onItemDecrease: (Pair<String, Long>) -> Unit
+    onItemIncrease: (id: String) -> Unit,
+    onItemDecrease: (id: String) -> Unit
 ) {
+
+    val formattedPrice = remember(itemPrice) {
+        "Rp ${itemPrice.toString().decimalFormat()},00"
+    }
 
     Row(modifier.fillMaxWidth()
         .clip(RoundedCornerShape(24.dp))
@@ -69,21 +69,17 @@ fun ShopItem(
                     .copy(fontWeight = FontWeight.Bold)
             )
             Text(
-                itemDisplayPrice,
+                formattedPrice,
                 style = KasirMudahTypography.bodyMedium
             )
         }
         Counter(
             count = count,
             onIncrease = {
-                onItemIncrease.invoke(
-                    Pair(itemId, itemRawPrice)
-                )
+                onItemIncrease.invoke(itemId)
             },
             onDecrease = {
-                onItemDecrease.invoke(
-                    Pair(itemId, itemRawPrice)
-                )
+                onItemDecrease.invoke(itemId)
             }
         )
     }
@@ -173,8 +169,7 @@ fun ShopItemPrev() {
             colorCode = Tertiary,
             itemId = "1",
             itemName = "Nama Item 1",
-            itemDisplayPrice = "Rp 15.000,00",
-            itemRawPrice = 15000,
+            itemPrice = 15000,
             count = 2,
             onClick = {},
             onEditColorClick = {},
