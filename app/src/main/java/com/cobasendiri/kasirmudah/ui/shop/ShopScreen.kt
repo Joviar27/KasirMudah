@@ -138,6 +138,17 @@ fun ShopScreen(
                     isFloatingActionVisible = addedItem.isNotEmpty()
                 )
             }
+            is ShopEvent.OnItemNewColor ->{
+                dummyState = dummyState.copy(
+                    shopItemList = dummyState.shopItemList.map {
+                        if(it.shop.id == event.itemId){
+                            it.copy(shop = it.shop.copy(
+                                colorCode = event.newColor
+                            ))
+                        }else it
+                    }
+                )
+            }
             is ShopEvent.OnReset ->{
                 //Temporary before viewmodel
                 addedItem.clear()
@@ -313,33 +324,34 @@ fun ShopContent(
             items(
                 items = state.shopItemList,
                 key = { shopItemState -> shopItemState.shop.id}
-            ) {
+            ) { item ->
                 Spacer(Modifier.height(16.dp))
                 ShopItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    colorCode = it.shop.colorCode,
-                    itemId = it.shop.id,
-                    itemName = it.shop.name,
-                    itemPrice = it.shop.price,
-                    count = it.count,
+                    colorCode = item.shop.colorCode,
+                    itemName = item.shop.name,
+                    itemPrice = item.shop.price,
+                    count = item.count,
                     onClick = {
 
                     },
                     onItemIncrease = {
                         ShopEvent.OnItemIncrease(
-                            itemId = it
+                            itemId = item.shop.id
                         ).let { event.invoke(it) }
                     },
                     onItemDecrease = {
                         ShopEvent.OnItemDecrease(
-                            itemId = it
+                            itemId = item.shop.id
                         ).let { event.invoke(it) }
                     },
-                    onEditColorClick = {
-
+                    onColorCodeUpdate = {
+                        ShopEvent.OnItemNewColor(
+                            itemId = item.shop.id,
+                            newColor = it
+                        ).let { event.invoke(it) }
                     }
                 )
-
             }
         }
 
