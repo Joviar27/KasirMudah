@@ -15,3 +15,9 @@ val TertiaryVariant = Color(0xFFF1F1E2)
 val OnPrimary = Color(0xFF3B3901)
 val OnPrimaryVariant = Color(0xFFA7A21C)
 val Negative = Color(0xFFD04F4F)
+
+//Color code option
+val PastelRed = Color(0xFFD89696)
+val PastelPurple = Color(0xFF9698D8)
+val PastelPink = Color(0xFFD896CB)
+val PastelGreen = Color(0xFF96D8D4)
