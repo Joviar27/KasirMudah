@@ -7,11 +7,7 @@ data class Shop(
 
     val name: String,
 
-    //Formatted with currency and decimal: eg: Rp 15.000,00
-    val displayPrice: String,
-
-    //Raw value
-    val rawPrice: Long,
+    val price: Long,
 
     val colorCode: Color
 )

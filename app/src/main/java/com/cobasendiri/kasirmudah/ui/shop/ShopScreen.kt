@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -52,6 +52,7 @@ import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.model.Shop
 import com.cobasendiri.kasirmudah.model.ShopAdded
+import com.cobasendiri.kasirmudah.ui.component.FloatingAction
 import com.cobasendiri.kasirmudah.ui.component.ShopItem
 import com.cobasendiri.kasirmudah.ui.component.TotalItem
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
@@ -60,51 +61,105 @@ import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
-import com.cobasendiri.kasirmudah.util.decimalFormat
+import kotlin.collections.find
 
 @Composable
-fun ShopScreen(){
+fun ShopScreen(
+    innerPadding: PaddingValues
+){
 
+    //Temporary before viewmodel
     val addedItem = rememberSaveable { mutableListOf<ShopAdded>() }
-    var totalAmount by rememberSaveable { mutableLongStateOf(0L) }
-
-    var initialShopState by remember { mutableStateOf<ShopState>(
+    var dummyState by remember { mutableStateOf<ShopState>(
         ShopState(
             shopName = "Toko Madura A",
             date = "24 Januari 2026",
-            totalAmount = "Rp 0,00",
-            shopItemList = generateDummyShopItem()
+            totalAmount = 0L,
+            shopItemList = generateDummyShopItemState(),
+            isFloatingActionVisible = false
         )
     ) }
 
     ShopContent(
-        state = initialShopState,
+        innerPadding = innerPadding,
+        state = dummyState,
     ){ event ->
         when(event){
             is ShopEvent.OnItemIncrease ->{
-                totalAmount += event.itemPrice
-                addedItem.find { it.id == event.itemId }?.let {
+                //Temporary before viewmodel
+                addedItem.find {it.id == event.itemId}?.let {
                     it.count += 1
-                } ?: run {
-                    addedItem.add(ShopAdded(event.itemId, 1))
+                }?: run {
+                    addedItem.add(ShopAdded(event.itemId,1))
                 }
+
+                dummyState = dummyState.copy(
+                    shopItemList = dummyState.shopItemList.map {
+                        if(it.shop.id == event.itemId){
+                            ShopItemState(
+                                shop = it.shop,
+                                count = addedItem.find { addedItem ->
+                                    addedItem.id == event.itemId
+                                }?.count ?: 0
+                            )
+                        }else it
+                    },
+                    totalAmount = addedItem.sumOf { addedItem ->
+                        val itemPrice = dummyState.shopItemList.find{it.shop.id == addedItem.id}?.shop?.price ?: 0
+                        addedItem.count * itemPrice
+                    },
+                    isFloatingActionVisible = addedItem.isNotEmpty()
+                )
             }
             is ShopEvent.OnItemDecrease ->{
-                totalAmount -= event.itemPrice
-                addedItem.find { it.id == event.itemId }?.let {
+                //Temporary before viewmodel
+                addedItem.find {it.id == event.itemId}?.let {
                     it.count -= 1
-                    if(it.count==0) addedItem.remove(it)
+                    if(it.count<=0){
+                        addedItem.remove(it)
+                    }
                 }
+
+                dummyState = dummyState.copy(
+                    shopItemList = dummyState.shopItemList.map {
+                        if(it.shop.id == event.itemId){
+                            ShopItemState(
+                                shop = it.shop,
+                                count = addedItem.find { addedItem ->
+                                    addedItem.id == event.itemId
+                                }?.count ?: 0
+                            )
+                        }else it
+                    },
+                    totalAmount = addedItem.sumOf { addedItem ->
+                        val itemPrice = dummyState.shopItemList.find{it.shop.id == addedItem.id}?.shop?.price ?: 0
+                        addedItem.count * itemPrice
+                    },
+                    isFloatingActionVisible = addedItem.isNotEmpty()
+                )
+            }
+            is ShopEvent.OnReset ->{
+                //Temporary before viewmodel
+                addedItem.clear()
+                val newList = dummyState.shopItemList.map {
+                    it.copy(count = 0)
+                }
+                dummyState = dummyState.copy(
+                    isFloatingActionVisible = false,
+                    totalAmount = 0,
+                    shopItemList = newList
+                )
+            }
+            is ShopEvent.OnFinish ->{
+
             }
         }
-        initialShopState = initialShopState.copy(
-            totalAmount = "Rp ${totalAmount.toString().decimalFormat()},00"
-        )
     }
 }
 
 @Composable
 fun ShopContent(
+    innerPadding: PaddingValues,
     state: ShopState,
     event: (ShopEvent) -> Unit
 ){
@@ -257,36 +312,48 @@ fun ShopContent(
             }
             items(
                 items = state.shopItemList,
-                key = { shop -> shop.id}
+                key = { shopItemState -> shopItemState.shop.id}
             ) {
                 Spacer(Modifier.height(16.dp))
                 ShopItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    colorCode = it.colorCode,
-                    itemId = it.id,
-                    itemName = it.name,
-                    itemDisplayPrice = it.displayPrice,
-                    itemRawPrice = it.rawPrice,
+                    colorCode = it.shop.colorCode,
+                    itemId = it.shop.id,
+                    itemName = it.shop.name,
+                    itemPrice = it.shop.price,
+                    count = it.count,
                     onClick = {
 
                     },
                     onItemIncrease = {
                         ShopEvent.OnItemIncrease(
-                            itemId = it.first,
-                            itemPrice = it.second
+                            itemId = it
                         ).let { event.invoke(it) }
                     },
                     onItemDecrease = {
                         ShopEvent.OnItemDecrease(
-                            itemId = it.first,
-                            itemPrice = it.second
+                            itemId = it
                         ).let { event.invoke(it) }
                     },
                     onEditColorClick = {
 
                     }
                 )
+
             }
+        }
+
+        if(state.isFloatingActionVisible){
+            FloatingAction(
+                Modifier.padding(bottom = innerPadding.calculateBottomPadding()+12.dp)
+                    .align(Alignment.BottomCenter),
+                onDelete = {
+                    event.invoke(ShopEvent.OnReset)
+                },
+                onDone = {
+                    event.invoke(ShopEvent.OnFinish)
+                }
+            )
         }
     }
 }
@@ -296,24 +363,29 @@ fun ShopContent(
 fun ShopContentPreview(){
     KasirMudahTheme {
         ShopContent(
+            innerPadding = PaddingValues(bottom = 60.dp),
             state = ShopState(
                 shopName = "Toko Madura A",
                 date = "24 Januari 2026",
-                totalAmount = "Rp 1.575.000,00",
-                shopItemList = generateDummyShopItem()
+                totalAmount = 1575000L,
+                shopItemList = generateDummyShopItemState(),
+                isFloatingActionVisible = true
             ),
         ){}
     }
 }
 
-fun generateDummyShopItem(): List<Shop>{
+fun generateDummyShopItemState(): List<ShopItemState>{
     return List(20) {
-        Shop(
-            it.toString(),
-            "Nama item",
-            "Rp 15.000,00",
-            15000,
-            Tertiary
+        ShopItemState(
+            shop = Shop(
+                it.toString(),
+                "Nama item",
+                15000,
+                Tertiary
+            ),
+            count = 0
         )
+
     }
 }

@@ -5,6 +5,12 @@ import com.cobasendiri.kasirmudah.model.Shop
 data class ShopState(
     val shopName: String,
     val date: String,
-    val totalAmount: String,
-    val shopItemList: List<Shop>
+    val totalAmount: Long,
+    val shopItemList: List<ShopItemState>,
+    val isFloatingActionVisible: Boolean
+)
+
+data class ShopItemState(
+    val shop: Shop,
+    val count: Int
 )

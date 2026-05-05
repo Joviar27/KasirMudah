@@ -5,13 +5,9 @@ interface ShopEvent {
 
     data object OnFinish: ShopEvent
 
-    data class OnItemIncrease(
-        val itemId: String,
-        val itemPrice: Long
-    ): ShopEvent
+    data object OnReset: ShopEvent
 
-    data class OnItemDecrease(
-        val itemId: String,
-        val itemPrice: Long
-    ): ShopEvent
+    data class OnItemIncrease(val itemId: String): ShopEvent
+
+    data class OnItemDecrease(val itemId: String): ShopEvent
 }

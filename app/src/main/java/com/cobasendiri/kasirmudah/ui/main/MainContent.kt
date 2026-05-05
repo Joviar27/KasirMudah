@@ -67,7 +67,7 @@ fun MainContent(){
             )
         ){
             composable<Screen.Shop>{
-                ShopScreen()
+                ShopScreen(innerPadding)
             }
             composable<Screen.History>{
                 HistoryScreen()
