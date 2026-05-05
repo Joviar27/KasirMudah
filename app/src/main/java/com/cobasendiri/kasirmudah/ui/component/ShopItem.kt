@@ -17,7 +17,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,7 +28,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
@@ -39,19 +44,20 @@ import com.cobasendiri.kasirmudah.util.decimalFormat
 fun ShopItem(
     modifier: Modifier = Modifier,
     colorCode: Color,
-    itemId: String,
     itemName: String,
     itemPrice: Long,
     count: Int,
     onClick: () -> Unit,
-    onEditColorClick: () -> Unit,
-    onItemIncrease: (id: String) -> Unit,
-    onItemDecrease: (id: String) -> Unit
+    onColorCodeUpdate: (Color) -> Unit,
+    onItemIncrease: () -> Unit,
+    onItemDecrease: () -> Unit
 ) {
 
     val formattedPrice = remember(itemPrice) {
         "Rp ${itemPrice.toString().decimalFormat()},00"
     }
+
+    var showColorCodePopup by remember { mutableStateOf(false) }
 
     Row(modifier.fillMaxWidth()
         .clip(RoundedCornerShape(24.dp))
@@ -60,7 +66,24 @@ fun ShopItem(
         .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ColorCode(colorCode, onEditColorClick)
+        Box{
+            ColorCode(colorCode){
+                showColorCodePopup = true
+            }
+            if(showColorCodePopup){
+                ColorCodePopup(
+                    alignment = Alignment.TopStart,
+                    offset = IntOffset(0,-110),
+                    properties = PopupProperties(focusable = true)
+                ){ newColor ->
+                    showColorCodePopup = false
+                    newColor?.let {
+                        onColorCodeUpdate.invoke(it)
+                    }
+                }
+            }
+        }
+
         Spacer(Modifier.width(16.dp))
         Column(Modifier.weight(1f)) {
             Text(
@@ -76,10 +99,10 @@ fun ShopItem(
         Counter(
             count = count,
             onIncrease = {
-                onItemIncrease.invoke(itemId)
+                onItemIncrease.invoke()
             },
             onDecrease = {
-                onItemDecrease.invoke(itemId)
+                onItemDecrease.invoke()
             }
         )
     }
@@ -167,12 +190,11 @@ fun ShopItemPrev() {
     Box(Modifier.padding(16.dp)){
         ShopItem(
             colorCode = Tertiary,
-            itemId = "1",
             itemName = "Nama Item 1",
             itemPrice = 15000,
             count = 2,
             onClick = {},
-            onEditColorClick = {},
+            onColorCodeUpdate = {},
             onItemIncrease = {}
         ){}
     }
