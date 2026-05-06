@@ -52,6 +52,7 @@ import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.model.Shop
 import com.cobasendiri.kasirmudah.model.ShopAdded
+import com.cobasendiri.kasirmudah.ui.component.FilterChip
 import com.cobasendiri.kasirmudah.ui.component.FloatingAction
 import com.cobasendiri.kasirmudah.ui.component.ShopItem
 import com.cobasendiri.kasirmudah.ui.component.TotalItem
@@ -67,16 +68,23 @@ import kotlin.collections.find
 fun ShopScreen(
     innerPadding: PaddingValues
 ){
-
     //Temporary before viewmodel
     val addedItem = rememberSaveable { mutableListOf<ShopAdded>() }
+    val itemList = rememberSaveable { generateDummyShopItemList() }
+
     var dummyState by remember { mutableStateOf<ShopState>(
         ShopState(
             shopName = "Toko Madura A",
             date = "24 Januari 2026",
             totalAmount = 0L,
-            shopItemList = generateDummyShopItemState(),
-            isFloatingActionVisible = false
+            shopItemList = itemList.map {
+                ShopItemState(
+                    shop = it,
+                    count = 0
+                )
+            },
+            isFloatingActionVisible = false,
+            filter = ShopFilter.FILTER_ALL
         )
     ) }
 
@@ -139,6 +147,11 @@ fun ShopScreen(
                 )
             }
             is ShopEvent.OnItemNewColor ->{
+                val index = itemList.indexOfFirst { it.id == event.itemId }
+                if(index != -1){
+                    itemList[index] = itemList[index].copy(colorCode = event.newColor)
+                }
+
                 dummyState = dummyState.copy(
                     shopItemList = dummyState.shopItemList.map {
                         if(it.shop.id == event.itemId){
@@ -160,6 +173,32 @@ fun ShopScreen(
                     totalAmount = 0,
                     shopItemList = newList
                 )
+            }
+            is ShopEvent.OnFilterChange ->{
+                dummyState = dummyState.copy(
+                    filter = event.newFilter
+                )
+                dummyState = when(event.newFilter){
+                    ShopFilter.FILTER_CART -> {
+                        dummyState.copy(
+                            shopItemList = dummyState.shopItemList.filter {
+                                it.count > 0
+                            }
+                        )
+                    }
+                    ShopFilter.FILTER_ALL -> {
+                        dummyState.copy(
+                            shopItemList = itemList.map { original ->
+                                ShopItemState(
+                                    shop = original,
+                                    count = addedItem.find {
+                                        it.id == original.id
+                                    }?.count ?: 0
+                                )
+                            }
+                        )
+                    }
+                }
             }
             is ShopEvent.OnFinish ->{
 
@@ -265,7 +304,7 @@ fun ShopContent(
                             RoundRect(
                                 rect = Rect(
                                     offset = Offset(0f, 0f),
-                                    size = Size(size.width, 200.dp.toPx())
+                                    size = Size(size.width, 250.dp.toPx())
                                 ),
                                 topLeft = CornerRadius.Zero,
                                 topRight = CornerRadius.Zero,
@@ -316,6 +355,27 @@ fun ShopContent(
                                 alignment = Alignment.Center,
                                 painter = painterResource(R.drawable.ic_plus_36),
                                 contentDescription = null
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(12.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        FilterChip(
+                            text = stringResource(R.string.all),
+                            filter = ShopFilter.FILTER_ALL,
+                            isSelected = state.filter == ShopFilter.FILTER_ALL
+                        ) {
+                            event.invoke(
+                                ShopEvent.OnFilterChange(it)
+                            )
+                        }
+                        FilterChip(
+                            text = stringResource(R.string.cart),
+                            filter = ShopFilter.FILTER_CART,
+                            isSelected = state.filter == ShopFilter.FILTER_CART
+                        ) {
+                            event.invoke(
+                                ShopEvent.OnFilterChange(it)
                             )
                         }
                     }
@@ -380,24 +440,27 @@ fun ShopContentPreview(){
                 shopName = "Toko Madura A",
                 date = "24 Januari 2026",
                 totalAmount = 1575000L,
-                shopItemList = generateDummyShopItemState(),
-                isFloatingActionVisible = true
+                shopItemList = generateDummyShopItemList().map {
+                    ShopItemState(
+                        shop = it,
+                        count = 0
+                    )
+                },
+                isFloatingActionVisible = true,
+                filter = ShopFilter.FILTER_ALL
             ),
         ){}
     }
 }
 
-fun generateDummyShopItemState(): List<ShopItemState>{
-    return List(20) {
-        ShopItemState(
-            shop = Shop(
-                it.toString(),
-                "Nama item",
-                15000,
-                Tertiary
-            ),
-            count = 0
-        )
 
+fun generateDummyShopItemList() : MutableList<Shop>{
+    return MutableList(20){
+        Shop(
+            it.toString(),
+            "Nama item",
+            15000,
+            Tertiary
+        )
     }
 }

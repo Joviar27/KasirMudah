@@ -7,4 +7,6 @@
     <string name="setting">Pengaturan</string>
     <string name="search">Cari Barang</string>
     <string name="delete">Hapus</string>
+    <string name="all">Semua</string>
+    <string name="cart">Keranjang</string>
 </resources>
