@@ -11,11 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,31 +21,30 @@ import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.White
 
 @Composable
-fun FilterChip(
+fun <T> FilterChip(
     modifier: Modifier = Modifier,
     text: String,
     isSelected: Boolean,
+    filter: T,
     selectedBgColor: Color = OnPrimary,
     unselectedBgColor: Color = Color.Transparent,
     selectedTextColor: Color = White,
     unselectedTextColor: Color = OnPrimary,
     borderColor: Color = OnPrimary,
-    onSelectChange: (Boolean) -> Unit
+    onSelectChange: (T) -> Unit
 ) {
-    var isSelected by remember { mutableStateOf(isSelected) }
-
     Box(modifier
+        .clip(RoundedCornerShape(24.dp))
+        .clickable{
+            onSelectChange.invoke(filter)
+        }
         .background(
             if(isSelected) selectedBgColor else unselectedBgColor,
-            RoundedCornerShape(24.dp)
         ).border(
             1.dp,
             borderColor,
             RoundedCornerShape(24.dp)
-        ).clickable{
-            isSelected = !isSelected
-            onSelectChange.invoke(isSelected)
-        }.padding(vertical = 8.dp, horizontal = 12.dp)
+        ).padding(vertical = 8.dp, horizontal = 12.dp)
     ){
         Text(
             text,
@@ -64,11 +60,13 @@ fun FilterChipPrev() {
     Column(Modifier.padding(16.dp)) {
         FilterChip(
             text = "Semua",
+            filter = "",
             isSelected = false
         ){}
         Spacer(Modifier.height(16.dp))
         FilterChip(
             text = "Keranjang",
+            filter = "",
             isSelected = true
         ){}
     }
