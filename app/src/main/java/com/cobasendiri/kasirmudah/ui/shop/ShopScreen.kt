@@ -203,6 +203,18 @@ fun ShopScreen(
             is ShopEvent.OnFinish ->{
 
             }
+            is ShopEvent.OnSearch ->{
+                dummyState = dummyState.copy(
+                    shopItemList = itemList.filter { it.name.contains(event.searchQuery) }.map {
+                        ShopItemState(
+                            shop = it,
+                            count = addedItem.find { addedItem ->
+                                addedItem.id == it.id
+                            }?.count ?: 0
+                        )
+                    }
+                )
+            }
         }
     }
 }
