@@ -18,4 +18,7 @@ interface ShopEvent {
         val newColor: Color
     ): ShopEvent
 
+    data class OnFilterChange(
+        val newFilter: ShopFilter
+    ): ShopEvent
 }
