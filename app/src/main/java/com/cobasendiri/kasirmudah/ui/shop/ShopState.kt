@@ -8,7 +8,9 @@ data class ShopState(
     val totalAmount: Long,
     val filter: ShopFilter,
     val shopItemList: List<ShopItemState>,
-    val isFloatingActionVisible: Boolean
+    val isFloatingActionVisible: Boolean,
+    val showEditItemDialog: Shop?,
+    val showAddItemDialog: Boolean
 )
 
 data class ShopItemState(
