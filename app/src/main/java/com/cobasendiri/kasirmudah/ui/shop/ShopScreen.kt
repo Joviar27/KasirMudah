@@ -55,6 +55,7 @@ import com.cobasendiri.kasirmudah.model.ShopAdded
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
 import com.cobasendiri.kasirmudah.ui.component.FloatingAction
 import com.cobasendiri.kasirmudah.ui.component.ShopItem
+import com.cobasendiri.kasirmudah.ui.component.ShopItemDetailDialog
 import com.cobasendiri.kasirmudah.ui.component.TotalItem
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
@@ -84,7 +85,9 @@ fun ShopScreen(
                 )
             },
             isFloatingActionVisible = false,
-            filter = ShopFilter.FILTER_ALL
+            filter = ShopFilter.FILTER_ALL,
+            showAddItemDialog = false,
+            showEditItemDialog = null
         )
     ) }
 
@@ -215,6 +218,73 @@ fun ShopScreen(
                     }
                 )
             }
+            is ShopEvent.OnShowAddItemDialog ->{
+                dummyState = dummyState.copy(
+                    showAddItemDialog = true,
+                )
+            }
+            is ShopEvent.OnShowEditItemDialog ->{
+                dummyState = dummyState.copy(
+                    showEditItemDialog = event.shop,
+                )
+            }
+            is ShopEvent.OnDismissItemDialog ->{
+                dummyState = dummyState.copy(
+                    showAddItemDialog = false,
+                    showEditItemDialog = null
+                )
+            }
+            is ShopEvent.OnNewShopItem ->{
+                //Temporary before viewmodel
+                val newShopItem = Shop(
+                    id = itemList.size.toString(),
+                    name = event.newShop.name,
+                    price = event.newShop.price.toLong(),
+                    colorCode = event.newShop.colorCode
+                )
+                itemList.add(newShopItem)
+
+                if(dummyState.filter == ShopFilter.FILTER_CART){
+                    return@ShopContent
+                }
+                dummyState = dummyState.copy(
+                    shopItemList = itemList.map { original ->
+                        ShopItemState(
+                            shop = original,
+                            count = addedItem.find {
+                                it.id == original.id
+                            }?.count ?: 0
+                        )
+                    }
+                )
+            }
+            is ShopEvent.OnUpdateShopItem ->{
+                //Temporary before viewmodel
+                val updatedShopItem = Shop(
+                    id = event.updatedShop.id,
+                    name = event.updatedShop.name,
+                    price = event.updatedShop.price.toLong(),
+                    colorCode = event.updatedShop.colorCode
+                )
+                val index = itemList.indexOfFirst { it.id == updatedShopItem.id }
+                if(index != -1){
+                    itemList[index] = updatedShopItem
+                }
+
+                if(dummyState.filter == ShopFilter.FILTER_CART){
+                    return@ShopContent
+                }
+                dummyState = dummyState.copy(
+                    shopItemList = itemList.map { original ->
+                        ShopItemState(
+                            shop = original,
+                            count = addedItem.find {
+                                it.id == original.id
+                            }?.count ?: 0
+                        )
+                    }
+                )
+            }
         }
     }
 }
@@ -245,6 +315,7 @@ fun ShopContent(
             colors = listOf(Primary, Color.Transparent)
         )
     }
+
 
     Box(Modifier
         .fillMaxSize()
@@ -357,7 +428,7 @@ fun ShopContent(
                             .background(OnPrimaryVariant)
                             .clickable(
                                 onClick = {
-                                    //Show add item dialog
+                                    event.invoke(ShopEvent.OnShowAddItemDialog)
                                 },
                             )
                             .padding(horizontal = 12.dp),
@@ -400,12 +471,11 @@ fun ShopContent(
                 Spacer(Modifier.height(16.dp))
                 ShopItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    colorCode = item.shop.colorCode,
-                    itemName = item.shop.name,
-                    itemPrice = item.shop.price,
-                    count = item.count,
+                    state = item,
                     onClick = {
-
+                        event.invoke(
+                            ShopEvent.OnShowEditItemDialog(it)
+                        )
                     },
                     onItemIncrease = {
                         ShopEvent.OnItemIncrease(
@@ -439,6 +509,27 @@ fun ShopContent(
                 }
             )
         }
+        if(state.showAddItemDialog){
+            ShopItemDetailDialog(
+                onSave = {
+                    event.invoke(ShopEvent.OnNewShopItem(it))
+                },
+                onDismiss = {
+                    event.invoke(ShopEvent.OnDismissItemDialog)
+                }
+            )
+        }
+        if(state.showEditItemDialog != null){
+            ShopItemDetailDialog(
+                shop = state.showEditItemDialog,
+                onSave = {
+                    event.invoke(ShopEvent.OnUpdateShopItem(it))
+                },
+                onDismiss = {
+                    event.invoke(ShopEvent.OnDismissItemDialog)
+                }
+            )
+        }
     }
 }
 
@@ -459,7 +550,9 @@ fun ShopContentPreview(){
                     )
                 },
                 isFloatingActionVisible = true,
-                filter = ShopFilter.FILTER_ALL
+                filter = ShopFilter.FILTER_ALL,
+                showEditItemDialog = null,
+                showAddItemDialog = false
             ),
         ){}
     }

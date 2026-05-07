@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.R
+import com.cobasendiri.kasirmudah.model.Shop
+import com.cobasendiri.kasirmudah.ui.shop.ShopItemState
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Surface
@@ -43,31 +45,31 @@ import com.cobasendiri.kasirmudah.util.decimalFormat
 @Composable
 fun ShopItem(
     modifier: Modifier = Modifier,
-    colorCode: Color,
-    itemName: String,
-    itemPrice: Long,
-    count: Int,
-    onClick: () -> Unit,
+    state: ShopItemState,
+    onClick: (Shop) -> Unit,
     onColorCodeUpdate: (Color) -> Unit,
     onItemIncrease: () -> Unit,
     onItemDecrease: () -> Unit
 ) {
 
-    val formattedPrice = remember(itemPrice) {
-        "Rp ${itemPrice.toString().decimalFormat()},00"
+    val formattedPrice = remember(state.shop.price) {
+        "Rp ${state.shop.price.toString().decimalFormat()},00"
     }
 
     var showColorCodePopup by remember { mutableStateOf(false) }
 
-    Row(modifier.fillMaxWidth()
+    Row(modifier
+        .fillMaxWidth()
         .clip(RoundedCornerShape(24.dp))
         .background(White)
-        .clickable(onClick = onClick)
+        .clickable(onClick = {
+            onClick.invoke(state.shop)
+        })
         .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box{
-            ColorCode(colorCode){
+            ColorCode(state.shop.colorCode){
                 showColorCodePopup = true
             }
             if(showColorCodePopup){
@@ -87,7 +89,7 @@ fun ShopItem(
         Spacer(Modifier.width(16.dp))
         Column(Modifier.weight(1f)) {
             Text(
-                itemName,
+                state.shop.name,
                 style = KasirMudahTypography.titleMedium
                     .copy(fontWeight = FontWeight.Bold)
             )
@@ -97,7 +99,7 @@ fun ShopItem(
             )
         }
         Counter(
-            count = count,
+            count = state.count,
             onIncrease = {
                 onItemIncrease.invoke()
             },
@@ -118,12 +120,13 @@ fun Counter(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ){
-        Box(Modifier.clip(CircleShape)
+        Box(Modifier
+            .clip(CircleShape)
             .background(Color.Transparent)
             .border(1.dp, OnPrimaryVariant, CircleShape)
             .padding(1.dp)
-            .clickable{
-                if(count>0){
+            .clickable {
+                if (count > 0) {
                     onDecrease.invoke()
                 }
             }
@@ -144,11 +147,12 @@ fun Counter(
                 style = KasirMudahTypography.bodyMedium
             )
         }
-        Box(Modifier.clip(CircleShape)
+        Box(Modifier
+            .clip(CircleShape)
             .background(Color.Transparent)
             .border(1.dp, OnPrimaryVariant, CircleShape)
             .padding(1.dp)
-            .clickable{
+            .clickable {
                 onIncrease.invoke()
             }
         ){
@@ -165,12 +169,14 @@ fun ColorCode(
     color: Color,
     onEditClick: () -> Unit
 ){
-    Box(Modifier.size(64.dp)
+    Box(Modifier
+        .size(64.dp)
         .background(color, RoundedCornerShape(16.dp))
         .padding(8.dp),
         contentAlignment = Alignment.TopEnd
     ){
-        Box(Modifier.clip(CircleShape)
+        Box(Modifier
+            .clip(CircleShape)
             .background(OnPrimary, CircleShape)
             .size(16.dp)
             .clickable(onClick = onEditClick),
@@ -187,12 +193,18 @@ fun ColorCode(
 @Preview
 @Composable
 fun ShopItemPrev() {
+    val shop = Shop(
+        id = "1",
+        name = "Nama Item 1",
+        price = 15000,
+        colorCode = Tertiary
+    )
     Box(Modifier.padding(16.dp)){
         ShopItem(
-            colorCode = Tertiary,
-            itemName = "Nama Item 1",
-            itemPrice = 15000,
-            count = 2,
+            state = ShopItemState(
+                shop = shop,
+                count = 2
+            ),
             onClick = {},
             onColorCodeUpdate = {},
             onItemIncrease = {}
