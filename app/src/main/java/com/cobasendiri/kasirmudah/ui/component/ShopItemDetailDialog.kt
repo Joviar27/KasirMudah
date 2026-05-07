@@ -81,8 +81,8 @@ fun ShopItemDetailDialog(
                     Spacer(Modifier.width(12.dp))
                     Text(
                         text = stringResource(
-                            if(shopDraft.id.isEmpty()) R.string.edit_item
-                            else R.string.add_item
+                            if(shopDraft.id.isEmpty()) R.string.add_item
+                            else R.string.edit_item
                         ),
                         style = KasirMudahTypography.headlineSmall
                     )
