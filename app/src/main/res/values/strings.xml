@@ -17,4 +17,7 @@
     <string name="item_price">Harga Barang</string>
     <string name="cancel">Batal</string>
     <string name="save">Simpan</string>
+
+    <!--  Action Popup  -->
+    <string name="bookmark">Tandai</string>
 </resources>
