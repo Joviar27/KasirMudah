@@ -379,15 +379,14 @@ fun ShopContent(
                 }
             }
             stickyHeader {
-                Column(Modifier.height(topPadding+235.dp)
-                    .drawBehind{
+                Column(Modifier.drawBehind{
                     val roundedRadius = 24.dp.toPx()
                     val path = Path().apply {
                         addRoundRect(
                             RoundRect(
                                 rect = Rect(
                                     offset = Offset(0f, 0f),
-                                    size = Size(size.width, (topPadding+235.dp).toPx())
+                                    size = Size(size.width, 245.dp.toPx())
                                 ),
                                 topLeft = CornerRadius.Zero,
                                 topRight = CornerRadius.Zero,
@@ -401,8 +400,6 @@ fun ShopContent(
                         color = TertiaryVariant,
                         alpha = topColorAlpha,
                     )
-                }.graphicsLayer{
-                    translationY = 16.dp.toPx()*topColorAlpha
                 }.padding(horizontal = 16.dp)){
                     Spacer(Modifier.height(24.dp))
                     TotalItem(totalAmount = state.totalAmount) {
