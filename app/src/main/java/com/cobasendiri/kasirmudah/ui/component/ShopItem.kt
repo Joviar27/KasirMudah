@@ -34,6 +34,7 @@ import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.model.Shop
+import com.cobasendiri.kasirmudah.ui.component.popup.ColorCodePopup
 import com.cobasendiri.kasirmudah.ui.shop.ShopItemState
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
@@ -75,9 +76,9 @@ fun ShopItem(
             if(showColorCodePopup){
                 ColorCodePopup(
                     alignment = Alignment.TopStart,
-                    offset = IntOffset(0,-110),
+                    offset = IntOffset(0, -110),
                     properties = PopupProperties(focusable = true)
-                ){ newColor ->
+                ) { newColor ->
                     showColorCodePopup = false
                     newColor?.let {
                         onColorCodeUpdate.invoke(it)
