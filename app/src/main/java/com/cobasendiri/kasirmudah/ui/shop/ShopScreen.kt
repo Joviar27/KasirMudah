@@ -474,10 +474,13 @@ fun ShopContent(
                 ShopItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     state = item,
-                    onClick = {
+                    onEdit = {
                         event.invoke(
                             ShopEvent.OnShowEditItemDialog(it)
                         )
+                    },
+                    onDelete = {
+
                     },
                     onItemIncrease = {
                         ShopEvent.OnItemIncrease(
@@ -494,7 +497,7 @@ fun ShopContent(
                             itemId = item.shop.id,
                             newColor = it
                         ).let { event.invoke(it) }
-                    }
+                    },
                 )
             }
         }

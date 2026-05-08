@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -34,6 +35,7 @@ import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.model.Shop
+import com.cobasendiri.kasirmudah.ui.component.popup.ActionPopup
 import com.cobasendiri.kasirmudah.ui.component.popup.ColorCodePopup
 import com.cobasendiri.kasirmudah.ui.shop.ShopItemState
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
@@ -47,7 +49,8 @@ import com.cobasendiri.kasirmudah.util.decimalFormat
 fun ShopItem(
     modifier: Modifier = Modifier,
     state: ShopItemState,
-    onClick: (Shop) -> Unit,
+    onEdit: (Shop) -> Unit,
+    onDelete: (String) -> Unit,
     onColorCodeUpdate: (Color) -> Unit,
     onItemIncrease: () -> Unit,
     onItemDecrease: () -> Unit
@@ -58,14 +61,15 @@ fun ShopItem(
     }
 
     var showColorCodePopup by remember { mutableStateOf(false) }
+    var showActionPopup by remember { mutableStateOf(false) }
 
     Row(modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(24.dp))
         .background(White)
-        .clickable(onClick = {
-            onClick.invoke(state.shop)
-        })
+        .clickable{
+            showActionPopup = true
+        }
         .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -108,6 +112,30 @@ fun ShopItem(
                 onItemDecrease.invoke()
             }
         )
+        if(showActionPopup){
+            ActionPopup(
+                firsItem = Pair(
+                    painterResource(R.drawable.ic_edit_22),
+                    stringResource(R.string.edit)
+                ),
+                secondItem = Pair(
+                    painterResource(R.drawable.ic_delete_22),
+                    stringResource(R.string.delete)
+                ),
+                alignment = Alignment.BottomEnd,
+                offset = IntOffset(30, 135),
+                properties = PopupProperties(focusable = true),
+                onDismiss = {
+                    showActionPopup = false
+                },
+                onFirstItemClick = {
+                    onEdit.invoke(state.shop)
+                },
+                onSecondItemClick = {
+                    onDelete.invoke(state.shop.id)
+                }
+            )
+        }
     }
 }
 
@@ -206,7 +234,8 @@ fun ShopItemPrev() {
                 shop = shop,
                 count = 2
             ),
-            onClick = {},
+            onEdit = {},
+            onDelete = {},
             onColorCodeUpdate = {},
             onItemIncrease = {}
         ){}

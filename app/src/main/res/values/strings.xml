@@ -20,4 +20,5 @@
 
     <!--  Action Popup  -->
     <string name="bookmark">Tandai</string>
+    <string name="edit">Edit</string>
 </resources>
