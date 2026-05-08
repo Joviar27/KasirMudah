@@ -41,6 +41,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -297,6 +298,9 @@ fun ShopContent(
 ){
 
     val listState = rememberLazyListState()
+    val topPadding = remember(innerPadding){
+        innerPadding.calculateTopPadding()
+    }
 
     val topColorAlpha by remember {
         derivedStateOf {
@@ -310,13 +314,6 @@ fun ShopContent(
         }
     }
 
-    val initialGradient = remember {
-        Brush.verticalGradient(
-            colors = listOf(Primary, Color.Transparent)
-        )
-    }
-
-
     Box(Modifier
         .fillMaxSize()
         .background(Surface)
@@ -324,12 +321,14 @@ fun ShopContent(
         //Top decoration view
         Box(modifier = Modifier
             .fillMaxWidth()
-            .height(250.dp)
+            .height(topPadding + 250.dp)
             .drawBehind {
                 drawRect(
-                    brush = initialGradient,
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Primary, Color.Transparent)
+                    ),
                     alpha = 1f-topColorAlpha,
-                    size = Size(size.width, 250.dp.toPx())
+                    size = Size(size.width, (topPadding+250.dp).toPx())
                 )
             }
         )
@@ -338,7 +337,7 @@ fun ShopContent(
             state = listState
         ) {
             item {
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(topPadding+16.dp))
                 Row(Modifier.fillMaxWidth()
                     .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -380,14 +379,15 @@ fun ShopContent(
                 }
             }
             stickyHeader {
-                Column(Modifier.drawBehind{
+                Column(Modifier.height(topPadding+235.dp)
+                    .drawBehind{
                     val roundedRadius = 24.dp.toPx()
                     val path = Path().apply {
                         addRoundRect(
                             RoundRect(
                                 rect = Rect(
                                     offset = Offset(0f, 0f),
-                                    size = Size(size.width, 250.dp.toPx())
+                                    size = Size(size.width, (topPadding+235.dp).toPx())
                                 ),
                                 topLeft = CornerRadius.Zero,
                                 topRight = CornerRadius.Zero,
@@ -401,6 +401,8 @@ fun ShopContent(
                         color = TertiaryVariant,
                         alpha = topColorAlpha,
                     )
+                }.graphicsLayer{
+                    translationY = 16.dp.toPx()*topColorAlpha
                 }.padding(horizontal = 16.dp)){
                     Spacer(Modifier.height(24.dp))
                     TotalItem(totalAmount = state.totalAmount) {
