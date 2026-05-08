@@ -41,6 +41,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -378,7 +379,8 @@ fun ShopContent(
                 }
             }
             stickyHeader {
-                Column(Modifier.drawBehind{
+                Column(Modifier.height(topPadding+235.dp)
+                    .drawBehind{
                     val roundedRadius = 24.dp.toPx()
                     val path = Path().apply {
                         addRoundRect(
@@ -399,8 +401,10 @@ fun ShopContent(
                         color = TertiaryVariant,
                         alpha = topColorAlpha,
                     )
+                }.graphicsLayer{
+                    translationY = 16.dp.toPx()*topColorAlpha
                 }.padding(horizontal = 16.dp)){
-                    Spacer(Modifier.height(topPadding+8.dp))
+                    Spacer(Modifier.height(24.dp))
                     TotalItem(totalAmount = state.totalAmount) {
                         event.invoke(ShopEvent.OnFinish)
                     }
