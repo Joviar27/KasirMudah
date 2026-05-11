@@ -556,23 +556,33 @@ fun ShopContent(
             )
         }
         if(state.showAddItemDialog){
+            val dismissItemDialogEvent = ShopEvent.OnDismissItemDialog
             ShopItemDetailDialog(
+                onDismiss = {
+                    event.invoke(dismissItemDialogEvent)
+                },
+                onCancel = {
+                    event.invoke(dismissItemDialogEvent)
+                },
                 onSave = {
                     event.invoke(ShopEvent.OnNewShopItem(it))
-                },
-                onDismiss = {
-                    event.invoke(ShopEvent.OnDismissItemDialog)
+                    event.invoke(dismissItemDialogEvent)
                 }
             )
         }
         if(state.showEditItemDialog != null){
+            val dismissItemDialogEvent = ShopEvent.OnDismissItemDialog
             ShopItemDetailDialog(
                 shop = state.showEditItemDialog,
+                onDismiss = {
+                    event.invoke(dismissItemDialogEvent)
+                },
+                onCancel = {
+                    event.invoke(dismissItemDialogEvent)
+                },
                 onSave = {
                     event.invoke(ShopEvent.OnUpdateShopItem(it))
-                },
-                onDismiss = {
-                    event.invoke(ShopEvent.OnDismissItemDialog)
+                    event.invoke(dismissItemDialogEvent)
                 }
             )
         }

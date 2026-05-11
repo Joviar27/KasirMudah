@@ -49,6 +49,7 @@ import com.cobasendiri.kasirmudah.ui.theme.White
 fun ShopItemDetailDialog(
     shop: Shop? = null,
     onDismiss: () -> Unit,
+    onCancel: () -> Unit,
     onSave: (ShopDraft) -> Unit
 ) {
     var shopDraft by remember { mutableStateOf(
@@ -114,16 +115,16 @@ fun ShopItemDetailDialog(
             Row {
                 RoundedOutlinedButton(
                     modifier = Modifier.width(140.dp),
-                    text = stringResource(R.string.cancel),
-                    onClick = onDismiss
-                )
+                    text = stringResource(R.string.cancel)
+                ){
+                    onCancel.invoke()
+                }
                 Spacer(Modifier.width(8.dp))
                 RoundedPrimaryButton(
                     modifier = Modifier.width(140.dp),
                     text = stringResource(R.string.save)
                 ) {
                     onSave.invoke(shopDraft)
-                    onDismiss.invoke()
                 }
             }
         }
@@ -135,14 +136,16 @@ fun ColorCodeDetail(
     color: Color,
     onEditClick: () -> Unit
 ){
-    Box(Modifier.size(40.dp)
+    Box(Modifier
+        .size(40.dp)
         .clip(RoundedCornerShape(8.dp))
         .background(color)
         .clickable(onClick = onEditClick)
         .padding(12.dp),
         contentAlignment = Alignment.Center
     ){
-        Box(Modifier.size(16.dp)
+        Box(Modifier
+            .size(16.dp)
             .clip(CircleShape)
             .background(OnPrimary, CircleShape),
             contentAlignment = Alignment.Center
@@ -166,8 +169,10 @@ fun ItemDetailPrev() {
                 price = 15000L,
                 colorCode = Tertiary
             ),
-            onDismiss = {}
-        ){}
+            onCancel = {},
+            onDismiss = {},
+            onSave = {}
+        )
     }
 }
 
@@ -175,6 +180,7 @@ fun ItemDetailPrev() {
 @Composable
 fun ItemDetailPrev2() {
     ShopItemDetailDialog(
-        onDismiss = {}
+        onDismiss = {},
+        onCancel = {}
     ){}
 }

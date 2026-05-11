@@ -54,7 +54,6 @@ fun NegativeConfirmDialog(
                     text = cancelButton
                 ){
                     onCancel.invoke()
-                    onDismiss.invoke()
                 }
                 Spacer(Modifier.width(8.dp))
                 RoundedNegativeButton(
@@ -62,7 +61,6 @@ fun NegativeConfirmDialog(
                     text = confirmButton
                 ) {
                     onConfirm.invoke()
-                    onDismiss.invoke()
                 }
             }
         }
