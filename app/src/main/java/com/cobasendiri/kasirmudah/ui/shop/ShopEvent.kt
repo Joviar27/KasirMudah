@@ -32,6 +32,12 @@ interface ShopEvent {
 
     data object OnDismissItemDialog: ShopEvent
 
+    data class OnShowConfirmDeleteDialog(
+        val itemId: String
+    ): ShopEvent
+
+    data object OnDismissConfirmDeleteDialog: ShopEvent
+
     data class OnNewShopItem(
         val newShop: ShopDraft
     ): ShopEvent

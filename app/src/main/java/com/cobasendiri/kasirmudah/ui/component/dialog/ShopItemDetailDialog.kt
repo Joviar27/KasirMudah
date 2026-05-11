@@ -1,4 +1,4 @@
-package com.cobasendiri.kasirmudah.ui.component
+package com.cobasendiri.kasirmudah.ui.component.dialog
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,6 +36,7 @@ import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.model.Shop
 import com.cobasendiri.kasirmudah.model.ShopDraft
+import com.cobasendiri.kasirmudah.ui.component.InputField
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
 import com.cobasendiri.kasirmudah.ui.component.popup.ColorCodePopup
@@ -61,77 +62,68 @@ fun ShopItemDetailDialog(
 
     var showColorCodePopup by remember { mutableStateOf(false) }
 
-    Dialog(
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false
-        ),
-        onDismissRequest = onDismiss
+    BaseDialog(
+        onDismiss = onDismiss
     ) {
-        Surface(Modifier.fillMaxWidth()
-            .padding(16.dp)
-            .background(White, RoundedCornerShape(16.dp))
-            .padding(horizontal = 16.dp, vertical = 24.dp)
+        Column(Modifier.background(White),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(Modifier.background(White),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    ColorCodeDetail(shopDraft.colorCode) {
-                        showColorCodePopup = true
-                    }
-                    Spacer(Modifier.width(12.dp))
-                    Text(
-                        text = stringResource(
-                            if(shopDraft.id.isEmpty()) R.string.add_item
-                            else R.string.edit_item
-                        ),
-                        style = KasirMudahTypography.headlineSmall
-                    )
-                    if(showColorCodePopup){
-                        ColorCodePopup(
-                            alignment = Alignment.BottomStart,
-                            offset = IntOffset(0, 110),
-                            properties = PopupProperties(focusable = true)
-                        ) { newColor ->
-                            showColorCodePopup = false
-                            newColor?.let {
-                                shopDraft = shopDraft.copy(colorCode = it)
-                            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                ColorCodeDetail(shopDraft.colorCode) {
+                    showColorCodePopup = true
+                }
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = stringResource(
+                        if(shopDraft.id.isEmpty()) R.string.add_item
+                        else R.string.edit_item
+                    ),
+                    style = KasirMudahTypography.headlineSmall
+                )
+                if(showColorCodePopup){
+                    ColorCodePopup(
+                        alignment = Alignment.BottomStart,
+                        offset = IntOffset(0, 110),
+                        properties = PopupProperties(focusable = true)
+                    ) { newColor ->
+                        showColorCodePopup = false
+                        newColor?.let {
+                            shopDraft = shopDraft.copy(colorCode = it)
                         }
                     }
                 }
-                Spacer(Modifier.height(24.dp))
-                InputField(
-                    label = stringResource(R.string.item_name),
-                    initialValue = shopDraft.name,
-                    maxCharacter = 35
+            }
+            Spacer(Modifier.height(24.dp))
+            InputField(
+                label = stringResource(R.string.item_name),
+                initialValue = shopDraft.name,
+                maxCharacter = 35
+            ) {
+                shopDraft = shopDraft.copy(name = it)
+            }
+            Spacer(Modifier.height(16.dp))
+            InputField(
+                label = stringResource(R.string.item_price),
+                initialValue = shopDraft.price,
+                currencyMode = true,
+                maxCharacter = 15
+            ) {
+                shopDraft = shopDraft.copy(price = it)
+            }
+            Spacer(Modifier.height(24.dp))
+            Row {
+                RoundedOutlinedButton(
+                    modifier = Modifier.width(140.dp),
+                    text = stringResource(R.string.cancel),
+                    onClick = onDismiss
+                )
+                Spacer(Modifier.width(8.dp))
+                RoundedPrimaryButton(
+                    modifier = Modifier.width(140.dp),
+                    text = stringResource(R.string.save)
                 ) {
-                    shopDraft = shopDraft.copy(name = it)
-                }
-                Spacer(Modifier.height(16.dp))
-                InputField(
-                    label = stringResource(R.string.item_price),
-                    initialValue = shopDraft.price,
-                    currencyMode = true,
-                    maxCharacter = 15
-                ) {
-                    shopDraft = shopDraft.copy(price = it)
-                }
-                Spacer(Modifier.height(24.dp))
-                Row {
-                    RoundedOutlinedButton(
-                        modifier = Modifier.width(140.dp),
-                        text = stringResource(R.string.cancel),
-                        onClick = onDismiss
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    RoundedPrimaryButton(
-                        modifier = Modifier.width(140.dp),
-                        text = stringResource(R.string.save)
-                    ) {
-                        onSave.invoke(shopDraft)
-                        onDismiss.invoke()
-                    }
+                    onSave.invoke(shopDraft)
+                    onDismiss.invoke()
                 }
             }
         }

@@ -41,7 +41,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,8 +55,9 @@ import com.cobasendiri.kasirmudah.model.ShopAdded
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
 import com.cobasendiri.kasirmudah.ui.component.FloatingAction
 import com.cobasendiri.kasirmudah.ui.component.ShopItem
-import com.cobasendiri.kasirmudah.ui.component.ShopItemDetailDialog
+import com.cobasendiri.kasirmudah.ui.component.dialog.ShopItemDetailDialog
 import com.cobasendiri.kasirmudah.ui.component.TotalItem
+import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
@@ -88,7 +88,8 @@ fun ShopScreen(
             isFloatingActionVisible = false,
             filter = ShopFilter.FILTER_ALL,
             showAddItemDialog = false,
-            showEditItemDialog = null
+            showEditItemDialog = null,
+            showConfirmDeleteDialog = null
         )
     ) }
 
@@ -286,6 +287,16 @@ fun ShopScreen(
                     }
                 )
             }
+            is ShopEvent.OnShowConfirmDeleteDialog ->{
+                dummyState = dummyState.copy(
+                    showConfirmDeleteDialog = event.itemId,
+                )
+            }
+            is ShopEvent.OnDismissConfirmDeleteDialog ->{
+                dummyState = dummyState.copy(
+                    showConfirmDeleteDialog = null
+                )
+            }
             is ShopEvent.OnDeleteShopItem ->{
                 val index = itemList.indexOfFirst { it.id == event.deletedShopId }
                 if(index != -1){
@@ -357,8 +368,8 @@ fun ShopContent(
                     brush = Brush.verticalGradient(
                         colors = listOf(Primary, Color.Transparent)
                     ),
-                    alpha = 1f-topColorAlpha,
-                    size = Size(size.width, (topPadding+250.dp).toPx())
+                    alpha = 1f - topColorAlpha,
+                    size = Size(size.width, (topPadding + 250.dp).toPx())
                 )
             }
         )
@@ -368,7 +379,8 @@ fun ShopContent(
         ) {
             item {
                 Spacer(Modifier.height(topPadding+16.dp))
-                Row(Modifier.fillMaxWidth()
+                Row(Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
@@ -508,7 +520,7 @@ fun ShopContent(
                     },
                     onDelete = {
                         event.invoke(
-                            ShopEvent.OnDeleteShopItem(it)
+                            ShopEvent.OnShowConfirmDeleteDialog(it)
                         )
                     },
                     onItemIncrease = {
@@ -564,6 +576,22 @@ fun ShopContent(
                 }
             )
         }
+        if(state.showConfirmDeleteDialog != null){
+            val dismissEvent = ShopEvent.OnDismissConfirmDeleteDialog
+            val itemId = state.showConfirmDeleteDialog
+            NegativeConfirmDialog(
+                title = stringResource(R.string.delete_shop_title),
+                body = stringResource(R.string.delete_shop_body),
+                cancelButton = stringResource(R.string.cancel),
+                confirmButton = stringResource(R.string.delete),
+                onDismiss = { event.invoke(dismissEvent) },
+                onCancel = { event.invoke(dismissEvent) },
+                onConfirm = {
+                    event.invoke(ShopEvent.OnDeleteShopItem(itemId))
+                    event.invoke(dismissEvent)
+                }
+            )
+        }
     }
 }
 
@@ -586,7 +614,8 @@ fun ShopContentPreview(){
                 isFloatingActionVisible = true,
                 filter = ShopFilter.FILTER_ALL,
                 showEditItemDialog = null,
-                showAddItemDialog = false
+                showAddItemDialog = false,
+                showConfirmDeleteDialog = null
             ),
         ){}
     }
