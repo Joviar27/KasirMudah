@@ -1,4 +1,4 @@
-package com.cobasendiri.kasirmudah.ui.component
+package com.cobasendiri.kasirmudah.ui.component.dialog
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,6 +36,7 @@ import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.model.Shop
 import com.cobasendiri.kasirmudah.model.ShopDraft
+import com.cobasendiri.kasirmudah.ui.component.InputField
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
 import com.cobasendiri.kasirmudah.ui.component.popup.ColorCodePopup

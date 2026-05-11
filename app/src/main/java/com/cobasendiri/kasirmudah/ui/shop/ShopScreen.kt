@@ -41,7 +41,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,7 +55,7 @@ import com.cobasendiri.kasirmudah.model.ShopAdded
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
 import com.cobasendiri.kasirmudah.ui.component.FloatingAction
 import com.cobasendiri.kasirmudah.ui.component.ShopItem
-import com.cobasendiri.kasirmudah.ui.component.ShopItemDetailDialog
+import com.cobasendiri.kasirmudah.ui.component.dialog.ShopItemDetailDialog
 import com.cobasendiri.kasirmudah.ui.component.TotalItem
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
