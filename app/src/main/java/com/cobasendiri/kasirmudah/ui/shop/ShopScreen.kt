@@ -286,6 +286,36 @@ fun ShopScreen(
                     }
                 )
             }
+            is ShopEvent.OnDeleteShopItem ->{
+                val index = itemList.indexOfFirst { it.id == event.deletedShopId }
+                if(index != -1){
+                    itemList.removeAt(index)
+                }
+
+                val indexAdded = addedItem.indexOfFirst { it.id ==event.deletedShopId }
+                if(indexAdded != -1){
+                    addedItem.removeAt(indexAdded)
+                }
+
+                if(dummyState.filter == ShopFilter.FILTER_CART){
+                    return@ShopContent
+                }
+                dummyState = dummyState.copy(
+                    shopItemList = itemList.map {
+                        ShopItemState(
+                            shop = it,
+                            count = addedItem.find { addedItem ->
+                                addedItem.id == it.id
+                            }?.count ?: 0
+                        )
+                    },
+                    totalAmount = addedItem.sumOf { addedItem ->
+                        val itemPrice = dummyState.shopItemList.find{it.shop.id == addedItem.id}?.shop?.price ?: 0
+                        addedItem.count * itemPrice
+                    },
+                    isFloatingActionVisible = addedItem.isNotEmpty()
+                )
+            }
         }
     }
 }
@@ -477,7 +507,9 @@ fun ShopContent(
                         )
                     },
                     onDelete = {
-
+                        event.invoke(
+                            ShopEvent.OnDeleteShopItem(it)
+                        )
                     },
                     onItemIncrease = {
                         ShopEvent.OnItemIncrease(
