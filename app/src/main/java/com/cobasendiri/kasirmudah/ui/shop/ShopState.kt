@@ -10,7 +10,8 @@ data class ShopState(
     val shopItemList: List<ShopItemState>,
     val isFloatingActionVisible: Boolean,
     val showEditItemDialog: Shop?,
-    val showAddItemDialog: Boolean
+    val showAddItemDialog: Boolean,
+    val showConfirmDeleteDialog: String?
 )
 
 data class ShopItemState(
