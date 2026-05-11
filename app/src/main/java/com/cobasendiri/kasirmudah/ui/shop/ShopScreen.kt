@@ -541,6 +541,11 @@ fun ShopContent(
                     },
                 )
             }
+            item {
+                val bottomBarSize = innerPadding.calculateBottomPadding() + 12.dp
+                val floatingActionSize = if(state.isFloatingActionVisible) 56.dp else 0.dp
+                Spacer(Modifier.height(bottomBarSize + floatingActionSize))
+            }
         }
 
         if(state.isFloatingActionVisible){
