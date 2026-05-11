@@ -1,4 +1,4 @@
-package com.cobasendiri.kasirmudah.ui.component
+package com.cobasendiri.kasirmudah.ui.component.popup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

@@ -39,4 +39,8 @@ interface ShopEvent {
     data class OnUpdateShopItem(
         val updatedShop: ShopDraft
     ): ShopEvent
+
+    data class OnDeleteShopItem(
+        val deletedShopId: String
+    ): ShopEvent
 }

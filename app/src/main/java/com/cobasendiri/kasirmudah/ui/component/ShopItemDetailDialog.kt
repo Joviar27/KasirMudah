@@ -38,6 +38,7 @@ import com.cobasendiri.kasirmudah.model.Shop
 import com.cobasendiri.kasirmudah.model.ShopDraft
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
+import com.cobasendiri.kasirmudah.ui.component.popup.ColorCodePopup
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
@@ -89,9 +90,9 @@ fun ShopItemDetailDialog(
                     if(showColorCodePopup){
                         ColorCodePopup(
                             alignment = Alignment.BottomStart,
-                            offset = IntOffset(0,110),
+                            offset = IntOffset(0, 110),
                             properties = PopupProperties(focusable = true)
-                        ){ newColor ->
+                        ) { newColor ->
                             showColorCodePopup = false
                             newColor?.let {
                                 shopDraft = shopDraft.copy(colorCode = it)
