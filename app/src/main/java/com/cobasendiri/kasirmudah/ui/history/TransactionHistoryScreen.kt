@@ -209,6 +209,9 @@ fun TransactionHistoryContent(
                     },
                     onDelete = {
                         event.invoke(TransactionHistoryEvent.OnShowConfirmDeleteDialog(it))
+                    },
+                    onItemClick = {
+                        //Navigate to transaction detail page
                     }
                 )
             }
@@ -235,8 +238,8 @@ fun TransactionHistoryContent(
 fun generateDummyTransactionItemList() : MutableList<Transaction>{
     return MutableList(20){
         Transaction(
-            id = "4shisefhw48t4w3r$it",
-            name = "transaksi-4shisefhw48t4w3r$it",
+            id = "4shisefhw48t4$it",
+            name = "transaksi-4shisefhw48t4$it",
             createdAt = "12 Agustus 2026 - 12:53:01",
             shopItems = MutableList(6){
                 TransactionShopItem(

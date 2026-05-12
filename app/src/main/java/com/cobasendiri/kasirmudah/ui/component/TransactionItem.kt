@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +38,7 @@ import com.cobasendiri.kasirmudah.ui.history.TransactionItemState
 fun TransactionItem(
     modifier: Modifier = Modifier,
     state: TransactionItemState,
+    onItemClick: (String) -> Unit,
     onUpdateBookmark: (String) -> Unit,
     onDelete: (String) -> Unit
 ) {
@@ -48,13 +50,13 @@ fun TransactionItem(
         .clip(RoundedCornerShape(24.dp))
         .background(White)
         .clickable{
-            showActionPopup = true
+            onItemClick.invoke(state.id)
         }
-        .padding(24.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        .padding(vertical = 24.dp)
+        .padding(start = 24.dp, end = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column {
+        Column(Modifier.weight(1f)) {
             Text(
                 text = state.name,
                 style = KasirMudahTypography.titleMedium
@@ -72,6 +74,13 @@ fun TransactionItem(
                 contentDescription = null
             )
         }
+        Image(
+            modifier = Modifier.clip(CircleShape).clickable{
+                showActionPopup = true
+            },
+            painter = painterResource(R.drawable.ic_more_40),
+            contentDescription = null
+        )
         if(showActionPopup){
             ActionPopup(
                 firsItem = Pair(
@@ -109,6 +118,7 @@ fun TransactionItemPrev() {
             createdAt = "12 Agustus 2026 - 12:53:01",
             isBookmarked = true
         ),
+        onItemClick = {},
         onDelete = {},
         onUpdateBookmark = {}
     )
