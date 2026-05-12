@@ -2,7 +2,7 @@ package com.cobasendiri.kasirmudah.ui.history
 
 interface TransactionHistoryEvent {
 
-    data class OnBookmark(
+    data class OnUpdateBookmark(
         val transactionId: String
     ): TransactionHistoryEvent
 

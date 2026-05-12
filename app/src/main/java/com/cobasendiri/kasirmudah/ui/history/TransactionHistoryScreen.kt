@@ -16,8 +16,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
@@ -30,13 +32,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.cobasendiri.kasirmudah.model.Shop
 import com.cobasendiri.kasirmudah.model.Transaction
 import com.cobasendiri.kasirmudah.model.TransactionShopItem
-import com.cobasendiri.kasirmudah.ui.shop.generateDummyShopItemList
 import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
-import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.ui.component.TransactionItem
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
@@ -46,31 +45,63 @@ import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 fun TransactionHistoryScreen(
     innerPadding: PaddingValues
 ){
-
+    //Dummy before viewmodel
+    val bookmarked = rememberSaveable { mutableListOf<String>() }
     val transactionList = rememberSaveable { generateDummyTransactionItemList() }
 
-    val dummyState = TransactionHistoryState(
-        filter = "ALL",
-        transactionList = transactionList.map {
-            TransactionItemState(
-                id = it.id,
-                name = it.name,
-                createdAt = it.createdAt,
-                isBookmarked = false
-            )
-        }
-    )
+    var dummyState by remember { mutableStateOf(
+        TransactionHistoryState(
+            filter = "ALL",
+            transactionList = transactionList.map {
+                TransactionItemState(
+                    id = it.id,
+                    name = it.name,
+                    createdAt = it.createdAt,
+                    isBookmarked = false
+                )
+            }
+        )
+    ) }
 
     TransactionHistoryContent(
         innerPadding,
         dummyState
     ){ event ->
         when(event){
-            is TransactionHistoryEvent.OnBookmark ->{
+            is TransactionHistoryEvent.OnUpdateBookmark ->{
+                val isBookmarked = bookmarked.contains(event.transactionId)
+                if(isBookmarked){
+                    bookmarked.remove(event.transactionId)
+                }else{
+                    bookmarked.add(event.transactionId)
+                }
+
+                dummyState = dummyState.copy(
+                    transactionList = dummyState.transactionList.map {
+                        TransactionItemState(
+                            id = it.id,
+                            name = it.name,
+                            createdAt = it.createdAt,
+                            isBookmarked = bookmarked.contains(it.id)
+                        )
+                    }
+                )
 
             }
             is TransactionHistoryEvent.OnDelete ->{
+                transactionList.removeIf { it.id == event.transactionId }
+                bookmarked.remove(event.transactionId)
 
+                dummyState = dummyState.copy(
+                    transactionList =  transactionList.map {
+                        TransactionItemState(
+                            id = it.id,
+                            name = it.name,
+                            createdAt = it.createdAt,
+                            isBookmarked = bookmarked.contains(it.id)
+                        )
+                    }
+                )
             }
         }
     }
@@ -161,8 +192,8 @@ fun TransactionHistoryContent(
                 TransactionItem(
                     Modifier.padding(horizontal = 16.dp),
                     state = item,
-                    onBookmark = {
-                        event.invoke(TransactionHistoryEvent.OnBookmark(it))
+                    onUpdateBookmark = {
+                        event.invoke(TransactionHistoryEvent.OnUpdateBookmark(it))
                     },
                     onDelete = {
                         event.invoke(TransactionHistoryEvent.OnDelete(it))
@@ -177,7 +208,7 @@ fun generateDummyTransactionItemList() : MutableList<Transaction>{
     return MutableList(20){
         Transaction(
             id = "4shisefhw48t4w3r$it",
-            name = "transaksi-4shisefhw48t4w3r",
+            name = "transaksi-4shisefhw48t4w3r$it",
             createdAt = "12 Agustus 2026 - 12:53:01",
             shopItems = MutableList(6){
                 TransactionShopItem(

@@ -37,7 +37,7 @@ import com.cobasendiri.kasirmudah.ui.history.TransactionItemState
 fun TransactionItem(
     modifier: Modifier = Modifier,
     state: TransactionItemState,
-    onBookmark: (String) -> Unit,
+    onUpdateBookmark: (String) -> Unit,
     onDelete: (String) -> Unit
 ) {
 
@@ -89,7 +89,7 @@ fun TransactionItem(
                     showActionPopup = false
                 },
                 onFirstItemClick = {
-                    onBookmark.invoke(state.id)
+                    onUpdateBookmark.invoke(state.id)
                 },
                 onSecondItemClick = {
                     onDelete.invoke(state.id)
@@ -110,6 +110,6 @@ fun TransactionItemPrev() {
             isBookmarked = true
         ),
         onDelete = {},
-        onBookmark = {}
+        onUpdateBookmark = {}
     )
 }
