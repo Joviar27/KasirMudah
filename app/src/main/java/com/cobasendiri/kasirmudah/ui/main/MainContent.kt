@@ -18,10 +18,10 @@ import androidx.navigation.compose.rememberNavController
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.nav.FloatingNavItem
 import com.cobasendiri.kasirmudah.nav.Screen
-import com.cobasendiri.kasirmudah.ui.history.HistoryScreen
 import com.cobasendiri.kasirmudah.ui.profile.ProfileScreen
 import com.cobasendiri.kasirmudah.ui.shop.ShopScreen
 import com.cobasendiri.kasirmudah.ui.component.FloatingNavigationBar
+import com.cobasendiri.kasirmudah.ui.history.TransactionHistoryScreen
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 
 @Composable
@@ -67,7 +67,7 @@ fun MainContent(){
                 ShopScreen(innerPadding)
             }
             composable<Screen.History>{
-                HistoryScreen()
+                TransactionHistoryScreen(innerPadding)
             }
             composable<Screen.Profile>{
                 ProfileScreen()

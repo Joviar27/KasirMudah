@@ -25,4 +25,7 @@
     <!-- Confirm Delete Dialog  -->
     <string name="delete_shop_title">Hapus Barang?</string>
     <string name="delete_shop_body">Barang akan dihapus secara permanen dan tidak bisa dikembalikan</string>
+
+    <!--  Transaction History Screen  -->
+    <string name="history">Riwayat Pembelian</string>
 </resources>
