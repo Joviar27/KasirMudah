@@ -1,17 +1,22 @@
 package com.cobasendiri.kasirmudah.ui.history
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -37,9 +42,12 @@ import com.cobasendiri.kasirmudah.model.TransactionShopItem
 import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
+import com.cobasendiri.kasirmudah.ui.component.FilterChip
 import com.cobasendiri.kasirmudah.ui.component.TransactionItem
 import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
+import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
+import com.cobasendiri.kasirmudah.ui.theme.Secondary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 
 @Composable
@@ -52,7 +60,7 @@ fun TransactionHistoryScreen(
 
     var dummyState by remember { mutableStateOf(
         TransactionHistoryState(
-            filter = "ALL",
+            filter = TransactionFilter.FILTER_ALL,
             showConfirmDeleteDialog = null,
             transactionList = transactionList.map {
                 TransactionItemState(
@@ -115,6 +123,33 @@ fun TransactionHistoryScreen(
                     showConfirmDeleteDialog = null
                 )
             }
+            is TransactionHistoryEvent.OnFilterChange ->{
+                dummyState = dummyState.copy(
+                    filter = event.newFilter
+                )
+
+                dummyState = when(event.newFilter){
+                    TransactionFilter.FILTER_BOOKMARKED -> {
+                        dummyState.copy(
+                            transactionList = dummyState.transactionList.filter {
+                                bookmarked.contains(it.id)
+                            }
+                        )
+                    }
+                    else ->{
+                        dummyState.copy(
+                            transactionList = transactionList.map {
+                                TransactionItemState(
+                                    id = it.id,
+                                    name = it.name,
+                                    createdAt = it.createdAt,
+                                    isBookmarked = bookmarked.contains(it.id)
+                                )
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -126,6 +161,8 @@ fun TransactionHistoryContent(
     event: (TransactionHistoryEvent) -> Unit
 ){
     val listState = rememberLazyListState()
+    val filterScrollState = rememberScrollState()
+
     val topPadding = remember(innerPadding){
         innerPadding.calculateTopPadding()
     }
@@ -168,13 +205,13 @@ fun TransactionHistoryContent(
         ) {
             stickyHeader {
                 Column(Modifier.drawBehind{
-                    val roundedRadius = 24.dp.toPx()
+                    val roundedRadius = 16.dp.toPx()
                     val path = Path().apply {
                         addRoundRect(
                             RoundRect(
                                 rect = Rect(
                                     offset = Offset(0f, 0f),
-                                    size = Size(size.width, 100.dp.toPx())
+                                    size = Size(size.width, 150.dp.toPx())
                                 ),
                                 topLeft = CornerRadius.Zero,
                                 topRight = CornerRadius.Zero,
@@ -188,12 +225,59 @@ fun TransactionHistoryContent(
                         color = TertiaryVariant,
                         alpha = topColorAlpha,
                     )
-                }.fillMaxWidth().padding(horizontal = 16.dp)) {
+                }.fillMaxWidth()) {
                     Spacer(Modifier.height(topPadding+16.dp))
                     Text(
+                        modifier = Modifier.padding(horizontal = 16.dp),
                         text = stringResource(R.string.history),
                         style = KasirMudahTypography.titleLarge
                     )
+                    Spacer(Modifier.height(16.dp))
+                    Row(
+                        Modifier.horizontalScroll(filterScrollState),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        FilterChip(
+                            modifier = Modifier.padding(start = 16.dp),
+                            text = stringResource(R.string.bookmarked),
+                            filter = TransactionFilter.FILTER_BOOKMARKED,
+                            isSelected = state.filter == TransactionFilter.FILTER_BOOKMARKED,
+                            selectedBgColor = Secondary,
+                            selectedTextColor = OnPrimary
+                        ) {
+                            event.invoke(
+                                TransactionHistoryEvent.OnFilterChange(it)
+                            )
+                        }
+                        FilterChip(
+                            text = stringResource(R.string.all),
+                            filter = TransactionFilter.FILTER_ALL,
+                            isSelected = state.filter == TransactionFilter.FILTER_ALL
+                        ) {
+                            event.invoke(
+                                TransactionHistoryEvent.OnFilterChange(it)
+                            )
+                        }
+                        FilterChip(
+                            text = stringResource(R.string.last_week),
+                            filter = TransactionFilter.FILTER_LAST_WEEK,
+                            isSelected = state.filter == TransactionFilter.FILTER_LAST_WEEK
+                        ) {
+                            event.invoke(
+                                TransactionHistoryEvent.OnFilterChange(it)
+                            )
+                        }
+                        FilterChip(
+                            modifier = Modifier.padding(end = 16.dp),
+                            text = stringResource(R.string.last_month),
+                            filter = TransactionFilter.FILTER_LAST_MONTH,
+                            isSelected = state.filter == TransactionFilter.FILTER_LAST_MONTH
+                        ) {
+                            event.invoke(
+                                TransactionHistoryEvent.OnFilterChange(it)
+                            )
+                        }
+                    }
                 }
             }
             items(

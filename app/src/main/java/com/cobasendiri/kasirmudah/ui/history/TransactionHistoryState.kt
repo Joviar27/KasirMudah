@@ -1,7 +1,7 @@
 package com.cobasendiri.kasirmudah.ui.history
 
 data class TransactionHistoryState(
-    val filter: String,
+    val filter: TransactionFilter,
     val transactionList: List<TransactionItemState>,
     val showConfirmDeleteDialog: String?
 )

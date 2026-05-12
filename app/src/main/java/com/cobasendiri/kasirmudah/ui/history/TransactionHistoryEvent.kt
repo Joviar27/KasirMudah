@@ -1,5 +1,8 @@
 package com.cobasendiri.kasirmudah.ui.history
 
+import com.cobasendiri.kasirmudah.ui.shop.ShopEvent
+import com.cobasendiri.kasirmudah.ui.shop.ShopFilter
+
 interface TransactionHistoryEvent {
 
     data class OnUpdateBookmark(
@@ -15,4 +18,8 @@ interface TransactionHistoryEvent {
     ): TransactionHistoryEvent
 
     data object OnDismissConfirmDeleteDialog: TransactionHistoryEvent
+
+    data class OnFilterChange(
+        val newFilter: TransactionFilter
+    ): TransactionHistoryEvent
 }

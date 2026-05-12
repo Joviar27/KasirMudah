@@ -30,4 +30,7 @@
 
     <!--  Transaction History Screen  -->
     <string name="history">Riwayat Pembelian</string>
+    <string name="bookmarked">Ditandai</string>
+    <string name="last_week">1 Minggu Terakhir</string>
+    <string name="last_month">1 Bulan Terakhir</string>
 </resources>
