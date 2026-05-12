@@ -299,6 +299,9 @@ fun TransactionHistoryContent(
                     }
                 )
             }
+            item {
+                Spacer(Modifier.height(innerPadding.calculateBottomPadding() + 12.dp))
+            }
         }
         if(state.showConfirmDeleteDialog != null){
             val dismissEvent = TransactionHistoryEvent.OnDismissConfirmDeleteDialog
