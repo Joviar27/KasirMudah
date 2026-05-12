@@ -110,6 +110,7 @@ fun ProfileScreenContent(
             .padding(vertical = 36.dp, horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(Modifier.height(topPadding))
             Image(
                 modifier = Modifier.size(180.dp,25.dp),
                 painter = painterResource(R.drawable.ic_kasirmudah),
