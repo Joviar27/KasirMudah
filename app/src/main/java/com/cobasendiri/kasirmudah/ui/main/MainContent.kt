@@ -70,7 +70,7 @@ fun MainContent(){
                 TransactionHistoryScreen(innerPadding)
             }
             composable<Screen.Profile>{
-                ProfileScreen()
+                ProfileScreen(innerPadding)
             }
         }
     }

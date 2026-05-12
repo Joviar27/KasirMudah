@@ -396,7 +396,7 @@ fun ShopContent(
                         .padding(vertical = 5.dp, horizontal = 10.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.setting),
+                            text = stringResource(R.string.menu_setting),
                             style = KasirMudahTypography.bodyMedium
                                 .copy(color = White)
                         )
