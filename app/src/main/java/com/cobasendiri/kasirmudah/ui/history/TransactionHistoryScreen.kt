@@ -38,6 +38,7 @@ import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.ui.component.TransactionItem
+import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 
@@ -52,6 +53,7 @@ fun TransactionHistoryScreen(
     var dummyState by remember { mutableStateOf(
         TransactionHistoryState(
             filter = "ALL",
+            showConfirmDeleteDialog = null,
             transactionList = transactionList.map {
                 TransactionItemState(
                     id = it.id,
@@ -101,6 +103,16 @@ fun TransactionHistoryScreen(
                             isBookmarked = bookmarked.contains(it.id)
                         )
                     }
+                )
+            }
+            is TransactionHistoryEvent.OnShowConfirmDeleteDialog ->{
+                dummyState = dummyState.copy(
+                    showConfirmDeleteDialog = event.transactionId
+                )
+            }
+            is TransactionHistoryEvent.OnDismissConfirmDeleteDialog -> {
+                dummyState = dummyState.copy(
+                    showConfirmDeleteDialog = null
                 )
             }
         }
@@ -196,10 +208,26 @@ fun TransactionHistoryContent(
                         event.invoke(TransactionHistoryEvent.OnUpdateBookmark(it))
                     },
                     onDelete = {
-                        event.invoke(TransactionHistoryEvent.OnDelete(it))
+                        event.invoke(TransactionHistoryEvent.OnShowConfirmDeleteDialog(it))
                     }
                 )
             }
+        }
+        if(state.showConfirmDeleteDialog != null){
+            val dismissEvent = TransactionHistoryEvent.OnDismissConfirmDeleteDialog
+            val itemId = state.showConfirmDeleteDialog
+            NegativeConfirmDialog(
+                title = stringResource(R.string.delete_transaction_title),
+                body = stringResource(R.string.delete_transaction_body),
+                cancelButton = stringResource(R.string.cancel),
+                confirmButton = stringResource(R.string.delete),
+                onDismiss = { event.invoke(dismissEvent) },
+                onCancel = { event.invoke(dismissEvent) },
+                onConfirm = {
+                    event.invoke(TransactionHistoryEvent.OnDelete(itemId))
+                    event.invoke(dismissEvent)
+                }
+            )
         }
     }
 }
