@@ -31,14 +31,12 @@ import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.White
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.ui.component.popup.ActionPopup
+import com.cobasendiri.kasirmudah.ui.history.TransactionItemState
 
 @Composable
 fun TransactionItem(
     modifier: Modifier = Modifier,
-    id: String,
-    name: String,
-    createdAt: String,
-    isBookmarked: Boolean,
+    state: TransactionItemState,
     onBookmark: (String) -> Unit,
     onDelete: (String) -> Unit
 ) {
@@ -58,17 +56,17 @@ fun TransactionItem(
     ) {
         Column {
             Text(
-                text = name,
+                text = state.name,
                 style = KasirMudahTypography.titleMedium
                     .copy(fontWeight = FontWeight.Bold)
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                createdAt,
+                state.createdAt,
                 style = KasirMudahTypography.bodyMedium
             )
         }
-        if(isBookmarked){
+        if(state.isBookmarked){
             Image(
                 painter = painterResource(R.drawable.ic_bookmarked_27),
                 contentDescription = null
@@ -78,7 +76,7 @@ fun TransactionItem(
             ActionPopup(
                 firsItem = Pair(
                     painterResource(R.drawable.ic_bookmark_22),
-                    stringResource(if(isBookmarked) R.string.cancel else R.string.bookmark)
+                    stringResource(if(state.isBookmarked) R.string.cancel else R.string.bookmark)
                 ),
                 secondItem = Pair(
                     painterResource(R.drawable.ic_delete_22),
@@ -91,10 +89,10 @@ fun TransactionItem(
                     showActionPopup = false
                 },
                 onFirstItemClick = {
-                    onBookmark.invoke(id)
+                    onBookmark.invoke(state.id)
                 },
                 onSecondItemClick = {
-                    onDelete.invoke(id)
+                    onDelete.invoke(state.id)
                 }
             )
         }
@@ -105,10 +103,12 @@ fun TransactionItem(
 @Composable
 fun TransactionItemPrev() {
     TransactionItem(
-        id = "uefwofgew",
-        name = "Transaksi 347295793wegwyf",
-        createdAt = "12 Agustus 2026 - 12:53:01",
-        isBookmarked = true,
+        state = TransactionItemState(
+            id = "uefwofgew",
+            name = "Transaksi 347295793wegwyf",
+            createdAt = "12 Agustus 2026 - 12:53:01",
+            isBookmarked = true
+        ),
         onDelete = {},
         onBookmark = {}
     )
