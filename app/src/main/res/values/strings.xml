@@ -4,7 +4,7 @@
     <!--  Shop Screen  -->
     <string name="total_item">Total Barang di Keranjang</string>
     <string name="done">Selesai</string>
-    <string name="setting">Pengaturan</string>
+    <string name="menu_setting">Pengaturan</string>
     <string name="search">Cari Barang</string>
     <string name="delete">Hapus</string>
     <string name="all">Semua</string>
@@ -33,4 +33,20 @@
     <string name="bookmarked">Ditandai</string>
     <string name="last_week">1 Minggu Terakhir</string>
     <string name="last_month">1 Bulan Terakhir</string>
+
+    <!--  Profile Screen  -->
+    <string name="menu_edit_profile">Edit Profil Toko</string>
+    <string name="menu_about_us">Tentang Kami</string>
+    <string name="menu_sync_data">Sinkronisasi Data</string>
+
+    <!--  Edit Profile Dialog  -->
+    <string name="edit_shop_profile">Edit Profil Toko</string>
+    <string name="shop_name">Nama toko</string>
+
+    <string name="default_shop_name">Tokomu</string>
+
+    <!-- Unavailable dialog   -->
+    <string name="close">Tutup</string>
+    <string name="unavailable_title">Belum Tersedia</string>
+    <string name="unavailable_body">Fitur ini belum tersedia pada versi ini, pantau terus versi terbaru aplikasi nya!</string>
 </resources>

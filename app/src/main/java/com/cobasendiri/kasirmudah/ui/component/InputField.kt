@@ -53,7 +53,9 @@ fun InputField(
     onValueChange: (String) -> Unit
 ) {
     var isFocused by remember { mutableStateOf(false) }
-    var searchQuery by remember { mutableStateOf(initialValue) }
+    var searchQuery by remember(initialValue) {
+        mutableStateOf(initialValue)
+    }
 
     val borderColor by animateColorAsState(
         targetValue = if (isFocused) OnPrimaryVariant else Tertiary,
