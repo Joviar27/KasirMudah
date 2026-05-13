@@ -37,6 +37,7 @@ import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.model.ShopProfile
 import com.cobasendiri.kasirmudah.ui.component.ProfileMenuItem
 import com.cobasendiri.kasirmudah.ui.component.dialog.EditProfileDialog
+import com.cobasendiri.kasirmudah.ui.component.dialog.InformationConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.Primary
@@ -85,10 +86,13 @@ fun ProfileScreen(
                 )
             }
             is ProfileEvent.OnShowUnavailableDialog ->{
-
+                dummyState = dummyState.copy(
+                    showUnavailableDialog = true
+                )
             }
             is ProfileEvent.OnDismissUnavailableDialog ->{
-
+                dummyState = dummyState.copy(
+                    showUnavailableDialog = false                )
             }
             is ProfileEvent.OnLaunchImagePicker ->{
                 imageLauncher.launch("image/*")
@@ -201,6 +205,16 @@ fun ProfileScreenContent(
                     event.invoke(ProfileEvent.OnEditProfile(it))
                     event.invoke(dismissEditDialogEvent)
                 }
+            )
+        }
+        if(state.showUnavailableDialog){
+            val dismissUnavailableDialog = ProfileEvent.OnDismissUnavailableDialog
+            InformationConfirmDialog(
+                title = stringResource(R.string.unavailable_title),
+                body = stringResource(R.string.unavailable_body),
+                confirmButton = stringResource(R.string.close),
+                onDismiss = { event.invoke(dismissUnavailableDialog) },
+                onConfirm = { event.invoke(dismissUnavailableDialog) }
             )
         }
     }

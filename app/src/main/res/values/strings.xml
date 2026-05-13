@@ -44,4 +44,9 @@
     <string name="shop_name">Nama toko</string>
 
     <string name="default_shop_name">Tokomu</string>
+
+    <!-- Unavailable dialog   -->
+    <string name="close">Tutup</string>
+    <string name="unavailable_title">Belum Tersedia</string>
+    <string name="unavailable_body">Fitur ini belum tersedia pada versi ini, pantau terus versi terbaru aplikasi nya!</string>
 </resources>
