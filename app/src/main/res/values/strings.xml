@@ -39,4 +39,9 @@
     <string name="menu_about_us">Tentang Kami</string>
     <string name="menu_sync_data">Sinkronisasi Data</string>
 
+    <!--  Edit Profile Dialog  -->
+    <string name="edit_shop_profile">Edit Profil Toko</string>
+    <string name="shop_name">Nama toko</string>
+
+    <string name="default_shop_name">Tokomu</string>
 </resources>

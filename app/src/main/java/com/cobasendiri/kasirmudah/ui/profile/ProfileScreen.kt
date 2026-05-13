@@ -1,5 +1,7 @@
 package com.cobasendiri.kasirmudah.ui.profile
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +27,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +36,7 @@ import coil.compose.AsyncImage
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.model.ShopProfile
 import com.cobasendiri.kasirmudah.ui.component.ProfileMenuItem
+import com.cobasendiri.kasirmudah.ui.component.dialog.EditProfileDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.Primary
@@ -43,7 +48,7 @@ fun ProfileScreen(
     innerPadding: PaddingValues
 ){
 
-    val dummyState by remember { mutableStateOf(
+    var dummyState by remember { mutableStateOf(
         ProfileState(
             shopProfile = ShopProfile(
                 shopName = "Toko Madura A",
@@ -54,16 +59,30 @@ fun ProfileScreen(
         )
     ) }
 
+    val imageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        dummyState = dummyState.copy(
+            showEditProfileDialog = dummyState.showEditProfileDialog?.copy(
+                shopImage = uri?.toString()
+            )
+        )
+    }
+
     ProfileScreenContent(
         innerPadding,
         dummyState
     ){ event ->
         when(event){
             is ProfileEvent.OnShowEditProfileDialog ->{
-
+                dummyState = dummyState.copy(
+                    showEditProfileDialog = event.shopProfile
+                )
             }
             is ProfileEvent.OnDismissEditProfileDialog ->{
-
+                dummyState = dummyState.copy(
+                    showEditProfileDialog = null
+                )
             }
             is ProfileEvent.OnShowUnavailableDialog ->{
 
@@ -71,8 +90,13 @@ fun ProfileScreen(
             is ProfileEvent.OnDismissUnavailableDialog ->{
 
             }
+            is ProfileEvent.OnLaunchImagePicker ->{
+                imageLauncher.launch("image/*")
+            }
             is ProfileEvent.OnEditProfile ->{
-
+                dummyState = dummyState.copy(
+                    shopProfile = event.newShopProfile
+                )
             }
         }
     }
@@ -120,18 +144,18 @@ fun ProfileScreenContent(
             )
             Spacer(Modifier.height(24.dp))
             AsyncImage(
-                modifier = Modifier
+                modifier = Modifier.size(130.dp)
                     .clip(CircleShape)
-                    .background(White)
-                    .padding(24.dp),
+                    .background(White),
                 model = state.shopProfile.shopImage,
                 contentDescription = null,
-                fallback = painterResource(R.drawable.ic_person_85),
-                error = painterResource(R.drawable.ic_person_85)
+                contentScale = ContentScale.Crop,
+                fallback = painterResource(R.drawable.ic_person_padded),
+                error = painterResource(R.drawable.ic_person_padded)
             )
             Spacer(Modifier.height(16.dp))
             Text(
-                text = state.shopProfile.shopName,
+                text = state.shopProfile.shopName ?: stringResource(R.string.default_shop_name),
                 style = KasirMudahTypography.titleLarge
             )
             Spacer(Modifier.height(24.dp))
@@ -163,6 +187,21 @@ fun ProfileScreenContent(
             ) {
                 event.invoke(ProfileEvent.OnShowUnavailableDialog)
             }
+        }
+        if(state.showEditProfileDialog != null){
+            val dismissEditDialogEvent = ProfileEvent.OnDismissEditProfileDialog
+            EditProfileDialog(
+                state.showEditProfileDialog,
+                onPickImage = {
+                    event.invoke(ProfileEvent.OnLaunchImagePicker)
+                },
+                onDismiss = { event.invoke(dismissEditDialogEvent) },
+                onCancel = { event.invoke(dismissEditDialogEvent) },
+                onSave = {
+                    event.invoke(ProfileEvent.OnEditProfile(it))
+                    event.invoke(dismissEditDialogEvent)
+                }
+            )
         }
     }
 }

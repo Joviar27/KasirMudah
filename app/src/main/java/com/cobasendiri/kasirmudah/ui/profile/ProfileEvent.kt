@@ -10,8 +10,10 @@ interface ProfileEvent {
 
     data object OnDismissEditProfileDialog: ProfileEvent
 
+    data object OnLaunchImagePicker: ProfileEvent
+
     data class OnEditProfile(
-        val shopProfile: ShopProfile
+        val newShopProfile: ShopProfile
     ): ProfileEvent
 
     data object OnShowUnavailableDialog: ProfileEvent
