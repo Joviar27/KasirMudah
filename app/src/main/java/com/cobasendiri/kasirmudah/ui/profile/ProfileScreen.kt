@@ -28,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.model.ShopProfile
 import com.cobasendiri.kasirmudah.ui.component.ProfileMenuItem
@@ -46,7 +47,7 @@ fun ProfileScreen(
         ProfileState(
             shopProfile = ShopProfile(
                 shopName = "Toko Madura A",
-                shopImage = "url to load image"
+                shopImage = null
             ),
             showEditProfileDialog = null,
             showUnavailableDialog = false
@@ -118,13 +119,15 @@ fun ProfileScreenContent(
                 alignment = Alignment.CenterStart
             )
             Spacer(Modifier.height(24.dp))
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .clip(CircleShape)
                     .background(White)
                     .padding(24.dp),
-                painter = painterResource(R.drawable.ic_person_85),
-                contentDescription = null
+                model = state.shopProfile.shopImage,
+                contentDescription = null,
+                fallback = painterResource(R.drawable.ic_person_85),
+                error = painterResource(R.drawable.ic_person_85)
             )
             Spacer(Modifier.height(16.dp))
             Text(
@@ -173,7 +176,7 @@ fun ProfileScreenPrev(){
             state = ProfileState(
                 ShopProfile(
                     "Toko Madura A",
-                    "url to load image"
+                    null
                 ),
                 showEditProfileDialog = null,
                 showUnavailableDialog = false
