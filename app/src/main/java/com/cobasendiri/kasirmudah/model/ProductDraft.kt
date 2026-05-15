@@ -2,7 +2,7 @@ package com.cobasendiri.kasirmudah.model
 
 import androidx.compose.ui.graphics.Color
 
-data class ShopDraft(
+data class ProductDraft(
     val id: String,
 
     val name: String,

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,12 +29,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.R
-import com.cobasendiri.kasirmudah.model.Shop
-import com.cobasendiri.kasirmudah.model.ShopDraft
+import com.cobasendiri.kasirmudah.model.Product
+import com.cobasendiri.kasirmudah.model.ProductDraft
 import com.cobasendiri.kasirmudah.ui.component.InputField
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
@@ -46,18 +43,18 @@ import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.White
 
 @Composable
-fun ShopItemDetailDialog(
-    shop: Shop? = null,
+fun ProductDetailDialog(
+    product: Product? = null,
     onDismiss: () -> Unit,
     onCancel: () -> Unit,
-    onSave: (ShopDraft) -> Unit
+    onSave: (ProductDraft) -> Unit
 ) {
-    var shopDraft by remember { mutableStateOf(
-        ShopDraft(
-            id = shop?.id ?: "",
-            name = shop?.name ?: "",
-            price = shop?.price?.toString() ?: "",
-            colorCode = shop?.colorCode ?: Tertiary
+    var productDraft by remember { mutableStateOf(
+        ProductDraft(
+            id = product?.id ?: "",
+            name = product?.name ?: "",
+            price = product?.price?.toString() ?: "",
+            colorCode = product?.colorCode ?: Tertiary
         )
     )}
 
@@ -70,13 +67,13 @@ fun ShopItemDetailDialog(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                ColorCodeDetail(shopDraft.colorCode) {
+                ColorCodeDetail(productDraft.colorCode) {
                     showColorCodePopup = true
                 }
                 Spacer(Modifier.width(12.dp))
                 Text(
                     text = stringResource(
-                        if(shopDraft.id.isEmpty()) R.string.add_item
+                        if(productDraft.id.isEmpty()) R.string.add_item
                         else R.string.edit_item
                     ),
                     style = KasirMudahTypography.headlineSmall
@@ -89,7 +86,7 @@ fun ShopItemDetailDialog(
                     ) { newColor ->
                         showColorCodePopup = false
                         newColor?.let {
-                            shopDraft = shopDraft.copy(colorCode = it)
+                            productDraft = productDraft.copy(colorCode = it)
                         }
                     }
                 }
@@ -97,19 +94,19 @@ fun ShopItemDetailDialog(
             Spacer(Modifier.height(24.dp))
             InputField(
                 label = stringResource(R.string.item_name),
-                initialValue = shopDraft.name,
+                initialValue = productDraft.name,
                 maxCharacter = 35
             ) {
-                shopDraft = shopDraft.copy(name = it)
+                productDraft = productDraft.copy(name = it)
             }
             Spacer(Modifier.height(16.dp))
             InputField(
                 label = stringResource(R.string.item_price),
-                initialValue = shopDraft.price,
+                initialValue = productDraft.price,
                 currencyMode = true,
                 maxCharacter = 15
             ) {
-                shopDraft = shopDraft.copy(price = it)
+                productDraft = productDraft.copy(price = it)
             }
             Spacer(Modifier.height(24.dp))
             Row {
@@ -124,7 +121,7 @@ fun ShopItemDetailDialog(
                     modifier = Modifier.width(140.dp),
                     text = stringResource(R.string.save)
                 ) {
-                    onSave.invoke(shopDraft)
+                    onSave.invoke(productDraft)
                 }
             }
         }
@@ -162,8 +159,8 @@ fun ColorCodeDetail(
 @Composable
 fun ItemDetailPrev() {
     Column(Modifier.fillMaxWidth()) {
-        ShopItemDetailDialog(
-            shop = Shop(
+        ProductDetailDialog(
+            product = Product(
                 id = "1",
                 name = "Barang Pertama",
                 price = 15000L,
@@ -179,7 +176,7 @@ fun ItemDetailPrev() {
 @Preview
 @Composable
 fun ItemDetailPrev2() {
-    ShopItemDetailDialog(
+    ProductDetailDialog(
         onDismiss = {},
         onCancel = {}
     ){}

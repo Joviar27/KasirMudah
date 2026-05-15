@@ -1,6 +1,6 @@
 package com.cobasendiri.kasirmudah.model
 
-data class ShopAdded(
-    val id: String,
+data class Cart(
+    val productId: String,
     var count: Int,
 )
