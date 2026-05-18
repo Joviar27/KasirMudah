@@ -1,5 +1,6 @@
 package com.cobasendiri.kasirmudah.data
 
+import com.cobasendiri.kasirmudah.data.room.CartDao
 import com.cobasendiri.kasirmudah.data.room.ProductDao
 import com.cobasendiri.kasirmudah.model.Product
 import com.cobasendiri.kasirmudah.model.ProductDraft
@@ -14,6 +15,18 @@ import kotlinx.coroutines.flow.map
 class ProductRepository(
     private val productDao: ProductDao
 ) {
+
+    companion object {
+        @Volatile
+        private var instance: ProductRepository? = null
+
+        fun getInstance(productDao: ProductDao): ProductRepository {
+            return instance ?: synchronized(this) {
+                instance ?: ProductRepository(productDao)
+                    .also { instance = it }
+            }
+        }
+    }
 
     fun getAllProducts(): Flow<Result<List<ProductInfo>>> {
         return productDao.getAllProducts()

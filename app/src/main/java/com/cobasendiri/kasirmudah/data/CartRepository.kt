@@ -11,8 +11,19 @@ import kotlinx.coroutines.flow.map
 class CartRepository(
     private val cartDao: CartDao
 ) {
+    companion object {
+        @Volatile
+        private var instance: CartRepository? = null
 
-    fun getAllCardProduct(): Flow<Result<List<ProductInfo>>>{
+        fun getInstance(cartDao: CartDao): CartRepository {
+            return instance ?: synchronized(this) {
+                instance ?: CartRepository(cartDao)
+                    .also { instance = it }
+            }
+        }
+    }
+
+    fun getAllCartProduct(): Flow<Result<List<ProductInfo>>>{
         return cartDao.getAllCartProducts()
             .map { it.mapListToDomain() }
             .mapCatchFlow()
