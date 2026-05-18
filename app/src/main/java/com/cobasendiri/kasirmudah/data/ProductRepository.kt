@@ -1,29 +1,42 @@
 package com.cobasendiri.kasirmudah.data
 
-import android.util.Log
-import com.cobasendiri.kasirmudah.data.room.CartDao
 import com.cobasendiri.kasirmudah.data.room.ProductDao
+import com.cobasendiri.kasirmudah.model.Product
+import com.cobasendiri.kasirmudah.model.ProductDraft
 import com.cobasendiri.kasirmudah.model.ProductInfo
-import com.cobasendiri.kasirmudah.util.DataMapper.mapToDomain
+import com.cobasendiri.kasirmudah.util.DataMapper.mapListToDomain
+import com.cobasendiri.kasirmudah.util.DataMapper.mapToEntity
+import com.cobasendiri.kasirmudah.util.mapCatchFlow
+import com.cobasendiri.kasirmudah.util.runCatchSuspending
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 class ProductRepository(
-    private val productDao: ProductDao,
-    private val cartDao: CartDao
+    private val productDao: ProductDao
 ) {
 
     fun getAllProducts(): Flow<Result<List<ProductInfo>>> {
         return productDao.getAllProducts()
-            .map { productResult ->
-                val productInfoList = productResult.map {
-                    it.mapToDomain()
-                }
-                Result.Success(productInfoList)
-            }.catch {
-                Log.e("${this@ProductRepository.javaClass.simpleName}","message: ${it.message}")
-                Result.Error(it.message.toString())
-            }
+            .map { it.mapListToDomain() }
+            .mapCatchFlow()
+    }
+
+    suspend fun addNewProduct(newProduct: Product): Result<Unit>{
+        return runCatchSuspending {
+            productDao.addProduct(newProduct.mapToEntity())
+        }
+    }
+
+    suspend fun updateProduct(productDraft: ProductDraft): Result<Unit>{
+        return runCatchSuspending {
+            productDao.updateProduct(productDraft.mapToEntity())
+        }
+    }
+
+    suspend fun deleteProduct(productId: String): Result<Unit>{
+        return runCatchSuspending {
+            productDao.deleteProduct(productId)
+        }
     }
 }
+
