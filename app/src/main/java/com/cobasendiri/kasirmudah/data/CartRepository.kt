@@ -4,13 +4,17 @@ import com.cobasendiri.kasirmudah.data.room.CartDao
 import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import com.cobasendiri.kasirmudah.domain.repository.ICartRepository
 import com.cobasendiri.kasirmudah.util.DataMapper.mapListToDomain
-import com.cobasendiri.kasirmudah.util.mapCatchFlow
-import com.cobasendiri.kasirmudah.util.runCatchSuspending
+import com.cobasendiri.kasirmudah.util.mapExceptionFlow
+import com.cobasendiri.kasirmudah.util.runMapExceptionSuspending
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
 class CartRepository(
-    private val cartDao: CartDao
+    private val cartDao: CartDao,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ): ICartRepository {
     companion object {
         @Volatile
@@ -24,24 +28,30 @@ class CartRepository(
         }
     }
 
-    override fun getAllCartProduct(): Flow<Result<List<ProductInfo>>>{
+    override fun getAllCartProduct(): Flow<List<ProductInfo>>{
         return cartDao.getAllCartProducts()
-            .map { it.mapListToDomain() }
-            .mapCatchFlow()
+            .mapExceptionFlow{
+                it.mapListToDomain()
+            }.flowOn(ioDispatcher)
     }
 
-    override fun getTotalCartAmount(): Flow<Result<Double?>>{
-        return cartDao.getTotalCartAmount().mapCatchFlow()
+    override fun getTotalCartAmount(): Flow<Double?>{
+        return cartDao.getTotalCartAmount().mapExceptionFlow()
+            .flowOn(ioDispatcher)
     }
 
-    override suspend fun addOrIncrementProduct(productId: String): Result<Unit>{
-        return runCatchSuspending {
+    override suspend fun addOrIncrementProduct(
+        productId: String
+    ) = withContext(ioDispatcher) {
+        runMapExceptionSuspending {
             cartDao.addOrIncrementProduct(productId)
         }
     }
 
-    override suspend fun decrementProduct(productId: String): Result<Unit>{
-        return runCatchSuspending {
+    override suspend fun decrementProduct(
+        productId: String
+    ) = withContext(ioDispatcher) {
+        runMapExceptionSuspending {
             cartDao.decrementProduct(productId)
         }
     }

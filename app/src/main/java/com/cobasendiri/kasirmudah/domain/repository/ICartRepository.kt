@@ -1,16 +1,15 @@
 package com.cobasendiri.kasirmudah.domain.repository
 
-import com.cobasendiri.kasirmudah.data.Result
 import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import kotlinx.coroutines.flow.Flow
 
 interface ICartRepository {
 
-    fun getAllCartProduct(): Flow<Result<List<ProductInfo>>>
+    fun getAllCartProduct(): Flow<List<ProductInfo>>
 
-    fun getTotalCartAmount(): Flow<Result<Double?>>
+    fun getTotalCartAmount(): Flow<Double?>
 
-    suspend fun addOrIncrementProduct(productId: String): Result<Unit>
+    suspend fun addOrIncrementProduct(productId: String)
 
-    suspend fun decrementProduct(productId: String): Result<Unit>
+    suspend fun decrementProduct(productId: String)
 }

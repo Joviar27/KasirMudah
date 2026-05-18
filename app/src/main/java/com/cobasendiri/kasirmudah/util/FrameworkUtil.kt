@@ -1,24 +1,42 @@
 package com.cobasendiri.kasirmudah.util
 
-import com.cobasendiri.kasirmudah.data.Result
+import android.database.sqlite.SQLiteConstraintException
+import android.database.sqlite.SQLiteDiskIOException
+import com.cobasendiri.kasirmudah.domain.exception.DomainException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import java.sql.SQLException
 
-suspend fun <T> runCatchSuspending(
+suspend fun <T> runMapExceptionSuspending(
     block: suspend () -> T
-): Result<T> {
+): T {
     return try {
-        Result.Success(block())
+        block()
     }catch (e: Exception){
-        Result.Error(e.message.toString())
+        throw e.toDomainException()
     }
 }
 
-fun <T>Flow<T>.mapCatchFlow(): Flow<Result<T>>{
+fun <U,T>Flow<U>.mapExceptionFlow(
+    dataMapping: (U) -> T
+): Flow<T>{
     return this.map{
-        Result.Success(it)
+        dataMapping(it)
     }.catch {
-        Result.Error(it.message.toString())
+        throw it.toDomainException()
+    }
+}
+
+fun <T> Flow<T>.mapExceptionFlow(): Flow<T> {
+    return this.catch { throw it.toDomainException() }
+}
+
+fun Throwable.toDomainException(): DomainException{
+    return when(this){
+        is SQLiteConstraintException -> DomainException.DataAlreadyExist
+        is SQLiteDiskIOException -> DomainException.StorageFullError
+        is SQLException -> DomainException.DatabaseError
+        else -> DomainException.UnknownError(this.message)
     }
 }

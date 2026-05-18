@@ -7,13 +7,17 @@ import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import com.cobasendiri.kasirmudah.domain.repository.IProductRepository
 import com.cobasendiri.kasirmudah.util.DataMapper.mapListToDomain
 import com.cobasendiri.kasirmudah.util.DataMapper.mapToEntity
-import com.cobasendiri.kasirmudah.util.mapCatchFlow
-import com.cobasendiri.kasirmudah.util.runCatchSuspending
+import com.cobasendiri.kasirmudah.util.mapExceptionFlow
+import com.cobasendiri.kasirmudah.util.runMapExceptionSuspending
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
 class ProductRepository(
-    private val productDao: ProductDao
+    private val productDao: ProductDao,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ): IProductRepository {
 
     companion object {
@@ -28,26 +32,33 @@ class ProductRepository(
         }
     }
 
-    override fun getAllProducts(): Flow<Result<List<ProductInfo>>> {
+    override fun getAllProducts(): Flow<List<ProductInfo>> {
         return productDao.getAllProducts()
-            .map { it.mapListToDomain() }
-            .mapCatchFlow()
+            .mapExceptionFlow {
+                it.mapListToDomain()
+            }.flowOn(ioDispatcher)
     }
 
-    override suspend fun addNewProduct(newProduct: Product): Result<Unit>{
-        return runCatchSuspending {
+    override suspend fun addNewProduct(
+        newProduct: Product
+    ) = withContext(ioDispatcher){
+        runMapExceptionSuspending {
             productDao.addProduct(newProduct.mapToEntity())
         }
     }
 
-    override suspend fun updateProduct(productDraft: ProductDraft): Result<Unit>{
-        return runCatchSuspending {
+    override suspend fun updateProduct(
+        productDraft: ProductDraft
+    ) = withContext(ioDispatcher){
+        runMapExceptionSuspending {
             productDao.updateProduct(productDraft.mapToEntity())
         }
     }
 
-    override suspend fun deleteProduct(productId: String): Result<Unit>{
-        return runCatchSuspending {
+    override suspend fun deleteProduct(
+        productId: String
+    ) = withContext(ioDispatcher) {
+        runMapExceptionSuspending {
             productDao.deleteProduct(productId)
         }
     }
