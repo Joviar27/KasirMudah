@@ -1,8 +1,8 @@
 package com.cobasendiri.kasirmudah.ui.shop
 
 import androidx.compose.ui.graphics.Color
-import com.cobasendiri.kasirmudah.model.Product
-import com.cobasendiri.kasirmudah.model.ProductDraft
+import com.cobasendiri.kasirmudah.domain.model.Product
+import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 
 interface ShopEvent {
     data class OnSearch(val searchQuery: String): ShopEvent

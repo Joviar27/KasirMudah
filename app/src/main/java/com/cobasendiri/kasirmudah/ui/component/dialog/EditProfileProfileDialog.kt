@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.R
-import com.cobasendiri.kasirmudah.model.ShopProfile
+import com.cobasendiri.kasirmudah.domain.model.ShopProfile
 import com.cobasendiri.kasirmudah.ui.component.InputField
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton

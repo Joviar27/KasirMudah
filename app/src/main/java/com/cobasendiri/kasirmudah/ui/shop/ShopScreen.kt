@@ -50,8 +50,8 @@ import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
-import com.cobasendiri.kasirmudah.model.Product
-import com.cobasendiri.kasirmudah.model.Cart
+import com.cobasendiri.kasirmudah.domain.model.Product
+import com.cobasendiri.kasirmudah.domain.model.Cart
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
 import com.cobasendiri.kasirmudah.ui.component.FloatingAction
 import com.cobasendiri.kasirmudah.ui.component.ProductItem

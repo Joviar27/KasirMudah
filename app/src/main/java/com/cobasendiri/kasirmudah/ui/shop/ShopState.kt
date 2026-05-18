@@ -1,6 +1,6 @@
 package com.cobasendiri.kasirmudah.ui.shop
 
-import com.cobasendiri.kasirmudah.model.Product
+import com.cobasendiri.kasirmudah.domain.model.Product
 
 data class ShopState(
     val shopName: String,

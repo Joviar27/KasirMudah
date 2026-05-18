@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.R
-import com.cobasendiri.kasirmudah.model.Product
-import com.cobasendiri.kasirmudah.model.ProductDraft
+import com.cobasendiri.kasirmudah.domain.model.Product
+import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 import com.cobasendiri.kasirmudah.ui.component.InputField
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton

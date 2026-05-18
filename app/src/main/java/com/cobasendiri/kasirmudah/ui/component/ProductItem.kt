@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.R
-import com.cobasendiri.kasirmudah.model.Product
+import com.cobasendiri.kasirmudah.domain.model.Product
 import com.cobasendiri.kasirmudah.ui.component.popup.ActionPopup
 import com.cobasendiri.kasirmudah.ui.component.popup.ColorCodePopup
 import com.cobasendiri.kasirmudah.ui.shop.ProductItemState

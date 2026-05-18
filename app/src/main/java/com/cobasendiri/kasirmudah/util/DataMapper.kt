@@ -2,9 +2,9 @@ package com.cobasendiri.kasirmudah.util
 
 import com.cobasendiri.kasirmudah.data.entity.ProductEntity
 import com.cobasendiri.kasirmudah.data.result.ProductResult
-import com.cobasendiri.kasirmudah.model.Product
-import com.cobasendiri.kasirmudah.model.ProductDraft
-import com.cobasendiri.kasirmudah.model.ProductInfo
+import com.cobasendiri.kasirmudah.domain.model.Product
+import com.cobasendiri.kasirmudah.domain.model.ProductDraft
+import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 
 object DataMapper {
 

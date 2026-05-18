@@ -1,13 +1,13 @@
-package com.cobasendiri.kasirmudah.model
+package com.cobasendiri.kasirmudah.domain.model
 
 import androidx.compose.ui.graphics.Color
 
-data class ProductDraft(
+data class Product(
     val id: String,
 
     val name: String,
 
-    val price: String,
+    val price: Long,
 
     val colorCode: Color
 )
