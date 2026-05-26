@@ -49,4 +49,9 @@
     <string name="close">Tutup</string>
     <string name="unavailable_title">Belum Tersedia</string>
     <string name="unavailable_body">Fitur ini belum tersedia pada versi ini, pantau terus versi terbaru aplikasi nya!</string>
+
+    <!--  Error message  -->
+    <string name="error_general">Terjadi kesalahan sistem</string>
+    <string name="error_database">Gagal melakukan perubahan data</string>
+    <string name="error_full_storage">Penyimpanan perangkat penuh</string>
 </resources>

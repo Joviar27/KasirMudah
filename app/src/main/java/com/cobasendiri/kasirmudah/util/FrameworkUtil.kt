@@ -1,12 +1,9 @@
 package com.cobasendiri.kasirmudah.util
 
-import android.database.sqlite.SQLiteConstraintException
-import android.database.sqlite.SQLiteDiskIOException
-import com.cobasendiri.kasirmudah.domain.exception.DomainException
+import com.cobasendiri.kasirmudah.domain.asKasirMudahException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import java.sql.SQLException
 
 suspend fun <T> runMapExceptionSuspending(
     block: suspend () -> T
@@ -14,7 +11,7 @@ suspend fun <T> runMapExceptionSuspending(
     return try {
         block()
     }catch (e: Exception){
-        throw e.toDomainException()
+        throw e.asKasirMudahException()
     }
 }
 
@@ -24,19 +21,10 @@ fun <U,T>Flow<U>.mapExceptionFlow(
     return this.map{
         dataMapping(it)
     }.catch {
-        throw it.toDomainException()
+        throw it.asKasirMudahException()
     }
 }
 
 fun <T> Flow<T>.mapExceptionFlow(): Flow<T> {
-    return this.catch { throw it.toDomainException() }
-}
-
-fun Throwable.toDomainException(): DomainException{
-    return when(this){
-        is SQLiteConstraintException -> DomainException.DataAlreadyExist
-        is SQLiteDiskIOException -> DomainException.StorageFullError
-        is SQLException -> DomainException.DatabaseError
-        else -> DomainException.UnknownError(this.message)
-    }
+    return this.catch { throw it.asKasirMudahException() }
 }
