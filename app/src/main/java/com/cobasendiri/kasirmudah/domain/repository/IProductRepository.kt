@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface IProductRepository {
 
-    fun getAllProducts(): Flow<List<ProductInfo>>
+    fun getAllProducts(searchQuery: String): Flow<List<ProductInfo>>
 
     suspend fun addNewProduct(newProduct: Product)
 

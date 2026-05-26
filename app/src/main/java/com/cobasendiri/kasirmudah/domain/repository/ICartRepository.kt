@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ICartRepository {
 
-    fun getAllCartProduct(): Flow<List<ProductInfo>>
+    fun getAllCartProduct(searchQuery: String): Flow<List<ProductInfo>>
 
     fun getTotalCartAmount(): Flow<Double?>
 

@@ -32,10 +32,15 @@ class ProductRepository(
         }
     }
 
-    override fun getAllProducts(): Flow<List<ProductInfo>> {
+    override fun getAllProducts(seachQuery: String): Flow<List<ProductInfo>> {
         return productDao.getAllProducts()
-            .mapExceptionFlow {
-                it.mapListToDomain()
+            .mapExceptionFlow { products ->
+                val filtered = if(seachQuery.isNotEmpty()){
+                    products.filter { it.productEntity.name.contains(seachQuery, true) }
+                }else {
+                    products
+                }
+                filtered.mapListToDomain()
             }.flowOn(ioDispatcher)
     }
 
