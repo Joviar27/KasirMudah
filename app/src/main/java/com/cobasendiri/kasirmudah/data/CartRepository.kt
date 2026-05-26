@@ -55,4 +55,11 @@ class CartRepository(
             cartDao.decrementProduct(productId)
         }
     }
+
+    override suspend fun clearCart() =
+        withContext(ioDispatcher) {
+            runMapExceptionSuspending {
+                cartDao.deleteAllCart()
+            }
+        }
 }

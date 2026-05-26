@@ -42,4 +42,7 @@ interface CartDao {
         INNER JOIN carts AS C ON p.id = c.productId
     """)
     fun getTotalCartAmount(): Flow<Double?>
+
+    @Query("DELETE FROM carts")
+    suspend fun deleteAllCart()
 }

@@ -12,4 +12,6 @@ interface ICartRepository {
     suspend fun addOrIncrementProduct(productId: String)
 
     suspend fun decrementProduct(productId: String)
+
+    suspend fun clearCart()
 }
