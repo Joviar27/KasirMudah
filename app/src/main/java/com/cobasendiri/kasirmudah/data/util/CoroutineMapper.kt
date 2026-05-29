@@ -18,10 +18,16 @@ object CoroutineMapper{
 
     fun <U,T>Flow<U>.mapExceptionFlow(
         dataMapping: (U) -> T
-    ): Flow<T>{
+    ): Flow<T?>{
         return this.map{
-            dataMapping(it)
+            try {
+                dataMapping(it)
+            }catch (e: Throwable){
+                //Catch operation logic, stream continue
+                null
+            }
         }.catch {
+            //Catch data source error, stream cancelled
             throw it.asKasirMudahException()
         }
     }

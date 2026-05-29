@@ -28,7 +28,7 @@ class CartRepository(
         }
     }
 
-    override fun getAllCartProduct(seachQuery: String): Flow<List<ProductInfo>>{
+    override fun getAllCartProduct(seachQuery: String): Flow<List<ProductInfo>?>{
         return cartDao.getAllCartProducts()
             .mapExceptionFlow{ products ->
                 val filtered = if(seachQuery.isNotEmpty()){

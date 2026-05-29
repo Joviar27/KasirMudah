@@ -1,6 +1,7 @@
 package com.cobasendiri.kasirmudah.domain.usecase
 
 import com.cobasendiri.kasirmudah.domain.Result
+import com.cobasendiri.kasirmudah.domain.exception.KasirMudahException
 import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import com.cobasendiri.kasirmudah.domain.repository.ICartRepository
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +14,11 @@ class GetCartListUseCase(
     fun invoke(searchQuery: String): Flow<Result<List<ProductInfo>>> {
         return cartRepository.getAllCartProduct(searchQuery)
             .map {
-                Result.Success(it)
+                if(it==null){
+                    Result.Error(KasirMudahException.UnknownError(null))
+                }else{
+                    Result.Success(it)
+                }
             }.catch {
                 Result.Error(it)
             }

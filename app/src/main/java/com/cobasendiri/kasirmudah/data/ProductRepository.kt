@@ -32,7 +32,7 @@ class ProductRepository(
         }
     }
 
-    override fun getAllProducts(seachQuery: String): Flow<List<ProductInfo>> {
+    override fun getAllProducts(seachQuery: String): Flow<List<ProductInfo>?> {
         return productDao.getAllProducts()
             .mapExceptionFlow { products ->
                 val filtered = if(seachQuery.isNotEmpty()){
