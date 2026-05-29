@@ -19,4 +19,6 @@ abstract class BaseViewModel: ViewModel() {
     }
 
     open fun showErrorMessage(errorMessage: UiMessage){}
+
+    open fun errorMessageShown(){}
 }

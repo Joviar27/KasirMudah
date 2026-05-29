@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -70,6 +71,7 @@ import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
+import com.cobasendiri.kasirmudah.ui.utils.ToastUtil.showToast
 import kotlin.collections.find
 
 @Composable
@@ -84,6 +86,13 @@ fun ShopScreen(
     )
 
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    state.errorMessage?.let { uiMessage ->
+        LaunchedEffect(uiMessage.getId()) {
+            uiMessage.asString(context).showToast(context)
+            viewModel.errorMessageShown()
+        }
+    }
 
     //Temporary before viewmodel
     val cartItemList = rememberSaveable { mutableListOf<Cart>() }
