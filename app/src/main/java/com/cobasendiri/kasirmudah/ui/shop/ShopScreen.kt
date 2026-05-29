@@ -76,6 +76,15 @@ import kotlin.collections.find
 fun ShopScreen(
     innerPadding: PaddingValues
 ){
+    val context = LocalContext.current
+    val appContext = context.applicationContext
+
+    val viewModel: ShopViewModel = viewModel(
+        factory = ViewModelFactory.getInstance(appContext)
+    )
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     //Temporary before viewmodel
     val cartItemList = rememberSaveable { mutableListOf<Cart>() }
     val itemList = rememberSaveable { generateDummyShopItemList() }
@@ -215,16 +224,7 @@ fun ShopScreen(
 
             }
             is ShopEvent.OnSearch ->{
-                dummyState = dummyState.copy(
-                    shopItemList = itemList.filter { it.name.contains(event.searchQuery) }.map {
-                        ProductInfo(
-                            product = it,
-                            count = cartItemList.find { addedItem ->
-                                addedItem.productId == it.id
-                            }?.count ?: 0
-                        )
-                    }
-                )
+                viewModel.loadProductList(event.searchQuery)
             }
             is ShopEvent.OnShowAddProductDialog ->{
                 dummyState = dummyState.copy(
