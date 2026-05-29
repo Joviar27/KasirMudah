@@ -41,10 +41,14 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.toColorLong
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cobasendiri.kasirmudah.ui.component.InputField
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 import com.cobasendiri.kasirmudah.ui.theme.Primary
@@ -52,6 +56,8 @@ import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.Product
 import com.cobasendiri.kasirmudah.domain.model.Cart
+import com.cobasendiri.kasirmudah.domain.model.ProductInfo
+import com.cobasendiri.kasirmudah.ui.ViewModelFactory
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
 import com.cobasendiri.kasirmudah.ui.component.FloatingAction
 import com.cobasendiri.kasirmudah.ui.component.ProductItem
@@ -80,7 +86,7 @@ fun ShopScreen(
             date = "24 Januari 2026",
             totalAmount = 0L,
             shopItemList = itemList.map {
-                ProductItemState(
+                ProductInfo(
                     product = it,
                     count = 0
                 )
@@ -109,7 +115,7 @@ fun ShopScreen(
                 dummyState = dummyState.copy(
                     shopItemList = dummyState.shopItemList.map {
                         if(it.product.id == event.itemId){
-                            ProductItemState(
+                            ProductInfo(
                                 product = it.product,
                                 count = cartItemList.find { addedItem ->
                                     addedItem.productId == event.itemId
@@ -136,7 +142,7 @@ fun ShopScreen(
                 dummyState = dummyState.copy(
                     shopItemList = dummyState.shopItemList.map {
                         if(it.product.id == event.itemId){
-                            ProductItemState(
+                            ProductInfo(
                                 product = it.product,
                                 count = cartItemList.find { addedItem ->
                                     addedItem.productId == event.itemId
@@ -154,14 +160,14 @@ fun ShopScreen(
             is ShopEvent.OnUpdateProductColor ->{
                 val index = itemList.indexOfFirst { it.id == event.productId }
                 if(index != -1){
-                    itemList[index] = itemList[index].copy(colorCode = event.newColor)
+                    itemList[index] = itemList[index].copy(colorCode = event.newColor.toColorLong())
                 }
 
                 dummyState = dummyState.copy(
                     shopItemList = dummyState.shopItemList.map {
                         if(it.product.id == event.productId){
                             it.copy(product = it.product.copy(
-                                colorCode = event.newColor
+                                colorCode = event.newColor.toColorLong()
                             ))
                         }else it
                     }
@@ -194,7 +200,7 @@ fun ShopScreen(
                     ShopFilter.FILTER_ALL -> {
                         dummyState.copy(
                             shopItemList = itemList.map { original ->
-                                ProductItemState(
+                                ProductInfo(
                                     product = original,
                                     count = cartItemList.find {
                                         it.productId == original.id
@@ -211,7 +217,7 @@ fun ShopScreen(
             is ShopEvent.OnSearch ->{
                 dummyState = dummyState.copy(
                     shopItemList = itemList.filter { it.name.contains(event.searchQuery) }.map {
-                        ProductItemState(
+                        ProductInfo(
                             product = it,
                             count = cartItemList.find { addedItem ->
                                 addedItem.productId == it.id
@@ -251,7 +257,7 @@ fun ShopScreen(
                 }
                 dummyState = dummyState.copy(
                     shopItemList = itemList.map { original ->
-                        ProductItemState(
+                        ProductInfo(
                             product = original,
                             count = cartItemList.find {
                                 it.productId == original.id
@@ -278,7 +284,7 @@ fun ShopScreen(
                 }
                 dummyState = dummyState.copy(
                     shopItemList = itemList.map { original ->
-                        ProductItemState(
+                        ProductInfo(
                             product = original,
                             count = cartItemList.find {
                                 it.productId == original.id
@@ -313,7 +319,7 @@ fun ShopScreen(
                 }
                 dummyState = dummyState.copy(
                     shopItemList = itemList.map {
-                        ProductItemState(
+                        ProductInfo(
                             product = it,
                             count = cartItemList.find { addedItem ->
                                 addedItem.productId == it.id
@@ -621,7 +627,7 @@ fun ShopContentPreview(){
                 date = "24 Januari 2026",
                 totalAmount = 1575000L,
                 shopItemList = generateDummyShopItemList().map {
-                    ProductItemState(
+                    ProductInfo(
                         product = it,
                         count = 0
                     )
@@ -643,7 +649,7 @@ fun generateDummyShopItemList() : MutableList<Product>{
             it.toString(),
             "Nama item",
             15000,
-            Tertiary
+            Tertiary.toColorLong()
         )
     }
 }

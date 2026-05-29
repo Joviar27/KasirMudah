@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toColorLong
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,9 +36,9 @@ import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.Product
+import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import com.cobasendiri.kasirmudah.ui.component.popup.ActionPopup
 import com.cobasendiri.kasirmudah.ui.component.popup.ColorCodePopup
-import com.cobasendiri.kasirmudah.ui.shop.ProductItemState
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Surface
@@ -48,7 +49,7 @@ import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 @Composable
 fun ProductItem(
     modifier: Modifier = Modifier,
-    state: ProductItemState,
+    state: ProductInfo,
     onEdit: (Product) -> Unit,
     onDelete: (String) -> Unit,
     onColorCodeUpdate: (Color) -> Unit,
@@ -58,6 +59,10 @@ fun ProductItem(
 
     val formattedPrice = remember(state.product.price) {
         "Rp ${state.product.price.toString().decimalFormat()},00"
+    }
+
+    val selectedColorCode = remember(state.product.colorCode) {
+        Color(value = state.product.colorCode.toULong())
     }
 
     var showColorCodePopup by remember { mutableStateOf(false) }
@@ -74,7 +79,7 @@ fun ProductItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box{
-            ColorCode(state.product.colorCode){
+            ColorCode(selectedColorCode){
                 showColorCodePopup = true
             }
             if(showColorCodePopup){
@@ -226,11 +231,11 @@ fun ShopItemPrev() {
         id = "1",
         name = "Nama Item 1",
         price = 15000,
-        colorCode = Tertiary
+        colorCode = Tertiary.toColorLong()
     )
     Box(Modifier.padding(16.dp)){
         ProductItem(
-            state = ProductItemState(
+            state = ProductInfo(
                 product = product,
                 count = 2
             ),

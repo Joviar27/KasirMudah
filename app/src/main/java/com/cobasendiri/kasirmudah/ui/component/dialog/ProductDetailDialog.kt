@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toColorLong
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,9 +55,13 @@ fun ProductDetailDialog(
             id = product?.id ?: "",
             name = product?.name ?: "",
             price = product?.price?.toString() ?: "",
-            colorCode = product?.colorCode ?: Tertiary
+            colorCode = product?.colorCode ?: Tertiary.toColorLong()
         )
     )}
+
+    val selectedColorCode = remember(productDraft.colorCode) {
+        Color(value = productDraft.colorCode.toULong())
+    }
 
     var showColorCodePopup by remember { mutableStateOf(false) }
 
@@ -67,7 +72,7 @@ fun ProductDetailDialog(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                ColorCodeDetail(productDraft.colorCode) {
+                ColorCodeDetail(selectedColorCode) {
                     showColorCodePopup = true
                 }
                 Spacer(Modifier.width(12.dp))
@@ -86,7 +91,7 @@ fun ProductDetailDialog(
                     ) { newColor ->
                         showColorCodePopup = false
                         newColor?.let {
-                            productDraft = productDraft.copy(colorCode = it)
+                            productDraft = productDraft.copy(colorCode = it.toColorLong())
                         }
                     }
                 }
@@ -164,7 +169,7 @@ fun ItemDetailPrev() {
                 id = "1",
                 name = "Barang Pertama",
                 price = 15000L,
-                colorCode = Tertiary
+                colorCode = Tertiary.toColorLong()
             ),
             onCancel = {},
             onDismiss = {},

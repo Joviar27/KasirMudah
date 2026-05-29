@@ -1,6 +1,5 @@
 package com.cobasendiri.kasirmudah.data.entity
 
-import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -14,5 +13,5 @@ data class ProductEntity(
 
     val price: Long,
 
-    val colorCode: Color
+    val colorCode: Long
 )

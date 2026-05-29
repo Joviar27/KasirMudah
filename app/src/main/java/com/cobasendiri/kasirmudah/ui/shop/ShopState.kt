@@ -1,20 +1,17 @@
 package com.cobasendiri.kasirmudah.ui.shop
 
 import com.cobasendiri.kasirmudah.domain.model.Product
+import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 
 data class ShopState(
-    val shopName: String,
-    val date: String,
-    val totalAmount: Long,
-    val filter: ShopFilter,
-    val shopItemList: List<ProductItemState>,
-    val isFloatingActionVisible: Boolean,
-    val showEditProductDialog: Product?,
-    val showAddProductDialog: Boolean,
-    val showConfirmDeleteDialog: String?
-)
-
-data class ProductItemState(
-    val product: Product,
-    val count: Int
+    val shopName: String = "",
+    val date: String = "",
+    val totalAmount: Long = 0L,
+    val filter: ShopFilter = ShopFilter.FILTER_ALL,
+    val shopItemList: List<ProductInfo> = listOf(),
+    val searchQuery: String = "",
+    val isFloatingActionVisible: Boolean = false,
+    val showEditProductDialog: Product? = null,
+    val showAddProductDialog: Boolean = false,
+    val showConfirmDeleteDialog: String? = null
 )

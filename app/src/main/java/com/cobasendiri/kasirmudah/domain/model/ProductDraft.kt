@@ -1,7 +1,5 @@
 package com.cobasendiri.kasirmudah.domain.model
 
-import androidx.compose.ui.graphics.Color
-
 data class ProductDraft(
     val id: String,
 
@@ -9,5 +7,5 @@ data class ProductDraft(
 
     val price: String,
 
-    val colorCode: Color
+    val colorCode: Long
 )
