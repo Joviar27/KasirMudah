@@ -88,7 +88,7 @@ fun ShopScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     state.errorMessage?.let { uiMessage ->
-        LaunchedEffect(uiMessage.getId()) {
+        LaunchedEffect(uiMessage.getRandomId()) {
             uiMessage.asString(context).showToast(context)
             viewModel.errorMessageShown()
         }
@@ -119,7 +119,7 @@ fun ShopScreen(
 
     ShopContent(
         innerPadding = innerPadding,
-        state = dummyState,
+        state = state,
     ){ event ->
         when(event){
             is ShopEvent.OnIncreaseProduct ->{
@@ -236,9 +236,7 @@ fun ShopScreen(
                 viewModel.loadProductList(event.searchQuery)
             }
             is ShopEvent.OnShowAddProductDialog ->{
-                dummyState = dummyState.copy(
-                    showAddProductDialog = true,
-                )
+                viewModel.showAddProductDialog()
             }
             is ShopEvent.OnShowEditProductDialog ->{
                 dummyState = dummyState.copy(
@@ -246,34 +244,10 @@ fun ShopScreen(
                 )
             }
             is ShopEvent.OnDismissProductDetailDialog ->{
-                dummyState = dummyState.copy(
-                    showAddProductDialog = false,
-                    showEditProductDialog = null
-                )
+                viewModel.dismissProductDetailDialog()
             }
             is ShopEvent.OnNewProduct ->{
-                //Temporary before viewmodel
-                val newProductItem = Product(
-                    id = itemList.size.toString(),
-                    name = event.newProduct.name,
-                    price = event.newProduct.price.toLong(),
-                    colorCode = event.newProduct.colorCode
-                )
-                itemList.add(newProductItem)
-
-                if(dummyState.filter == ShopFilter.FILTER_CART){
-                    return@ShopContent
-                }
-                dummyState = dummyState.copy(
-                    shopItemList = itemList.map { original ->
-                        ProductInfo(
-                            product = original,
-                            count = cartItemList.find {
-                                it.productId == original.id
-                            }?.count ?: 0
-                        )
-                    }
-                )
+                viewModel.addNewProduct(event.newProduct)
             }
             is ShopEvent.OnUpdateProduct ->{
                 //Temporary before viewmodel

@@ -45,7 +45,7 @@ class ProductRepository(
     }
 
     override suspend fun addNewProduct(
-        newProduct: Product
+        newProduct: ProductDraft
     ) = withContext(ioDispatcher){
         runMapExceptionSuspending {
             productDao.addProduct(newProduct.mapToEntity())

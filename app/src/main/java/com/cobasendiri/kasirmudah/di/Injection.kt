@@ -5,6 +5,7 @@ import com.cobasendiri.kasirmudah.data.ProductRepository
 import com.cobasendiri.kasirmudah.data.room.ProductDao
 import com.cobasendiri.kasirmudah.data.room.ShopDatabase
 import com.cobasendiri.kasirmudah.domain.repository.IProductRepository
+import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 
 object Injection {
@@ -19,5 +20,9 @@ object Injection {
 
     fun provideGetProductListUseCase(context: Context): GetProductLisUseCase{
         return GetProductLisUseCase(provideProductRepository(context))
+    }
+
+    fun provideAddProductUseCase(context: Context): AddProductUseCase{
+        return AddProductUseCase(provideProductRepository(context))
     }
 }

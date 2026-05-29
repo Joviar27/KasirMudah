@@ -1,6 +1,8 @@
 package com.cobasendiri.kasirmudah.ui.shop
 
 import androidx.lifecycle.viewModelScope
+import com.cobasendiri.kasirmudah.domain.model.ProductDraft
+import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
 import com.cobasendiri.kasirmudah.ui.UiMessage
@@ -9,7 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ShopViewModel(
-    private val getProductLisUseCase: GetProductLisUseCase
+    private val getProductLisUseCase: GetProductLisUseCase,
+    private val addProductUseCase: AddProductUseCase
 ): BaseViewModel() {
 
     private val _state = MutableStateFlow(ShopState())
@@ -30,6 +33,27 @@ class ShopViewModel(
                 }
             }
         }
+    }
+
+    fun addNewProduct(productDraft: ProductDraft){
+        viewModelScope.launch {
+            addProductUseCase.invoke(productDraft).handleResult {
+                dismissProductDetailDialog()
+            }
+        }
+    }
+
+    fun showAddProductDialog(){
+        _state.value = state.value.copy(
+            showAddProductDialog = true
+        )
+    }
+
+    fun dismissProductDetailDialog(){
+        _state.value = state.value.copy(
+            showAddProductDialog = false,
+            showEditProductDialog = null
+        )
     }
 
     override fun showErrorMessage(errorMessage: UiMessage) {

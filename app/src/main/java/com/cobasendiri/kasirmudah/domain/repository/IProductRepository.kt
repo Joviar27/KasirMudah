@@ -9,7 +9,7 @@ interface IProductRepository {
 
     fun getAllProducts(searchQuery: String): Flow<List<ProductInfo>?>
 
-    suspend fun addNewProduct(newProduct: Product)
+    suspend fun addNewProduct(newProduct: ProductDraft)
 
     suspend fun updateProduct(productDraft: ProductDraft)
 
