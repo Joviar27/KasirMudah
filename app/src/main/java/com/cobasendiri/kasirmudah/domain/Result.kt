@@ -1,4 +1,4 @@
-package com.cobasendiri.kasirmudah.data
+package com.cobasendiri.kasirmudah.domain
 
 sealed class Result<out T> private constructor() {
     data class Success<out T>(val data : T) : Result<T>()

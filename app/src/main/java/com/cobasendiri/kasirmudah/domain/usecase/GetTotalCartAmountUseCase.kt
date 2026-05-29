@@ -2,7 +2,7 @@ package com.cobasendiri.kasirmudah.domain.usecase
 
 import com.cobasendiri.kasirmudah.domain.repository.ICartRepository
 import kotlinx.coroutines.flow.Flow
-import com.cobasendiri.kasirmudah.data.Result
+import com.cobasendiri.kasirmudah.domain.Result
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 

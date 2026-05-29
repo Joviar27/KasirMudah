@@ -1,7 +1,7 @@
 package com.cobasendiri.kasirmudah.domain.usecase
 
 import com.cobasendiri.kasirmudah.domain.repository.ICartRepository
-import com.cobasendiri.kasirmudah.data.Result
+import com.cobasendiri.kasirmudah.domain.Result
 import com.cobasendiri.kasirmudah.domain.exception.KasirMudahException
 
 class IncrementProductUseCase(

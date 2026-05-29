@@ -1,6 +1,6 @@
 package com.cobasendiri.kasirmudah.domain.usecase
 
-import com.cobasendiri.kasirmudah.data.Result
+import com.cobasendiri.kasirmudah.domain.Result
 import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import com.cobasendiri.kasirmudah.domain.repository.ICartRepository
 import kotlinx.coroutines.flow.Flow

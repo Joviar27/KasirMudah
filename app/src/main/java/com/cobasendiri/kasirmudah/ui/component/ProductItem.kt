@@ -43,7 +43,7 @@ import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.White
-import com.cobasendiri.kasirmudah.util.decimalFormat
+import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 
 @Composable
 fun ProductItem(

@@ -1,4 +1,4 @@
-package com.cobasendiri.kasirmudah.util
+package com.cobasendiri.kasirmudah.data.util
 
 import com.cobasendiri.kasirmudah.data.entity.ProductEntity
 import com.cobasendiri.kasirmudah.data.result.ProductResult

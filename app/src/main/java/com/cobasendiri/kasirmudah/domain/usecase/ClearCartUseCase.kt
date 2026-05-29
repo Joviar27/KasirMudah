@@ -1,6 +1,6 @@
 package com.cobasendiri.kasirmudah.domain.usecase
 
-import com.cobasendiri.kasirmudah.data.Result
+import com.cobasendiri.kasirmudah.domain.Result
 import com.cobasendiri.kasirmudah.domain.exception.KasirMudahException
 import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 import com.cobasendiri.kasirmudah.domain.repository.ICartRepository

@@ -3,7 +3,7 @@ package com.cobasendiri.kasirmudah.domain.usecase
 import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import com.cobasendiri.kasirmudah.data.Result
+import com.cobasendiri.kasirmudah.domain.Result
 import com.cobasendiri.kasirmudah.domain.repository.IProductRepository
 import kotlinx.coroutines.flow.catch
 
