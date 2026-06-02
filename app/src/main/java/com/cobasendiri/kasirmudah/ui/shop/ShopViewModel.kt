@@ -5,6 +5,7 @@ import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
 import com.cobasendiri.kasirmudah.ui.UiMessage
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 class ShopViewModel(
     private val getProductLisUseCase: GetProductLisUseCase,
     private val addProductUseCase: AddProductUseCase,
-    private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase
+    private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase,
+    private val incrementProductUseCase: IncrementProductUseCase
 ): BaseViewModel() {
 
     private val _state = MutableStateFlow(ShopState())
@@ -42,9 +44,19 @@ class ShopViewModel(
         viewModelScope.launch {
             getTotalCartAmountUseCase.invoke().collect { result ->
                 result.handleResult {
-                    _state.value = state.value.copy(totalAmount = it ?: 0L)
+                    _state.value = state.value.copy(
+                        totalAmount = it ?: 0L,
+                        isFloatingActionVisible = it != null && it > 0L
+                    )
                 }
             }
+        }
+    }
+
+    fun incrementProduct(productId: String){
+        viewModelScope.launch {
+            incrementProductUseCase.invoke(productId)
+                .handleResult {}
         }
     }
 

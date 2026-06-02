@@ -123,30 +123,7 @@ fun ShopScreen(
     ){ event ->
         when(event){
             is ShopEvent.OnIncreaseProduct ->{
-                //Temporary before viewmodel
-                cartItemList.find {it.productId == event.itemId}?.let {
-                    it.count += 1
-                }?: run {
-                    cartItemList.add(Cart(event.itemId,1))
-                }
-
-                dummyState = dummyState.copy(
-                    shopItemList = dummyState.shopItemList.map {
-                        if(it.product.id == event.itemId){
-                            ProductInfo(
-                                product = it.product,
-                                count = cartItemList.find { addedItem ->
-                                    addedItem.productId == event.itemId
-                                }?.count ?: 0
-                            )
-                        }else it
-                    },
-                    totalAmount = cartItemList.sumOf { addedItem ->
-                        val itemPrice = dummyState.shopItemList.find{it.product.id == addedItem.productId}?.product?.price ?: 0
-                        addedItem.count * itemPrice
-                    },
-                    isFloatingActionVisible = cartItemList.isNotEmpty()
-                )
+                viewModel.incrementProduct(event.itemId)
             }
             is ShopEvent.OnDecreaseProduct ->{
                 //Temporary before viewmodel

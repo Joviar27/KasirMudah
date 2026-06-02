@@ -19,9 +19,9 @@ class ViewModelFactory(
     private val getProductLisUseCase: GetProductLisUseCase,
     private val addProductUseCase: AddProductUseCase,
     private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase,
+    private val incrementProductUseCase: IncrementProductUseCase,
 //    private val deleteProductUseCase: DeleteProductUseCase,
 //    private val updateProductUseCase: UpdateProductUseCase,
-//    private val incrementProductUseCase: IncrementProductUseCase,
 //    private val decrementProductUseCase: DecrementProductUseCase,
 //    private val getCartListUseCase: GetCartListUseCase,
 //    private val clearCartUseCase: ClearCartUseCase
@@ -36,7 +36,8 @@ class ViewModelFactory(
                 instance ?: ViewModelFactory(
                     Injection.provideGetProductListUseCase(context),
                     Injection.provideAddProductUseCase(context),
-                    Injection.provideGetTotalCartAmountUseCase(context)
+                    Injection.provideGetTotalCartAmountUseCase(context),
+                    Injection.provideIncrementProductUseCase(context)
                 ).also { instance = it }
             }
         }
@@ -46,7 +47,7 @@ class ViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ShopViewModel::class.java)) {
             return ShopViewModel(getProductLisUseCase, addProductUseCase,
-                getTotalCartAmountUseCase) as T
+                getTotalCartAmountUseCase, incrementProductUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
