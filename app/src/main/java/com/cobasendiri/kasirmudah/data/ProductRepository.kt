@@ -9,11 +9,13 @@ import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import com.cobasendiri.kasirmudah.domain.repository.IProductRepository
 import com.cobasendiri.kasirmudah.data.util.DataMapper.mapListToDomain
 import com.cobasendiri.kasirmudah.data.util.DataMapper.mapToEntity
+import com.cobasendiri.kasirmudah.data.util.IdGenerator
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import java.util.UUID
 
 class ProductRepository(
     private val productDao: ProductDao,
@@ -39,6 +41,8 @@ class ProductRepository(
                     products.filter { it.productEntity.name.contains(seachQuery, true) }
                 }else {
                     products
+                }.sortedByDescending {
+                    it.productEntity.id
                 }
                 filtered.mapListToDomain()
             }.flowOn(ioDispatcher)
@@ -48,7 +52,11 @@ class ProductRepository(
         newProduct: ProductDraft
     ) = withContext(ioDispatcher){
         runMapExceptionSuspending {
-            productDao.addProduct(newProduct.mapToEntity())
+            productDao.addProduct(
+                newProduct.copy(
+                    id = IdGenerator.generateProductId()
+                ).mapToEntity()
+            )
         }
     }
 
