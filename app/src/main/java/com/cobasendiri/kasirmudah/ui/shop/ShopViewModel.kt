@@ -3,6 +3,7 @@ package com.cobasendiri.kasirmudah.ui.shop
 import androidx.lifecycle.viewModelScope
 import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.ClearCartUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DecrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
@@ -18,7 +19,8 @@ class ShopViewModel(
     private val addProductUseCase: AddProductUseCase,
     private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase,
     private val incrementProductUseCase: IncrementProductUseCase,
-    private val decrementProductUseCase: DecrementProductUseCase
+    private val decrementProductUseCase: DecrementProductUseCase,
+    private val clearCartUseCase: ClearCartUseCase
 ): BaseViewModel() {
 
     private val _state = MutableStateFlow(ShopState())
@@ -64,6 +66,12 @@ class ShopViewModel(
     fun decrementProduct(productId: String){
         viewModelScope.launch {
             decrementProductUseCase.invoke(productId).handleResult()
+        }
+    }
+
+    fun clearCart(){
+        viewModelScope.launch {
+            clearCartUseCase.invoke().handleResult()
         }
     }
 

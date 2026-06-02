@@ -145,16 +145,7 @@ fun ShopScreen(
                 )
             }
             is ShopEvent.OnReset ->{
-                //Temporary before viewmodel
-                cartItemList.clear()
-                val newList = dummyState.shopItemList.map {
-                    it.copy(count = 0)
-                }
-                dummyState = dummyState.copy(
-                    isFloatingActionVisible = false,
-                    totalAmount = 0,
-                    shopItemList = newList
-                )
+                viewModel.clearCart()
             }
             is ShopEvent.OnFilterChange ->{
                 dummyState = dummyState.copy(
