@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 class GetTotalCartAmountUseCase(
     private val cartRepository: ICartRepository
 ) {
-    fun invoke(): Flow<Result<Double?>>{
+    fun invoke(): Flow<Result<Long?>>{
         return cartRepository.getTotalCartAmount()
             .map {
                 Result.Success(it)

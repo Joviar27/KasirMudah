@@ -7,7 +7,7 @@ interface ICartRepository {
 
     fun getAllCartProduct(searchQuery: String): Flow<List<ProductInfo>?>
 
-    fun getTotalCartAmount(): Flow<Double?>
+    fun getTotalCartAmount(): Flow<Long?>
 
     suspend fun addOrIncrementProduct(productId: String)
 

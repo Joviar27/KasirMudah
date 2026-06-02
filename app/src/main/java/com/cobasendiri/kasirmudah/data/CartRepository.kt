@@ -40,7 +40,7 @@ class CartRepository(
             }.flowOn(ioDispatcher)
     }
 
-    override fun getTotalCartAmount(): Flow<Double?>{
+    override fun getTotalCartAmount(): Flow<Long?>{
         return cartDao.getTotalCartAmount().mapExceptionFlow()
             .flowOn(ioDispatcher)
     }
