@@ -1,6 +1,7 @@
 package com.cobasendiri.kasirmudah.ui.shop
 
 import androidx.lifecycle.viewModelScope
+import com.cobasendiri.kasirmudah.domain.model.Product
 import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.ClearCartUseCase
@@ -9,6 +10,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
 import com.cobasendiri.kasirmudah.ui.UiMessage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,6 +26,7 @@ class ShopViewModel(
     private val getProductLisUseCase: GetProductLisUseCase,
     private val getCartListUseCase: GetCartListUseCase,
     private val addProductUseCase: AddProductUseCase,
+    private val updateProductUseCase: UpdateProductUseCase,
     private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase,
     private val incrementProductUseCase: IncrementProductUseCase,
     private val decrementProductUseCase: DecrementProductUseCase,
@@ -110,17 +113,33 @@ class ShopViewModel(
         }
     }
 
+    fun updateProduct(productDraft: ProductDraft){
+        viewModelScope.launch {
+            updateProductUseCase.invoke(productDraft).handleResult{
+                dismissProductDetailDialog()
+            }
+        }
+    }
+
     fun showAddProductDialog(){
-        _state.value = state.value.copy(
-            showAddProductDialog = true
-        )
+        _state.update {
+            it.copy(showAddProductDialog = true)
+        }
+    }
+
+    fun showEditProductDialog(product: Product){
+        _state.update {
+            it.copy(showEditProductDialog = product)
+        }
     }
 
     fun dismissProductDetailDialog(){
-        _state.value = state.value.copy(
-            showAddProductDialog = false,
-            showEditProductDialog = null
-        )
+        _state.update {
+            it.copy(
+                showAddProductDialog = false,
+                showEditProductDialog = null
+            )
+        }
     }
 
     override fun showErrorMessage(errorMessage: UiMessage) {

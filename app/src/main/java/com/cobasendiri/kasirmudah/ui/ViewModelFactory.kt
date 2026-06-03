@@ -18,13 +18,13 @@ import com.cobasendiri.kasirmudah.ui.shop.ShopViewModel
 class ViewModelFactory(
     private val getProductLisUseCase: GetProductLisUseCase,
     private val addProductUseCase: AddProductUseCase,
+    private val updateProductUseCase: UpdateProductUseCase,
     private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase,
     private val incrementProductUseCase: IncrementProductUseCase,
     private val decrementProductUseCase: DecrementProductUseCase,
     private val clearCartUseCase: ClearCartUseCase,
     private val getCartListUseCase: GetCartListUseCase,
 //    private val deleteProductUseCase: DeleteProductUseCase,
-//    private val updateProductUseCase: UpdateProductUseCase,
 ) : ViewModelProvider.Factory {
 
     companion object {
@@ -36,6 +36,7 @@ class ViewModelFactory(
                 instance ?: ViewModelFactory(
                     Injection.provideGetProductListUseCase(context),
                     Injection.provideAddProductUseCase(context),
+                    Injection.provideUpdateProductUseCase(context),
                     Injection.provideGetTotalCartAmountUseCase(context),
                     Injection.provideIncrementProductUseCase(context),
                     Injection.provideDecrementProductUseCase(context),
@@ -50,8 +51,8 @@ class ViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ShopViewModel::class.java)) {
             return ShopViewModel(getProductLisUseCase, getCartListUseCase, addProductUseCase,
-                getTotalCartAmountUseCase, incrementProductUseCase, decrementProductUseCase,
-                clearCartUseCase) as T
+                updateProductUseCase, getTotalCartAmountUseCase, incrementProductUseCase,
+                decrementProductUseCase, clearCartUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

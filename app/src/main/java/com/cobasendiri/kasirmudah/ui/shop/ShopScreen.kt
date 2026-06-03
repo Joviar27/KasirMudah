@@ -160,9 +160,7 @@ fun ShopScreen(
                 viewModel.showAddProductDialog()
             }
             is ShopEvent.OnShowEditProductDialog ->{
-                dummyState = dummyState.copy(
-                    showEditProductDialog = event.product,
-                )
+                viewModel.showEditProductDialog(event.product)
             }
             is ShopEvent.OnDismissProductDetailDialog ->{
                 viewModel.dismissProductDetailDialog()
@@ -171,31 +169,7 @@ fun ShopScreen(
                 viewModel.addNewProduct(event.newProduct)
             }
             is ShopEvent.OnUpdateProduct ->{
-                //Temporary before viewmodel
-                val updatedProductItem = Product(
-                    id = event.updatedProduct.id,
-                    name = event.updatedProduct.name,
-                    price = event.updatedProduct.price.toLong(),
-                    colorCode = event.updatedProduct.colorCode
-                )
-                val index = itemList.indexOfFirst { it.id == updatedProductItem.id }
-                if(index != -1){
-                    itemList[index] = updatedProductItem
-                }
-
-                if(dummyState.filter == ShopFilter.FILTER_CART){
-                    return@ShopContent
-                }
-                dummyState = dummyState.copy(
-                    shopItemList = itemList.map { original ->
-                        ProductInfo(
-                            product = original,
-                            count = cartItemList.find {
-                                it.productId == original.id
-                            }?.count ?: 0
-                        )
-                    }
-                )
+                viewModel.updateProduct(event.updatedProduct)
             }
             is ShopEvent.OnShowConfirmDeleteDialog ->{
                 dummyState = dummyState.copy(
