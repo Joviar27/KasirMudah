@@ -3,7 +3,6 @@ package com.cobasendiri.kasirmudah.data
 import com.cobasendiri.kasirmudah.data.room.ProductDao
 import com.cobasendiri.kasirmudah.data.util.CoroutineMapper.mapExceptionFlow
 import com.cobasendiri.kasirmudah.data.util.CoroutineMapper.runMapExceptionSuspending
-import com.cobasendiri.kasirmudah.domain.model.Product
 import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import com.cobasendiri.kasirmudah.domain.repository.IProductRepository
@@ -15,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
-import java.util.UUID
 
 class ProductRepository(
     private val productDao: ProductDao,

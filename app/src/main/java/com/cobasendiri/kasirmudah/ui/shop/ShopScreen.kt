@@ -26,10 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,7 +53,6 @@ import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.Product
-import com.cobasendiri.kasirmudah.domain.model.Cart
 import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import com.cobasendiri.kasirmudah.ui.ViewModelFactory
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
@@ -72,7 +68,6 @@ import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
 import com.cobasendiri.kasirmudah.ui.utils.ToastUtil.showToast
-import kotlin.collections.find
 
 @Composable
 fun ShopScreen(
@@ -93,29 +88,6 @@ fun ShopScreen(
             viewModel.errorMessageShown()
         }
     }
-
-    //Temporary before viewmodel
-    val cartItemList = rememberSaveable { mutableListOf<Cart>() }
-    val itemList = rememberSaveable { generateDummyShopItemList() }
-
-    var dummyState by remember { mutableStateOf<ShopState>(
-        ShopState(
-            shopName = "Toko Madura A",
-            date = "24 Januari 2026",
-            totalAmount = 0L,
-            shopItemList = itemList.map {
-                ProductInfo(
-                    product = it,
-                    count = 0
-                )
-            },
-            isFloatingActionVisible = false,
-            filter = ShopFilter.FILTER_ALL,
-            showAddProductDialog = false,
-            showEditProductDialog = null,
-            showConfirmDeleteDialog = null
-        )
-    ) }
 
     ShopContent(
         innerPadding = innerPadding,
