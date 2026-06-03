@@ -36,6 +36,15 @@ interface CartDao {
     @Query("UPDATE carts SET count = MAX(0, count - 1) WHERE productId = :productId ")
     suspend fun decrementProduct(productId: String)
 
+    @Query("DELETE FROM carts WHERE productId = :productId AND count <= 0")
+    suspend fun removeFromCartIfCountZero(productId: String)
+
+    @Transaction
+    suspend fun decrementOrRemoveProduct(productId: String){
+        decrementProduct(productId)
+        removeFromCartIfCountZero(productId)
+    }
+
     @Query("""
         SELECT SUM (p.price * c.count)
         FROM products AS p

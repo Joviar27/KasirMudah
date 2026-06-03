@@ -57,7 +57,7 @@ class CartRepository(
         productId: String
     ) = withContext(ioDispatcher) {
         runMapExceptionSuspending {
-            cartDao.decrementProduct(productId)
+            cartDao.decrementOrRemoveProduct(productId)
         }
     }
 
