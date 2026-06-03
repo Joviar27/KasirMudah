@@ -38,8 +38,8 @@ import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
-import com.cobasendiri.kasirmudah.util.decimalFormat
-import com.cobasendiri.kasirmudah.util.rawFormat
+import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
+import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.rawFormat
 
 @Composable
 fun InputField(

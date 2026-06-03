@@ -1,6 +1,6 @@
 package com.cobasendiri.kasirmudah.ui.profile
 
-import com.cobasendiri.kasirmudah.model.ShopProfile
+import com.cobasendiri.kasirmudah.domain.model.ShopProfile
 
 interface ProfileEvent {
 

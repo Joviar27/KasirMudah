@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.cobasendiri.kasirmudah.R
-import com.cobasendiri.kasirmudah.model.ShopProfile
+import com.cobasendiri.kasirmudah.domain.model.ShopProfile
 import com.cobasendiri.kasirmudah.ui.component.ProfileMenuItem
 import com.cobasendiri.kasirmudah.ui.component.dialog.EditProfileDialog
 import com.cobasendiri.kasirmudah.ui.component.dialog.InformationConfirmDialog

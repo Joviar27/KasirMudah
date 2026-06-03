@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toColorLong
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,30 +35,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.R
-import com.cobasendiri.kasirmudah.model.Shop
+import com.cobasendiri.kasirmudah.domain.model.Product
+import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import com.cobasendiri.kasirmudah.ui.component.popup.ActionPopup
 import com.cobasendiri.kasirmudah.ui.component.popup.ColorCodePopup
-import com.cobasendiri.kasirmudah.ui.shop.ShopItemState
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.White
-import com.cobasendiri.kasirmudah.util.decimalFormat
+import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 
 @Composable
-fun ShopItem(
+fun ProductItem(
     modifier: Modifier = Modifier,
-    state: ShopItemState,
-    onEdit: (Shop) -> Unit,
+    state: ProductInfo,
+    onEdit: (Product) -> Unit,
     onDelete: (String) -> Unit,
-    onColorCodeUpdate: (Color) -> Unit,
+    onColorCodeUpdate: (Long) -> Unit,
     onItemIncrease: () -> Unit,
     onItemDecrease: () -> Unit
 ) {
 
-    val formattedPrice = remember(state.shop.price) {
-        "Rp ${state.shop.price.toString().decimalFormat()},00"
+    val formattedPrice = remember(state.product.price) {
+        "Rp ${state.product.price.toString().decimalFormat()},00"
+    }
+
+    val selectedColorCode = remember(state.product.colorCode) {
+        Color(value = state.product.colorCode.toULong())
     }
 
     var showColorCodePopup by remember { mutableStateOf(false) }
@@ -74,7 +79,7 @@ fun ShopItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box{
-            ColorCode(state.shop.colorCode){
+            ColorCode(selectedColorCode){
                 showColorCodePopup = true
             }
             if(showColorCodePopup){
@@ -85,7 +90,7 @@ fun ShopItem(
                 ) { newColor ->
                     showColorCodePopup = false
                     newColor?.let {
-                        onColorCodeUpdate.invoke(it)
+                        onColorCodeUpdate.invoke(it.toColorLong())
                     }
                 }
             }
@@ -94,7 +99,7 @@ fun ShopItem(
         Spacer(Modifier.width(16.dp))
         Column(Modifier.weight(1f)) {
             Text(
-                state.shop.name,
+                state.product.name,
                 style = KasirMudahTypography.titleMedium
                     .copy(fontWeight = FontWeight.Bold)
             )
@@ -129,10 +134,10 @@ fun ShopItem(
                     showActionPopup = false
                 },
                 onFirstItemClick = {
-                    onEdit.invoke(state.shop)
+                    onEdit.invoke(state.product)
                 },
                 onSecondItemClick = {
-                    onDelete.invoke(state.shop.id)
+                    onDelete.invoke(state.product.id)
                 }
             )
         }
@@ -222,16 +227,16 @@ fun ColorCode(
 @Preview
 @Composable
 fun ShopItemPrev() {
-    val shop = Shop(
+    val product = Product(
         id = "1",
         name = "Nama Item 1",
         price = 15000,
-        colorCode = Tertiary
+        colorCode = Tertiary.toColorLong()
     )
     Box(Modifier.padding(16.dp)){
-        ShopItem(
-            state = ShopItemState(
-                shop = shop,
+        ProductItem(
+            state = ProductInfo(
+                product = product,
                 count = 2
             ),
             onEdit = {},

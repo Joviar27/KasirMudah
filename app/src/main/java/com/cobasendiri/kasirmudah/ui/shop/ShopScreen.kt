@@ -23,12 +23,10 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,21 +39,26 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.toColorLong
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cobasendiri.kasirmudah.ui.component.InputField
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
-import com.cobasendiri.kasirmudah.model.Shop
-import com.cobasendiri.kasirmudah.model.ShopAdded
+import com.cobasendiri.kasirmudah.domain.model.Product
+import com.cobasendiri.kasirmudah.domain.model.ProductInfo
+import com.cobasendiri.kasirmudah.ui.ViewModelFactory
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
 import com.cobasendiri.kasirmudah.ui.component.FloatingAction
-import com.cobasendiri.kasirmudah.ui.component.ShopItem
-import com.cobasendiri.kasirmudah.ui.component.dialog.ShopItemDetailDialog
+import com.cobasendiri.kasirmudah.ui.component.ProductItem
+import com.cobasendiri.kasirmudah.ui.component.dialog.ProductDetailDialog
 import com.cobasendiri.kasirmudah.ui.component.TotalItem
 import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
@@ -64,268 +67,80 @@ import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
-import kotlin.collections.find
+import com.cobasendiri.kasirmudah.ui.utils.ToastUtil.showToast
 
 @Composable
 fun ShopScreen(
     innerPadding: PaddingValues
 ){
-    //Temporary before viewmodel
-    val addedItem = rememberSaveable { mutableListOf<ShopAdded>() }
-    val itemList = rememberSaveable { generateDummyShopItemList() }
+    val context = LocalContext.current
+    val appContext = context.applicationContext
 
-    var dummyState by remember { mutableStateOf<ShopState>(
-        ShopState(
-            shopName = "Toko Madura A",
-            date = "24 Januari 2026",
-            totalAmount = 0L,
-            shopItemList = itemList.map {
-                ShopItemState(
-                    shop = it,
-                    count = 0
-                )
-            },
-            isFloatingActionVisible = false,
-            filter = ShopFilter.FILTER_ALL,
-            showAddItemDialog = false,
-            showEditItemDialog = null,
-            showConfirmDeleteDialog = null
-        )
-    ) }
+    val viewModel: ShopViewModel = viewModel(
+        factory = ViewModelFactory.getInstance(appContext)
+    )
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    state.toastMessage?.let { uiMessage ->
+        LaunchedEffect(uiMessage.getMessageId()) {
+            uiMessage.asString(context).showToast(context)
+            viewModel.toastMessageShown()
+        }
+    }
 
     ShopContent(
         innerPadding = innerPadding,
-        state = dummyState,
+        state = state,
     ){ event ->
         when(event){
-            is ShopEvent.OnItemIncrease ->{
-                //Temporary before viewmodel
-                addedItem.find {it.id == event.itemId}?.let {
-                    it.count += 1
-                }?: run {
-                    addedItem.add(ShopAdded(event.itemId,1))
-                }
-
-                dummyState = dummyState.copy(
-                    shopItemList = dummyState.shopItemList.map {
-                        if(it.shop.id == event.itemId){
-                            ShopItemState(
-                                shop = it.shop,
-                                count = addedItem.find { addedItem ->
-                                    addedItem.id == event.itemId
-                                }?.count ?: 0
-                            )
-                        }else it
-                    },
-                    totalAmount = addedItem.sumOf { addedItem ->
-                        val itemPrice = dummyState.shopItemList.find{it.shop.id == addedItem.id}?.shop?.price ?: 0
-                        addedItem.count * itemPrice
-                    },
-                    isFloatingActionVisible = addedItem.isNotEmpty()
-                )
+            is ShopEvent.OnIncreaseProduct ->{
+                viewModel.incrementProduct(event.itemId)
             }
-            is ShopEvent.OnItemDecrease ->{
-                //Temporary before viewmodel
-                addedItem.find {it.id == event.itemId}?.let {
-                    it.count -= 1
-                    if(it.count<=0){
-                        addedItem.remove(it)
-                    }
-                }
-
-                dummyState = dummyState.copy(
-                    shopItemList = dummyState.shopItemList.map {
-                        if(it.shop.id == event.itemId){
-                            ShopItemState(
-                                shop = it.shop,
-                                count = addedItem.find { addedItem ->
-                                    addedItem.id == event.itemId
-                                }?.count ?: 0
-                            )
-                        }else it
-                    },
-                    totalAmount = addedItem.sumOf { addedItem ->
-                        val itemPrice = dummyState.shopItemList.find{it.shop.id == addedItem.id}?.shop?.price ?: 0
-                        addedItem.count * itemPrice
-                    },
-                    isFloatingActionVisible = addedItem.isNotEmpty()
-                )
+            is ShopEvent.OnDecreaseProduct ->{
+                viewModel.decrementProduct(event.itemId)
             }
-            is ShopEvent.OnItemNewColor ->{
-                val index = itemList.indexOfFirst { it.id == event.itemId }
-                if(index != -1){
-                    itemList[index] = itemList[index].copy(colorCode = event.newColor)
-                }
-
-                dummyState = dummyState.copy(
-                    shopItemList = dummyState.shopItemList.map {
-                        if(it.shop.id == event.itemId){
-                            it.copy(shop = it.shop.copy(
-                                colorCode = event.newColor
-                            ))
-                        }else it
-                    }
-                )
+            is ShopEvent.OnUpdateProductColor ->{
+               viewModel.updateProductColorCode(
+                   event.productId,
+                   event.newColor
+               )
             }
             is ShopEvent.OnReset ->{
-                //Temporary before viewmodel
-                addedItem.clear()
-                val newList = dummyState.shopItemList.map {
-                    it.copy(count = 0)
-                }
-                dummyState = dummyState.copy(
-                    isFloatingActionVisible = false,
-                    totalAmount = 0,
-                    shopItemList = newList
-                )
+                viewModel.clearCart()
             }
             is ShopEvent.OnFilterChange ->{
-                dummyState = dummyState.copy(
-                    filter = event.newFilter
-                )
-                dummyState = when(event.newFilter){
-                    ShopFilter.FILTER_CART -> {
-                        dummyState.copy(
-                            shopItemList = dummyState.shopItemList.filter {
-                                it.count > 0
-                            }
-                        )
-                    }
-                    ShopFilter.FILTER_ALL -> {
-                        dummyState.copy(
-                            shopItemList = itemList.map { original ->
-                                ShopItemState(
-                                    shop = original,
-                                    count = addedItem.find {
-                                        it.id == original.id
-                                    }?.count ?: 0
-                                )
-                            }
-                        )
-                    }
-                }
+                viewModel.updateFilter(event.newFilter)
             }
             is ShopEvent.OnFinish ->{
 
             }
             is ShopEvent.OnSearch ->{
-                dummyState = dummyState.copy(
-                    shopItemList = itemList.filter { it.name.contains(event.searchQuery) }.map {
-                        ShopItemState(
-                            shop = it,
-                            count = addedItem.find { addedItem ->
-                                addedItem.id == it.id
-                            }?.count ?: 0
-                        )
-                    }
-                )
+                viewModel.updateQuery(event.searchQuery)
             }
-            is ShopEvent.OnShowAddItemDialog ->{
-                dummyState = dummyState.copy(
-                    showAddItemDialog = true,
-                )
+            is ShopEvent.OnShowAddProductDialog ->{
+                viewModel.showAddProductDialog()
             }
-            is ShopEvent.OnShowEditItemDialog ->{
-                dummyState = dummyState.copy(
-                    showEditItemDialog = event.shop,
-                )
+            is ShopEvent.OnShowEditProductDialog ->{
+                viewModel.showEditProductDialog(event.product)
             }
-            is ShopEvent.OnDismissItemDialog ->{
-                dummyState = dummyState.copy(
-                    showAddItemDialog = false,
-                    showEditItemDialog = null
-                )
+            is ShopEvent.OnDismissProductDetailDialog ->{
+                viewModel.dismissProductDetailDialog()
             }
-            is ShopEvent.OnNewShopItem ->{
-                //Temporary before viewmodel
-                val newShopItem = Shop(
-                    id = itemList.size.toString(),
-                    name = event.newShop.name,
-                    price = event.newShop.price.toLong(),
-                    colorCode = event.newShop.colorCode
-                )
-                itemList.add(newShopItem)
-
-                if(dummyState.filter == ShopFilter.FILTER_CART){
-                    return@ShopContent
-                }
-                dummyState = dummyState.copy(
-                    shopItemList = itemList.map { original ->
-                        ShopItemState(
-                            shop = original,
-                            count = addedItem.find {
-                                it.id == original.id
-                            }?.count ?: 0
-                        )
-                    }
-                )
+            is ShopEvent.OnNewProduct ->{
+                viewModel.addNewProduct(event.newProduct)
             }
-            is ShopEvent.OnUpdateShopItem ->{
-                //Temporary before viewmodel
-                val updatedShopItem = Shop(
-                    id = event.updatedShop.id,
-                    name = event.updatedShop.name,
-                    price = event.updatedShop.price.toLong(),
-                    colorCode = event.updatedShop.colorCode
-                )
-                val index = itemList.indexOfFirst { it.id == updatedShopItem.id }
-                if(index != -1){
-                    itemList[index] = updatedShopItem
-                }
-
-                if(dummyState.filter == ShopFilter.FILTER_CART){
-                    return@ShopContent
-                }
-                dummyState = dummyState.copy(
-                    shopItemList = itemList.map { original ->
-                        ShopItemState(
-                            shop = original,
-                            count = addedItem.find {
-                                it.id == original.id
-                            }?.count ?: 0
-                        )
-                    }
-                )
+            is ShopEvent.OnUpdateProduct ->{
+                viewModel.updateProduct(event.updatedProduct)
             }
             is ShopEvent.OnShowConfirmDeleteDialog ->{
-                dummyState = dummyState.copy(
-                    showConfirmDeleteDialog = event.itemId,
-                )
+                viewModel.showConfirmDeleteDialog(event.itemId)
             }
             is ShopEvent.OnDismissConfirmDeleteDialog ->{
-                dummyState = dummyState.copy(
-                    showConfirmDeleteDialog = null
-                )
+                viewModel.dismissConfirmDeleteDialog()
             }
-            is ShopEvent.OnDeleteShopItem ->{
-                val index = itemList.indexOfFirst { it.id == event.deletedShopId }
-                if(index != -1){
-                    itemList.removeAt(index)
-                }
-
-                val indexAdded = addedItem.indexOfFirst { it.id ==event.deletedShopId }
-                if(indexAdded != -1){
-                    addedItem.removeAt(indexAdded)
-                }
-
-                if(dummyState.filter == ShopFilter.FILTER_CART){
-                    return@ShopContent
-                }
-                dummyState = dummyState.copy(
-                    shopItemList = itemList.map {
-                        ShopItemState(
-                            shop = it,
-                            count = addedItem.find { addedItem ->
-                                addedItem.id == it.id
-                            }?.count ?: 0
-                        )
-                    },
-                    totalAmount = addedItem.sumOf { addedItem ->
-                        val itemPrice = dummyState.shopItemList.find{it.shop.id == addedItem.id}?.shop?.price ?: 0
-                        addedItem.count * itemPrice
-                    },
-                    isFloatingActionVisible = addedItem.isNotEmpty()
-                )
+            is ShopEvent.OnDeleteProduct ->{
+                viewModel.deleteProduct(event.productId)
             }
         }
     }
@@ -469,7 +284,7 @@ fun ShopContent(
                             .background(OnPrimaryVariant)
                             .clickable(
                                 onClick = {
-                                    event.invoke(ShopEvent.OnShowAddItemDialog)
+                                    event.invoke(ShopEvent.OnShowAddProductDialog)
                                 },
                             )
                             .padding(horizontal = 12.dp),
@@ -507,15 +322,15 @@ fun ShopContent(
             }
             items(
                 items = state.shopItemList,
-                key = { shopItemState -> shopItemState.shop.id}
+                key = { shopItemState -> shopItemState.product.id}
             ) { item ->
                 Spacer(Modifier.height(16.dp))
-                ShopItem(
+                ProductItem(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     state = item,
                     onEdit = {
                         event.invoke(
-                            ShopEvent.OnShowEditItemDialog(it)
+                            ShopEvent.OnShowEditProductDialog(it)
                         )
                     },
                     onDelete = {
@@ -524,18 +339,18 @@ fun ShopContent(
                         )
                     },
                     onItemIncrease = {
-                        ShopEvent.OnItemIncrease(
-                            itemId = item.shop.id
+                        ShopEvent.OnIncreaseProduct(
+                            itemId = item.product.id
                         ).let { event.invoke(it) }
                     },
                     onItemDecrease = {
-                        ShopEvent.OnItemDecrease(
-                            itemId = item.shop.id
+                        ShopEvent.OnDecreaseProduct(
+                            itemId = item.product.id
                         ).let { event.invoke(it) }
                     },
                     onColorCodeUpdate = {
-                        ShopEvent.OnItemNewColor(
-                            itemId = item.shop.id,
+                        ShopEvent.OnUpdateProductColor(
+                            productId = item.product.id,
                             newColor = it
                         ).let { event.invoke(it) }
                     },
@@ -560,9 +375,9 @@ fun ShopContent(
                 }
             )
         }
-        if(state.showAddItemDialog){
-            val dismissItemDialogEvent = ShopEvent.OnDismissItemDialog
-            ShopItemDetailDialog(
+        if(state.showAddProductDialog){
+            val dismissItemDialogEvent = ShopEvent.OnDismissProductDetailDialog
+            ProductDetailDialog(
                 onDismiss = {
                     event.invoke(dismissItemDialogEvent)
                 },
@@ -570,15 +385,14 @@ fun ShopContent(
                     event.invoke(dismissItemDialogEvent)
                 },
                 onSave = {
-                    event.invoke(ShopEvent.OnNewShopItem(it))
-                    event.invoke(dismissItemDialogEvent)
+                    event.invoke(ShopEvent.OnNewProduct(it))
                 }
             )
         }
-        if(state.showEditItemDialog != null){
-            val dismissItemDialogEvent = ShopEvent.OnDismissItemDialog
-            ShopItemDetailDialog(
-                shop = state.showEditItemDialog,
+        if(state.showEditProductDialog != null){
+            val dismissItemDialogEvent = ShopEvent.OnDismissProductDetailDialog
+            ProductDetailDialog(
+                product = state.showEditProductDialog,
                 onDismiss = {
                     event.invoke(dismissItemDialogEvent)
                 },
@@ -586,8 +400,7 @@ fun ShopContent(
                     event.invoke(dismissItemDialogEvent)
                 },
                 onSave = {
-                    event.invoke(ShopEvent.OnUpdateShopItem(it))
-                    event.invoke(dismissItemDialogEvent)
+                    event.invoke(ShopEvent.OnUpdateProduct(it))
                 }
             )
         }
@@ -602,7 +415,7 @@ fun ShopContent(
                 onDismiss = { event.invoke(dismissEvent) },
                 onCancel = { event.invoke(dismissEvent) },
                 onConfirm = {
-                    event.invoke(ShopEvent.OnDeleteShopItem(itemId))
+                    event.invoke(ShopEvent.OnDeleteProduct(itemId))
                     event.invoke(dismissEvent)
                 }
             )
@@ -621,15 +434,15 @@ fun ShopContentPreview(){
                 date = "24 Januari 2026",
                 totalAmount = 1575000L,
                 shopItemList = generateDummyShopItemList().map {
-                    ShopItemState(
-                        shop = it,
+                    ProductInfo(
+                        product = it,
                         count = 0
                     )
                 },
                 isFloatingActionVisible = true,
                 filter = ShopFilter.FILTER_ALL,
-                showEditItemDialog = null,
-                showAddItemDialog = false,
+                showEditProductDialog = null,
+                showAddProductDialog = false,
                 showConfirmDeleteDialog = null
             ),
         ){}
@@ -637,13 +450,13 @@ fun ShopContentPreview(){
 }
 
 
-fun generateDummyShopItemList() : MutableList<Shop>{
+fun generateDummyShopItemList() : MutableList<Product>{
     return MutableList(20){
-        Shop(
+        Product(
             it.toString(),
             "Nama item",
             15000,
-            Tertiary
+            Tertiary.toColorLong()
         )
     }
 }
