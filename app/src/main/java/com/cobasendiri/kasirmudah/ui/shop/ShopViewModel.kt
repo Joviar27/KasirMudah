@@ -10,8 +10,13 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
 import com.cobasendiri.kasirmudah.ui.UiMessage
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ShopViewModel(
@@ -27,20 +32,29 @@ class ShopViewModel(
     val state: StateFlow<ShopState> get() = _state
 
     init {
-        loadProductList("")
+        loadProductList()
         getTotalCartAmount()
     }
 
-    fun loadProductList(newQuery: String){
-        _state.value = state.value.copy(
-            searchQuery = newQuery
-        )
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun updateQuery(newQuery: String) {
+        _state.update {
+            it.copy(searchQuery = newQuery)
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun loadProductList(){
         viewModelScope.launch {
-            getProductLisUseCase.invoke(newQuery).collect { result ->
-                result.handleResult {
-                    _state.value = state.value.copy(shopItemList = it)
+            _state.map { it.searchQuery }
+                .distinctUntilChanged()
+                .flatMapLatest {  query ->
+                    getProductLisUseCase.invoke(query)
+                }.collect { result ->
+                    result.handleResult { products ->
+                        _state.update { it.copy(shopItemList = products) }
+                    }
                 }
-            }
         }
     }
 

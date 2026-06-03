@@ -177,7 +177,7 @@ fun ShopScreen(
 
             }
             is ShopEvent.OnSearch ->{
-                viewModel.loadProductList(event.searchQuery)
+                viewModel.updateQuery(event.searchQuery)
             }
             is ShopEvent.OnShowAddProductDialog ->{
                 viewModel.showAddProductDialog()
