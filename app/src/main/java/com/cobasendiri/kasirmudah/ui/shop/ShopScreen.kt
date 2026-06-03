@@ -162,44 +162,13 @@ fun ShopScreen(
                 viewModel.updateProduct(event.updatedProduct)
             }
             is ShopEvent.OnShowConfirmDeleteDialog ->{
-                dummyState = dummyState.copy(
-                    showConfirmDeleteDialog = event.itemId,
-                )
+                viewModel.showConfirmDeleteDialog(event.itemId)
             }
             is ShopEvent.OnDismissConfirmDeleteDialog ->{
-                dummyState = dummyState.copy(
-                    showConfirmDeleteDialog = null
-                )
+                viewModel.dismissConfirmDeleteDialog()
             }
             is ShopEvent.OnDeleteProduct ->{
-                val index = itemList.indexOfFirst { it.id == event.productId }
-                if(index != -1){
-                    itemList.removeAt(index)
-                }
-
-                val indexAdded = cartItemList.indexOfFirst { it.productId ==event.productId }
-                if(indexAdded != -1){
-                    cartItemList.removeAt(indexAdded)
-                }
-
-                if(dummyState.filter == ShopFilter.FILTER_CART){
-                    return@ShopContent
-                }
-                dummyState = dummyState.copy(
-                    shopItemList = itemList.map {
-                        ProductInfo(
-                            product = it,
-                            count = cartItemList.find { addedItem ->
-                                addedItem.productId == it.id
-                            }?.count ?: 0
-                        )
-                    },
-                    totalAmount = cartItemList.sumOf { addedItem ->
-                        val itemPrice = dummyState.shopItemList.find{it.product.id == addedItem.productId}?.product?.price ?: 0
-                        addedItem.count * itemPrice
-                    },
-                    isFloatingActionVisible = cartItemList.isNotEmpty()
-                )
+                viewModel.deleteProduct(event.productId)
             }
         }
     }

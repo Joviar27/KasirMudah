@@ -6,6 +6,7 @@ import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.ClearCartUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DecrementProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.DeleteProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
@@ -32,7 +33,8 @@ class ShopViewModel(
     private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase,
     private val incrementProductUseCase: IncrementProductUseCase,
     private val decrementProductUseCase: DecrementProductUseCase,
-    private val clearCartUseCase: ClearCartUseCase
+    private val clearCartUseCase: ClearCartUseCase,
+    private val deleteProductUseCase: DeleteProductUseCase
 ): BaseViewModel() {
 
     private val _state = MutableStateFlow(ShopState())
@@ -129,6 +131,14 @@ class ShopViewModel(
         }
     }
 
+    fun deleteProduct(productId: String){
+        viewModelScope.launch {
+            deleteProductUseCase.invoke(productId).handleResult{
+                dismissConfirmDeleteDialog()
+            }
+        }
+    }
+
     fun showAddProductDialog(){
         _state.update {
             it.copy(showAddProductDialog = true)
@@ -148,6 +158,14 @@ class ShopViewModel(
                 showEditProductDialog = null
             )
         }
+    }
+
+    fun showConfirmDeleteDialog(productId: String){
+        _state.update { it.copy(showConfirmDeleteDialog = productId) }
+    }
+
+    fun dismissConfirmDeleteDialog(){
+        _state.update { it.copy(showConfirmDeleteDialog = null) }
     }
 
     override fun showErrorMessage(errorMessage: UiMessage) {
