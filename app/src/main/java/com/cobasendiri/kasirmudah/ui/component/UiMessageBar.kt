@@ -37,7 +37,10 @@ fun UiMessageBar(
             .background(White, RoundedCornerShape(8.dp))
             .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            Modifier.background(White),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Image(modifier = Modifier.background(imageBackground, CircleShape),
                 painter = imageStart,
                 contentDescription = null

@@ -11,7 +11,7 @@ data class ShopState(
     val filter: ShopFilter = ShopFilter.FILTER_ALL,
     val shopItemList: List<ProductInfo> = listOf(),
     val searchQuery: String = "",
-    val toastMessage: UiMessage? = null,
+    val uiMessage: UiMessage? = null,
     val isFloatingActionVisible: Boolean = false,
     val showEditProductDialog: Product? = null,
     val showAddProductDialog: Boolean = false,

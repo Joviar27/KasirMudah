@@ -1,5 +1,10 @@
 package com.cobasendiri.kasirmudah.ui.shop
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -60,14 +66,18 @@ import com.cobasendiri.kasirmudah.ui.component.FloatingAction
 import com.cobasendiri.kasirmudah.ui.component.ProductItem
 import com.cobasendiri.kasirmudah.ui.component.dialog.ProductDetailDialog
 import com.cobasendiri.kasirmudah.ui.component.TotalItem
+import com.cobasendiri.kasirmudah.ui.component.UiMessageBar
 import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
+import com.cobasendiri.kasirmudah.ui.theme.Negative
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
+import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
 import com.cobasendiri.kasirmudah.ui.utils.ToastUtil.showToast
+import kotlinx.coroutines.delay
 
 @Composable
 fun ShopScreen(
@@ -82,10 +92,10 @@ fun ShopScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    state.toastMessage?.let { uiMessage ->
+    state.uiMessage?.let { uiMessage ->
         LaunchedEffect(uiMessage.getMessageId()) {
-            uiMessage.asString(context).showToast(context)
-            viewModel.toastMessageShown()
+            delay(3000L)
+            viewModel.uiMessageShown()
         }
     }
 
@@ -152,6 +162,8 @@ fun ShopContent(
     state: ShopState,
     event: (ShopEvent) -> Unit
 ){
+
+    val context = LocalContext.current
 
     val listState = rememberLazyListState()
     val topPadding = remember(innerPadding){
@@ -418,6 +430,31 @@ fun ShopContent(
                     event.invoke(ShopEvent.OnDeleteProduct(itemId))
                     event.invoke(dismissEvent)
                 }
+            )
+        }
+
+        AnimatedVisibility(
+            visible = state.uiMessage != null,
+            enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
+            exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut(),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .statusBarsPadding()
+        ) {
+            val icon = when(state.uiMessage?.type){
+                UiMessageType.SUCCESS -> painterResource(R.drawable.ic_check_24_white)
+                UiMessageType.ERROR -> painterResource(R.drawable.ic_error_24_white)
+                else -> painterResource(R.drawable.ic_info_outline_24_white)
+            }
+            val color = when(state.uiMessage?.type){
+                UiMessageType.SUCCESS -> Primary
+                UiMessageType.ERROR -> Negative
+                else -> Tertiary
+            }
+            UiMessageBar(
+                imageStart = icon,
+                imageBackground = color,
+                message = state.uiMessage?.asString(context) ?: ""
             )
         }
     }
