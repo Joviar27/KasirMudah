@@ -81,11 +81,11 @@ class ShopViewModel(
     private fun getTotalCartAmount(){
         viewModelScope.launch {
             getTotalCartAmountUseCase.invoke().collect { result ->
-                result.handleResult {
-                    _state.value = state.value.copy(
-                        totalAmount = it ?: 0L,
-                        isFloatingActionVisible = it != null && it > 0L
-                    )
+                result.handleResult { totalAmount ->
+                    _state.update { it.copy(
+                        totalAmount = totalAmount ?: 0L,
+                        isFloatingActionVisible = totalAmount != null && totalAmount > 0L
+                    ) }
                 }
             }
         }
@@ -169,14 +169,10 @@ class ShopViewModel(
     }
 
     override fun showErrorMessage(errorMessage: UiMessage) {
-        _state.value = state.value.copy(
-            errorMessage = errorMessage
-        )
+        _state.update { it.copy(errorMessage = errorMessage) }
     }
 
     override fun errorMessageShown() {
-        _state.value = state.value.copy(
-            errorMessage = null
-        )
+        _state.update { it.copy(errorMessage = null) }
     }
 }
