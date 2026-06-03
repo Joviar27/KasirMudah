@@ -386,7 +386,6 @@ fun ShopContent(
                 },
                 onSave = {
                     event.invoke(ShopEvent.OnNewProduct(it))
-                    event.invoke(dismissItemDialogEvent)
                 }
             )
         }
@@ -402,7 +401,6 @@ fun ShopContent(
                 },
                 onSave = {
                     event.invoke(ShopEvent.OnUpdateProduct(it))
-                    event.invoke(dismissItemDialogEvent)
                 }
             )
         }
