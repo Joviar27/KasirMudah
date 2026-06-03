@@ -1,6 +1,7 @@
 package com.cobasendiri.kasirmudah.ui.shop
 
 import androidx.lifecycle.viewModelScope
+import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.Product
 import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
@@ -15,6 +16,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
 import com.cobasendiri.kasirmudah.ui.UiMessage
+import com.cobasendiri.kasirmudah.ui.utils.UiMessageUtil.asUiMessage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -112,6 +114,7 @@ class ShopViewModel(
     fun addNewProduct(productDraft: ProductDraft){
         viewModelScope.launch {
             addProductUseCase.invoke(productDraft).handleResult {
+                showToastMessage(R.string.succcess_add.asUiMessage())
                 dismissProductDetailDialog()
             }
         }
@@ -120,6 +123,7 @@ class ShopViewModel(
     fun updateProduct(productDraft: ProductDraft){
         viewModelScope.launch {
             updateProductUseCase.invoke(productDraft).handleResult{
+                showToastMessage(R.string.success_update.asUiMessage())
                 dismissProductDetailDialog()
             }
         }
@@ -134,6 +138,7 @@ class ShopViewModel(
     fun deleteProduct(productId: String){
         viewModelScope.launch {
             deleteProductUseCase.invoke(productId).handleResult{
+                showToastMessage(R.string.success_delete.asUiMessage())
                 dismissConfirmDeleteDialog()
             }
         }
@@ -168,11 +173,11 @@ class ShopViewModel(
         _state.update { it.copy(showConfirmDeleteDialog = null) }
     }
 
-    override fun showErrorMessage(errorMessage: UiMessage) {
-        _state.update { it.copy(errorMessage = errorMessage) }
+    override fun showToastMessage(message: UiMessage) {
+        _state.update { it.copy(toastMessage = message) }
     }
 
-    override fun errorMessageShown() {
-        _state.update { it.copy(errorMessage = null) }
+    override fun toastMessageShown() {
+        _state.update { it.copy(toastMessage = null) }
     }
 }

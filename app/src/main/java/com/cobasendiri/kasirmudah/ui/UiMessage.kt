@@ -16,7 +16,7 @@ sealed interface UiMessage {
         @StringRes val resId: Int
     ) : UiMessage
 
-    fun getRandomId(): Long = id
+    fun getMessageId(): Long = id
 
     fun asString(context: Context): String = when (this) {
         is DynamicString -> value

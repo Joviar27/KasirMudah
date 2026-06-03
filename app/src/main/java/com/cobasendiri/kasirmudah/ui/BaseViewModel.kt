@@ -13,12 +13,12 @@ abstract class BaseViewModel: ViewModel() {
             is Result.Success -> onSuccess?.invoke(this.data)
             is Result.Error -> {
                 val uiMessage = this.error.asUiMessage()
-                showErrorMessage(uiMessage)
+                showToastMessage(uiMessage)
             }
         }
     }
 
-    open fun showErrorMessage(errorMessage: UiMessage){}
+    open fun showToastMessage(message: UiMessage){}
 
-    open fun errorMessageShown(){}
+    open fun toastMessageShown(){}
 }

@@ -82,10 +82,10 @@ fun ShopScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    state.errorMessage?.let { uiMessage ->
-        LaunchedEffect(uiMessage.getRandomId()) {
+    state.toastMessage?.let { uiMessage ->
+        LaunchedEffect(uiMessage.getMessageId()) {
             uiMessage.asString(context).showToast(context)
-            viewModel.errorMessageShown()
+            viewModel.toastMessageShown()
         }
     }
 
