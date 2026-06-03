@@ -129,20 +129,10 @@ fun ShopScreen(
                 viewModel.decrementProduct(event.itemId)
             }
             is ShopEvent.OnUpdateProductColor ->{
-                val index = itemList.indexOfFirst { it.id == event.productId }
-                if(index != -1){
-                    itemList[index] = itemList[index].copy(colorCode = event.newColor.toColorLong())
-                }
-
-                dummyState = dummyState.copy(
-                    shopItemList = dummyState.shopItemList.map {
-                        if(it.product.id == event.productId){
-                            it.copy(product = it.product.copy(
-                                colorCode = event.newColor.toColorLong()
-                            ))
-                        }else it
-                    }
-                )
+               viewModel.updateProductColorCode(
+                   event.productId,
+                   event.newColor
+               )
             }
             is ShopEvent.OnReset ->{
                 viewModel.clearCart()

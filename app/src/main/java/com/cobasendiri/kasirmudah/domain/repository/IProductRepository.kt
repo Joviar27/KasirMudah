@@ -13,6 +13,8 @@ interface IProductRepository {
 
     suspend fun updateProduct(productDraft: ProductDraft)
 
+    suspend fun updateProductColorCode(productId: String, newColor: Long)
+
     suspend fun deleteProduct(productId: String)
 
 }

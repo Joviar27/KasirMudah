@@ -12,6 +12,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.ui.shop.ShopViewModel
 
@@ -19,6 +20,7 @@ class ViewModelFactory(
     private val getProductLisUseCase: GetProductLisUseCase,
     private val addProductUseCase: AddProductUseCase,
     private val updateProductUseCase: UpdateProductUseCase,
+    private val updateProductColorCodeUseCase: UpdateProductColorCodeUseCase,
     private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase,
     private val incrementProductUseCase: IncrementProductUseCase,
     private val decrementProductUseCase: DecrementProductUseCase,
@@ -37,6 +39,7 @@ class ViewModelFactory(
                     Injection.provideGetProductListUseCase(context),
                     Injection.provideAddProductUseCase(context),
                     Injection.provideUpdateProductUseCase(context),
+                    Injection.provideUpdateProductColorCodeUseCase(context),
                     Injection.provideGetTotalCartAmountUseCase(context),
                     Injection.provideIncrementProductUseCase(context),
                     Injection.provideDecrementProductUseCase(context),
@@ -51,8 +54,8 @@ class ViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ShopViewModel::class.java)) {
             return ShopViewModel(getProductLisUseCase, getCartListUseCase, addProductUseCase,
-                updateProductUseCase, getTotalCartAmountUseCase, incrementProductUseCase,
-                decrementProductUseCase, clearCartUseCase) as T
+                updateProductUseCase, updateProductColorCodeUseCase, getTotalCartAmountUseCase,
+                incrementProductUseCase, decrementProductUseCase, clearCartUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

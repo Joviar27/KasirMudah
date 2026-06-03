@@ -17,7 +17,7 @@ interface ShopEvent {
 
     data class OnUpdateProductColor(
         val productId: String,
-        val newColor: Color
+        val newColor: Long
     ): ShopEvent
 
     data class OnFilterChange(

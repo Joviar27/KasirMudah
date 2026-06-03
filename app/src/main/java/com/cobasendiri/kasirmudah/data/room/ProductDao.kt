@@ -25,6 +25,9 @@ interface ProductDao {
     @Update
     suspend fun updateProduct(product: ProductEntity)
 
+    @Query("UPDATE products SET colorCode = :newColor WHERE id = :productId")
+    suspend fun updateProductColorCode(productId: String, newColor: Long)
+
     @Query("DELETE FROM products WHERE id = :id")
     suspend fun deleteProduct(id: String)
 }

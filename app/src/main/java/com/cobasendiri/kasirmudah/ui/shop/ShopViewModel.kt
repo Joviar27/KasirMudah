@@ -10,6 +10,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
 import com.cobasendiri.kasirmudah.ui.UiMessage
@@ -27,6 +28,7 @@ class ShopViewModel(
     private val getCartListUseCase: GetCartListUseCase,
     private val addProductUseCase: AddProductUseCase,
     private val updateProductUseCase: UpdateProductUseCase,
+    private val updateProductColorCodeUseCase: UpdateProductColorCodeUseCase,
     private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase,
     private val incrementProductUseCase: IncrementProductUseCase,
     private val decrementProductUseCase: DecrementProductUseCase,
@@ -118,6 +120,12 @@ class ShopViewModel(
             updateProductUseCase.invoke(productDraft).handleResult{
                 dismissProductDetailDialog()
             }
+        }
+    }
+
+    fun updateProductColorCode(productId: String, newColor: Long){
+        viewModelScope.launch {
+            updateProductColorCodeUseCase.invoke(productId, newColor).handleResult()
         }
     }
 

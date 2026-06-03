@@ -68,6 +68,15 @@ class ProductRepository(
         }
     }
 
+    override suspend fun updateProductColorCode(
+        productId: String,
+        newColor: Long
+    ) = withContext(ioDispatcher) {
+        runMapExceptionSuspending {
+            productDao.updateProductColorCode(productId, newColor)
+        }
+    }
+
     override suspend fun deleteProduct(
         productId: String
     ) = withContext(ioDispatcher) {

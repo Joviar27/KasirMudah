@@ -52,7 +52,7 @@ fun ProductItem(
     state: ProductInfo,
     onEdit: (Product) -> Unit,
     onDelete: (String) -> Unit,
-    onColorCodeUpdate: (Color) -> Unit,
+    onColorCodeUpdate: (Long) -> Unit,
     onItemIncrease: () -> Unit,
     onItemDecrease: () -> Unit
 ) {
@@ -90,7 +90,7 @@ fun ProductItem(
                 ) { newColor ->
                     showColorCodePopup = false
                     newColor?.let {
-                        onColorCodeUpdate.invoke(it)
+                        onColorCodeUpdate.invoke(it.toColorLong())
                     }
                 }
             }
