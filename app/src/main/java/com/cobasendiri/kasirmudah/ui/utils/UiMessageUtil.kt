@@ -1,7 +1,7 @@
 package com.cobasendiri.kasirmudah.ui.utils
 
 import androidx.annotation.StringRes
-import com.cobasendiri.kasirmudah.ui.UiMessage
+import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import java.util.UUID
 
 object UiMessageUtil {

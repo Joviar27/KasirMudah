@@ -15,7 +15,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
-import com.cobasendiri.kasirmudah.ui.UiMessage
+import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import com.cobasendiri.kasirmudah.ui.utils.UiMessageUtil.asUiMessage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow

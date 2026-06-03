@@ -1,7 +1,7 @@
 package com.cobasendiri.kasirmudah.ui.utils
 
 import com.cobasendiri.kasirmudah.domain.exception.KasirMudahException
-import com.cobasendiri.kasirmudah.ui.UiMessage
+import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import com.cobasendiri.kasirmudah.R
 import java.util.UUID
 

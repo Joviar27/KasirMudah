@@ -2,6 +2,7 @@ package com.cobasendiri.kasirmudah.ui
 
 import androidx.lifecycle.ViewModel
 import com.cobasendiri.kasirmudah.domain.Result
+import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import com.cobasendiri.kasirmudah.ui.utils.ErrorMessageMapper.asUiMessage
 
 abstract class BaseViewModel: ViewModel() {
