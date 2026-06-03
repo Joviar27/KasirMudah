@@ -5,6 +5,7 @@ import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.ClearCartUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DecrementProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 
 class ShopViewModel(
     private val getProductLisUseCase: GetProductLisUseCase,
+    private val getCartListUseCase: GetCartListUseCase,
     private val addProductUseCase: AddProductUseCase,
     private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase,
     private val incrementProductUseCase: IncrementProductUseCase,
@@ -44,12 +46,23 @@ class ShopViewModel(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
+    fun updateFilter(newFilter: ShopFilter) {
+        _state.update {
+            it.copy(filter = newFilter)
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun loadProductList(){
         viewModelScope.launch {
-            _state.map { it.searchQuery }
+            _state.map { Pair(it.searchQuery, it.filter) }
                 .distinctUntilChanged()
-                .flatMapLatest {  query ->
-                    getProductLisUseCase.invoke(query)
+                .flatMapLatest { condition ->
+                    if(condition.second == ShopFilter.FILTER_CART){
+                        getCartListUseCase.invoke(condition.first)
+                    }else{
+                        getProductLisUseCase.invoke(condition.first)
+                    }
                 }.collect { result ->
                     result.handleResult { products ->
                         _state.update { it.copy(shopItemList = products) }

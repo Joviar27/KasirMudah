@@ -21,10 +21,10 @@ class ViewModelFactory(
     private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase,
     private val incrementProductUseCase: IncrementProductUseCase,
     private val decrementProductUseCase: DecrementProductUseCase,
-    private val clearCartUseCase: ClearCartUseCase
+    private val clearCartUseCase: ClearCartUseCase,
+    private val getCartListUseCase: GetCartListUseCase,
 //    private val deleteProductUseCase: DeleteProductUseCase,
 //    private val updateProductUseCase: UpdateProductUseCase,
-//    private val getCartListUseCase: GetCartListUseCase,
 ) : ViewModelProvider.Factory {
 
     companion object {
@@ -39,7 +39,8 @@ class ViewModelFactory(
                     Injection.provideGetTotalCartAmountUseCase(context),
                     Injection.provideIncrementProductUseCase(context),
                     Injection.provideDecrementProductUseCase(context),
-                    Injection.provideClearCartUseCase(context)
+                    Injection.provideClearCartUseCase(context),
+                    Injection.provideGetCartListUseCase(context)
                 ).also { instance = it }
             }
         }
@@ -48,7 +49,7 @@ class ViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ShopViewModel::class.java)) {
-            return ShopViewModel(getProductLisUseCase, addProductUseCase,
+            return ShopViewModel(getProductLisUseCase, getCartListUseCase, addProductUseCase,
                 getTotalCartAmountUseCase, incrementProductUseCase, decrementProductUseCase,
                 clearCartUseCase) as T
         }

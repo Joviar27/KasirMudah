@@ -1,6 +1,6 @@
 package com.cobasendiri.kasirmudah.ui.shop
 
-enum class ShopFilter(val value: String) {
-    FILTER_ALL("all"),
-    FILTER_CART("cart")
+enum class ShopFilter {
+    FILTER_ALL,
+    FILTER_CART
 }

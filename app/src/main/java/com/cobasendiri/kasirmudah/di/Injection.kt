@@ -11,6 +11,7 @@ import com.cobasendiri.kasirmudah.domain.repository.IProductRepository
 import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.ClearCartUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DecrementProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
@@ -35,6 +36,10 @@ object Injection {
 
     fun provideGetProductListUseCase(context: Context): GetProductLisUseCase{
         return GetProductLisUseCase(provideProductRepository(context))
+    }
+
+    fun provideGetCartListUseCase(context: Context): GetCartListUseCase{
+        return GetCartListUseCase(provideCartRepository(context))
     }
 
     fun provideAddProductUseCase(context: Context): AddProductUseCase{

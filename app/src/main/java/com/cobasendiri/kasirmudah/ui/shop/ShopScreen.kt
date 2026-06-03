@@ -148,30 +148,7 @@ fun ShopScreen(
                 viewModel.clearCart()
             }
             is ShopEvent.OnFilterChange ->{
-                dummyState = dummyState.copy(
-                    filter = event.newFilter
-                )
-                dummyState = when(event.newFilter){
-                    ShopFilter.FILTER_CART -> {
-                        dummyState.copy(
-                            shopItemList = dummyState.shopItemList.filter {
-                                it.count > 0
-                            }
-                        )
-                    }
-                    ShopFilter.FILTER_ALL -> {
-                        dummyState.copy(
-                            shopItemList = itemList.map { original ->
-                                ProductInfo(
-                                    product = original,
-                                    count = cartItemList.find {
-                                        it.productId == original.id
-                                    }?.count ?: 0
-                                )
-                            }
-                        )
-                    }
-                }
+                viewModel.updateFilter(event.newFilter)
             }
             is ShopEvent.OnFinish ->{
 
