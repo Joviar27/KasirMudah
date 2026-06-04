@@ -2,6 +2,7 @@ package com.cobasendiri.kasirmudah.ui
 
 import androidx.lifecycle.ViewModel
 import com.cobasendiri.kasirmudah.domain.Result
+import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import com.cobasendiri.kasirmudah.ui.utils.ErrorMessageMapper.asUiMessage
 
 abstract class BaseViewModel: ViewModel() {
@@ -13,12 +14,12 @@ abstract class BaseViewModel: ViewModel() {
             is Result.Success -> onSuccess?.invoke(this.data)
             is Result.Error -> {
                 val uiMessage = this.error.asUiMessage()
-                showToastMessage(uiMessage)
+                showUiMessage(uiMessage)
             }
         }
     }
 
-    open fun showToastMessage(message: UiMessage){}
+    open fun showUiMessage(message: UiMessage){}
 
-    open fun toastMessageShown(){}
+    open fun uiMessageShown(){}
 }
