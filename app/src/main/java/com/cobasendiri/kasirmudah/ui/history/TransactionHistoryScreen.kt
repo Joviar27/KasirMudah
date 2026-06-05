@@ -36,8 +36,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.cobasendiri.kasirmudah.domain.model.Transaction
-import com.cobasendiri.kasirmudah.domain.model.TransactionShopItem
 import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
@@ -61,14 +59,7 @@ fun TransactionHistoryScreen(
         TransactionHistoryState(
             filter = TransactionFilter.FILTER_ALL,
             showConfirmDeleteDialog = null,
-            transactionList = transactionList.map {
-                TransactionItemState(
-                    id = it.id,
-                    name = it.name,
-                    createdAt = it.createdAt,
-                    isBookmarked = false
-                )
-            }
+            transactionList = transactionList
         )
     ) }
 
@@ -321,18 +312,15 @@ fun TransactionHistoryContent(
     }
 }
 
-fun generateDummyTransactionItemList() : MutableList<Transaction>{
+
+
+fun generateDummyTransactionItemList(): MutableList<TransactionItemState>{
     return MutableList(20){
-        Transaction(
+        TransactionItemState(
             id = "4shisefhw48t4$it",
             name = "transaksi-4shisefhw48t4$it",
             createdAt = "12 Agustus 2026 - 12:53:01",
-            shopItems = MutableList(6){
-                TransactionShopItem(
-                    itemName = "Barang Nomor $it",
-                    totalPrice = "Rp 863.000,00"
-                )
-            }
+            isBookmarked = false
         )
     }
 }

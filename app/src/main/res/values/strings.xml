@@ -39,6 +39,13 @@
     <string name="menu_about_us">Tentang Kami</string>
     <string name="menu_sync_data">Sinkronisasi Data</string>
 
+    <!--  Receipt Page  -->
+    <string name="receipt_title">Nota Pembelian</string>
+    <string name="transaction_id">Nomor Pembelian: %1$s</string>
+    <string name="price">Harga</string>
+    <string name="name_count">%1$s (%2$sX)</string>
+    <string name="total">Total</string>
+
     <!--  Edit Profile Dialog  -->
     <string name="edit_shop_profile">Edit Profil Toko</string>
     <string name="shop_name">Nama toko</string>
