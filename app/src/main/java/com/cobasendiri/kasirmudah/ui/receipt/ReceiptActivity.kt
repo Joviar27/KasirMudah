@@ -8,8 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.cobasendiri.kasirmudah.domain.model.Receipt
-import com.cobasendiri.kasirmudah.domain.model.ReceiptItem
+import com.cobasendiri.kasirmudah.domain.model.TransactionReceipt
+import com.cobasendiri.kasirmudah.domain.model.TransactionReceiptItem
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 
 class ReceiptActivity: ComponentActivity() {
@@ -55,15 +55,14 @@ class ReceiptActivity: ComponentActivity() {
 
     }
 
-    fun generateDummyReceipt() : Receipt{
-        return Receipt(
+    fun generateDummyReceipt() : TransactionReceipt{
+        return TransactionReceipt(
             id = "4shisefhw48t4",
-            name = "transaksi-4shisefhw48t4",
             createdAt = "12 Agustus 2026 - 12:53:01",
             shopItems = MutableList(6){
-                ReceiptItem(
-                    itemName = "Barang Nomor $it",
-                    totalPrice = "Rp 863.000,00",
+                TransactionReceiptItem(
+                    name = "Barang Nomor $it",
+                    totalAmount = 980000,
                     count = 5
                 )
             },

@@ -1,13 +1,13 @@
 package com.cobasendiri.kasirmudah.ui.receipt
 
-import com.cobasendiri.kasirmudah.domain.model.ReceiptItem
+import com.cobasendiri.kasirmudah.domain.model.TransactionReceiptItem
 
 data class ReceiptState(
     val previewMode: Boolean = false,
     val shopName: String = "",
     val transactionId: String = "",
     val transactionCreatedAt: String = "",
-    val transactionShopItems: List<ReceiptItem> = listOf(),
+    val transactionShopItems: List<TransactionReceiptItem> = listOf(),
     val totalTransaction: String = "",
     val showConfirmDeleteDialog: String? = null
 )
