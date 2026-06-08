@@ -10,10 +10,12 @@ import com.cobasendiri.kasirmudah.domain.usecase.DecrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DeleteProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
+import com.cobasendiri.kasirmudah.ui.receipt.ReceiptViewModel
 import com.cobasendiri.kasirmudah.ui.shop.ShopViewModel
 
 class ViewModelFactory(
@@ -27,6 +29,7 @@ class ViewModelFactory(
     private val clearCartUseCase: ClearCartUseCase,
     private val getCartListUseCase: GetCartListUseCase,
     private val deleteProductUseCase: DeleteProductUseCase,
+    private val getReceiptItemsUseCase: GetReceiptItemsUseCase
 ) : ViewModelProvider.Factory {
 
     companion object {
@@ -45,7 +48,8 @@ class ViewModelFactory(
                     Injection.provideDecrementProductUseCase(context),
                     Injection.provideClearCartUseCase(context),
                     Injection.provideGetCartListUseCase(context),
-                    Injection.provideDeleteProductUseCase(context)
+                    Injection.provideDeleteProductUseCase(context),
+                    Injection.provideGetReceiptItemsUseCase(context)
                 ).also { instance = it }
             }
         }
@@ -59,6 +63,8 @@ class ViewModelFactory(
                 incrementProductUseCase, decrementProductUseCase, clearCartUseCase,
                 deleteProductUseCase
             ) as T
+        }else if(modelClass.isAssignableFrom(ReceiptViewModel::class.java)){
+            return ReceiptViewModel(getReceiptItemsUseCase, getTotalCartAmountUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

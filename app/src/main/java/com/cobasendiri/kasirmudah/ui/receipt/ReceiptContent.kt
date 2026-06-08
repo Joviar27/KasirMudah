@@ -18,6 +18,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cobasendiri.kasirmudah.R
-import com.cobasendiri.kasirmudah.domain.model.ReceiptItem
+import com.cobasendiri.kasirmudah.domain.model.TransactionReceiptItem
 import com.cobasendiri.kasirmudah.ui.component.ReceiptTopBar
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
@@ -36,6 +37,7 @@ import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
+import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,6 +61,9 @@ fun ReceiptContent(
             )
         }
     ) { innerPadding ->
+        val formattedTotal = remember(state.totalTransaction) {
+            "Rp ${state.totalTransaction.toString().decimalFormat()},00"
+        }
 
         val scrollState = rememberScrollState()
 
@@ -121,20 +126,7 @@ fun ReceiptContent(
                 Spacer(Modifier.height(10.dp))
                 state.transactionShopItems.forEach { item ->
                     Spacer(Modifier.height(6.dp))
-                    Row(Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = stringResource(R.string.name_count, item.itemName, item.count),
-                            style = KasirMudahTypography.labelMedium
-                        )
-                        Text(
-                            text = item.totalPrice,
-                            style = KasirMudahTypography.labelMedium.copy(
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        )
-                    }
+                    ReceiptItem(item)
                     Spacer(Modifier.height(6.dp))
                 }
                 Spacer(Modifier.height(36.dp))
@@ -148,7 +140,7 @@ fun ReceiptContent(
                         )
                     )
                     Text(
-                        text = state.totalTransaction,
+                        text = formattedTotal,
                         style = KasirMudahTypography.bodyMedium.copy(
                             fontWeight = FontWeight.SemiBold
                         )
@@ -193,11 +185,33 @@ fun ReceiptContent(
                 onCancel = { event.invoke(dismissEvent) },
                 onConfirm = {
                     event.invoke(ReceiptEvent.OnDelete(transactionId))
-                    //delete this, dismiss from viewmodel later
-                    event.invoke(dismissEvent)
                 }
             )
         }
+    }
+}
+
+@Composable
+fun ReceiptItem(
+    item: TransactionReceiptItem
+){
+    val formattedAmount = remember(item.totalAmount) {
+        "Rp ${item.totalAmount.toString().decimalFormat()},00"
+    }
+
+    Row(Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = stringResource(R.string.name_count, item.name, item.count),
+            style = KasirMudahTypography.labelMedium
+        )
+        Text(
+            text = formattedAmount,
+            style = KasirMudahTypography.labelMedium.copy(
+                fontWeight = FontWeight.SemiBold
+            )
+        )
     }
 }
 
@@ -211,13 +225,13 @@ fun ReceiptContentPrev(){
             transactionCreatedAt = "12 Agustus 2026 - 12:53:01",
             transactionId = "4shisefhw48t4",
             transactionShopItems = MutableList(6){
-                ReceiptItem(
-                    itemName = "Barang Nomor $it",
-                    totalPrice = "Rp 863.000,00",
+                TransactionReceiptItem(
+                    name = "Barang Nomor $it",
+                    totalAmount = 980000,
                     count = 5
                 )
             },
-            totalTransaction = "Rp 1.500.255,00"
+            totalTransaction = 1500225
         )
     ){}
 }

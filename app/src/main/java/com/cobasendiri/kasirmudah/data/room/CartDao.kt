@@ -57,7 +57,7 @@ interface CartDao {
     suspend fun deleteAllCart()
 
     @Query("""
-        SELECT p.name, c.count, (p.price * c.count)
+        SELECT p.name, c.count, (p.price * c.count) AS totalAmount
         FROM products as p
         INNER JOIN carts as c ON p.id = c.productId
     """)

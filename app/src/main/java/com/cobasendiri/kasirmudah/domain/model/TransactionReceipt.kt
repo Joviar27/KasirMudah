@@ -4,5 +4,5 @@ data class TransactionReceipt(
     val id: String,
     val createdAt: String,
     val shopItems: List<TransactionReceiptItem>,
-    val totalTransaction: String,
+    val totalTransaction: Long,
 )

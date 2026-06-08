@@ -4,9 +4,10 @@ import com.cobasendiri.kasirmudah.data.CartRepository
 import com.cobasendiri.kasirmudah.domain.Result
 import com.cobasendiri.kasirmudah.domain.exception.KasirMudahException
 import com.cobasendiri.kasirmudah.domain.model.TransactionReceiptItem
+import com.cobasendiri.kasirmudah.domain.repository.ICartRepository
 
 class GetReceiptItemsUseCase(
-    private val cartRepository: CartRepository
+    private val cartRepository: ICartRepository
 ) {
     suspend fun invoke(): Result<List<TransactionReceiptItem>>{
         return try {
