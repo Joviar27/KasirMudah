@@ -36,7 +36,20 @@ class ReceiptActivity: ComponentActivity() {
             }
 
             KasirMudahTheme {
-                ReceiptContent(dummyState){}
+                ReceiptContent(dummyState){ event ->
+                    when(event){
+                        is ReceiptEvent.OnShowConfirmDeleteDialog -> {
+                            dummyState = dummyState.copy(
+                                showConfirmDeleteDialog = event.transactionId
+                            )
+                        }
+                        is ReceiptEvent.OnDismissConfirmDeleteDialog -> {
+                            dummyState = dummyState.copy(
+                                showConfirmDeleteDialog = null
+                            )
+                        }
+                    }
+                }
             }
         }
 

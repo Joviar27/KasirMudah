@@ -2,7 +2,6 @@ package com.cobasendiri.kasirmudah.ui.receipt
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +32,7 @@ import com.cobasendiri.kasirmudah.domain.model.ReceiptItem
 import com.cobasendiri.kasirmudah.ui.component.ReceiptTopBar
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
+import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
@@ -51,7 +51,7 @@ fun ReceiptContent(
                     event.invoke(ReceiptEvent.OnUpdateBookmark(state.transactionId))
                 },
                 onDelete = {
-                    event.invoke(ReceiptEvent.OnDelete(state.transactionId))
+                    event.invoke(ReceiptEvent.OnShowConfirmDeleteDialog(state.transactionId))
                 },
                 onNavigateBack = {
                     event.invoke(ReceiptEvent.OnNavigateBack)
@@ -180,6 +180,23 @@ fun ReceiptContent(
                     event.invoke(ReceiptEvent.OnDownload)
                 }
             }
+        }
+        if(state.showConfirmDeleteDialog != null){
+            val dismissEvent = ReceiptEvent.OnDismissConfirmDeleteDialog
+            val transactionId = state.showConfirmDeleteDialog
+            NegativeConfirmDialog(
+                title = stringResource(R.string.delete_transaction_title),
+                body = stringResource(R.string.delete_transaction_body),
+                cancelButton = stringResource(R.string.cancel),
+                confirmButton = stringResource(R.string.delete),
+                onDismiss = { event.invoke(dismissEvent) },
+                onCancel = { event.invoke(dismissEvent) },
+                onConfirm = {
+                    event.invoke(ReceiptEvent.OnDelete(transactionId))
+                    //delete this, dismiss from viewmodel later
+                    event.invoke(dismissEvent)
+                }
+            )
         }
     }
 }

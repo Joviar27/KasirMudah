@@ -16,6 +16,8 @@ interface ReceiptEvent {
         val transactionId: String
     ): ReceiptEvent
 
+    data object OnDismissConfirmDeleteDialog: ReceiptEvent
+
     data object OnSave: ReceiptEvent
 
     data object OnDownload: ReceiptEvent
