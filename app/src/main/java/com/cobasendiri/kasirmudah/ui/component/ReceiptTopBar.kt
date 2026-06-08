@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -49,18 +50,20 @@ fun ReceiptTopBar(
         .background(Primary)
         .padding(horizontal = 16.dp)
         .padding(top = 32.dp, bottom = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            modifier = Modifier.clip(CircleShape).clickable{
+            modifier = Modifier.clip(CircleShape)
+                .clickable{
                 onNavigateBack.invoke()
             },
             painter = painterResource(R.drawable.ic_arrow_left_32),
             contentDescription = null
         )
         Text(
+            modifier = Modifier.weight(1f),
             text = stringResource(R.string.receipt_title),
+            textAlign = TextAlign.Center,
             style = KasirMudahTypography.titleMedium
         )
         if(showMenuIcon){
@@ -87,7 +90,7 @@ fun ReceiptTopBar(
                     stringResource(R.string.delete)
                 ),
                 alignment = Alignment.BottomEnd,
-                offset = IntOffset(30, 135),
+                offset = IntOffset(0, 150),
                 properties = PopupProperties(focusable = true),
                 onDismiss = {
                     showActionPopup = false
