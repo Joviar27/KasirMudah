@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.ReceiptItem
 import com.cobasendiri.kasirmudah.ui.component.ReceiptTopBar
+import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
+import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
@@ -43,7 +46,7 @@ fun ReceiptContent(
     Scaffold(
         topBar = {
             ReceiptTopBar(
-                showMenuIcon = state.previewMode,
+                showMenuIcon = !state.previewMode,
                 onUpdateBookmark = {
                     event.invoke(ReceiptEvent.OnUpdateBookmark(state.transactionId))
                 },
@@ -59,16 +62,18 @@ fun ReceiptContent(
 
         val scrollState = rememberScrollState()
 
-        Box(Modifier.padding(innerPadding)
+        Column(Modifier.padding(innerPadding)
             .fillMaxSize()
             .background(Surface)
-            .verticalScroll(scrollState)
             .padding(vertical = 16.dp, horizontal = 24.dp)
         ){
             Column(
                 modifier = Modifier
+                    .weight(1f)
                     .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color.White)
+                    .verticalScroll(scrollState)
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -84,15 +89,17 @@ fun ReceiptContent(
                     text = state.shopName,
                     style = KasirMudahTypography.titleLarge
                 )
-                Text(
-                    text = state.transactionCreatedAt,
-                    style = KasirMudahTypography.bodyLarge
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = stringResource(R.string.transaction_id, state.transactionId),
-                    style = KasirMudahTypography.labelSmall
-                )
+                if(!state.previewMode){
+                    Text(
+                        text = state.transactionCreatedAt,
+                        style = KasirMudahTypography.bodyLarge
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(R.string.transaction_id, state.transactionId),
+                        style = KasirMudahTypography.labelSmall
+                    )
+                }
                 Spacer(Modifier.height(36.dp))
                 Row(Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -152,6 +159,26 @@ fun ReceiptContent(
                     thickness = 1.dp,
                     color = OnPrimary
                 )
+            }
+            Spacer(Modifier.height(16.dp))
+            if(state.previewMode){
+                RoundedPrimaryButton(
+                    text = stringResource(R.string.save)
+                ) {
+                    event.invoke(ReceiptEvent.OnSave)
+                }
+                Spacer(Modifier.height(8.dp))
+                RoundedOutlinedButton(
+                    text = stringResource(R.string.cancel)
+                ) {
+                    event.invoke(ReceiptEvent.OnNavigateBack)
+                }
+            }else{
+                RoundedPrimaryButton(
+                    text = stringResource(R.string.download_receipt)
+                ) {
+                    event.invoke(ReceiptEvent.OnDownload)
+                }
             }
         }
     }

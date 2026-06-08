@@ -45,6 +45,7 @@
     <string name="price">Harga</string>
     <string name="name_count">%1$s (%2$sX)</string>
     <string name="total">Total</string>
+    <string name="download_receipt">Unduh Nota Pembelian</string>
 
     <!--  Edit Profile Dialog  -->
     <string name="edit_shop_profile">Edit Profil Toko</string>

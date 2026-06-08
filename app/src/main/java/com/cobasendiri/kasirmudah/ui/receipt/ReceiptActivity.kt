@@ -25,6 +25,7 @@ class ReceiptActivity: ComponentActivity() {
             var dummyState by remember {
                 mutableStateOf(
                     ReceiptState(
+                        previewMode = true,
                         shopName = "Toko Madura A",
                         transactionCreatedAt = dummyReceipt.createdAt,
                         transactionId = dummyReceipt.id,

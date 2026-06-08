@@ -15,4 +15,8 @@ interface ReceiptEvent {
     data class OnShowConfirmDeleteDialog(
         val transactionId: String
     ): ReceiptEvent
+
+    data object OnSave: ReceiptEvent
+
+    data object OnDownload: ReceiptEvent
 }
