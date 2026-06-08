@@ -1,4 +1,4 @@
-package com.cobasendiri.kasirmudah.ui.receipt 
+package com.cobasendiri.kasirmudah.ui.receipt.draft
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +33,6 @@ import com.cobasendiri.kasirmudah.domain.model.TransactionReceiptItem
 import com.cobasendiri.kasirmudah.ui.component.ReceiptTopBar
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
-import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
@@ -41,22 +40,16 @@ import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReceiptContent(
-    state: ReceiptState,
-    event: (ReceiptEvent) -> Unit
+fun ReceiptDraftContent(
+    state: ReceiptDraftState,
+    event: (ReceiptDraftEvent) -> Unit
 ){
     Scaffold(
         topBar = {
             ReceiptTopBar(
-                showMenuIcon = !state.previewMode,
-                onUpdateBookmark = {
-                    event.invoke(ReceiptEvent.OnUpdateBookmark(state.transactionId))
-                },
-                onDelete = {
-                    event.invoke(ReceiptEvent.OnShowConfirmDeleteDialog(state.transactionId))
-                },
+                showMenuIcon = false,
                 onNavigateBack = {
-                    event.invoke(ReceiptEvent.OnNavigateBack)
+                    event.invoke(ReceiptDraftEvent.OnNavigateBack)
                 }
             )
         }
@@ -94,17 +87,6 @@ fun ReceiptContent(
                     text = state.shopName,
                     style = KasirMudahTypography.titleLarge
                 )
-                if(!state.previewMode){
-                    Text(
-                        text = state.transactionCreatedAt,
-                        style = KasirMudahTypography.bodyLarge
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = stringResource(R.string.transaction_id, state.transactionId),
-                        style = KasirMudahTypography.labelSmall
-                    )
-                }
                 Spacer(Modifier.height(36.dp))
                 Row(Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -153,40 +135,17 @@ fun ReceiptContent(
                 )
             }
             Spacer(Modifier.height(16.dp))
-            if(state.previewMode){
-                RoundedPrimaryButton(
-                    text = stringResource(R.string.save)
-                ) {
-                    event.invoke(ReceiptEvent.OnSave)
-                }
-                Spacer(Modifier.height(8.dp))
-                RoundedOutlinedButton(
-                    text = stringResource(R.string.cancel)
-                ) {
-                    event.invoke(ReceiptEvent.OnNavigateBack)
-                }
-            }else{
-                RoundedPrimaryButton(
-                    text = stringResource(R.string.download_receipt)
-                ) {
-                    event.invoke(ReceiptEvent.OnDownload)
-                }
+            RoundedPrimaryButton(
+                text = stringResource(R.string.save)
+            ) {
+                event.invoke(ReceiptDraftEvent.OnSave)
             }
-        }
-        if(state.showConfirmDeleteDialog != null){
-            val dismissEvent = ReceiptEvent.OnDismissConfirmDeleteDialog
-            val transactionId = state.showConfirmDeleteDialog
-            NegativeConfirmDialog(
-                title = stringResource(R.string.delete_transaction_title),
-                body = stringResource(R.string.delete_transaction_body),
-                cancelButton = stringResource(R.string.cancel),
-                confirmButton = stringResource(R.string.delete),
-                onDismiss = { event.invoke(dismissEvent) },
-                onCancel = { event.invoke(dismissEvent) },
-                onConfirm = {
-                    event.invoke(ReceiptEvent.OnDelete(transactionId))
-                }
-            )
+            Spacer(Modifier.height(8.dp))
+            RoundedOutlinedButton(
+                text = stringResource(R.string.cancel)
+            ) {
+                event.invoke(ReceiptDraftEvent.OnNavigateBack)
+            }
         }
     }
 }
@@ -219,12 +178,10 @@ fun ReceiptItem(
 @Preview(showBackground = true)
 @Composable
 fun ReceiptContentPrev(){
-    ReceiptContent(
-        ReceiptState(
+    ReceiptDraftContent(
+        ReceiptDraftState(
             shopName = "Toko Madura A",
-            transactionCreatedAt = "12 Agustus 2026 - 12:53:01",
-            transactionId = "4shisefhw48t4",
-            transactionShopItems = MutableList(6){
+            transactionShopItems = MutableList(6) {
                 TransactionReceiptItem(
                     name = "Barang Nomor $it",
                     totalAmount = 980000,

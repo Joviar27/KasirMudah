@@ -1,24 +1,22 @@
-package com.cobasendiri.kasirmudah.ui.receipt
+package com.cobasendiri.kasirmudah.ui.receipt.draft
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
-import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ReceiptViewModel(
+class ReceiptDraftViewModel(
     private val getReceiptItemsUseCase: GetReceiptItemsUseCase,
     private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase
 ): BaseViewModel() {
 
-    private val _state = MutableStateFlow(ReceiptState())
-    val state: StateFlow<ReceiptState> get() = _state
+    private val _state = MutableStateFlow(ReceiptDraftState())
+    val state: StateFlow<ReceiptDraftState> get() = _state
 
     init {
         getReceiptItems()

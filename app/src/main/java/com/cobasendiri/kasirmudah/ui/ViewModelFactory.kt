@@ -15,7 +15,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
-import com.cobasendiri.kasirmudah.ui.receipt.ReceiptViewModel
+import com.cobasendiri.kasirmudah.ui.receipt.draft.ReceiptDraftViewModel
 import com.cobasendiri.kasirmudah.ui.shop.ShopViewModel
 
 class ViewModelFactory(
@@ -63,8 +63,8 @@ class ViewModelFactory(
                 incrementProductUseCase, decrementProductUseCase, clearCartUseCase,
                 deleteProductUseCase
             ) as T
-        }else if(modelClass.isAssignableFrom(ReceiptViewModel::class.java)){
-            return ReceiptViewModel(getReceiptItemsUseCase, getTotalCartAmountUseCase) as T
+        }else if(modelClass.isAssignableFrom(ReceiptDraftViewModel::class.java)){
+            return ReceiptDraftViewModel(getReceiptItemsUseCase, getTotalCartAmountUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -3,7 +3,6 @@ package com.cobasendiri.kasirmudah.ui.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,8 +38,8 @@ fun ReceiptTopBar(
     modifier: Modifier = Modifier,
     showMenuIcon: Boolean = false,
     isBookmarked: Boolean = false,
-    onUpdateBookmark: () -> Unit,
-    onDelete: () -> Unit,
+    onUpdateBookmark: (() -> Unit)? = null,
+    onDelete: (() -> Unit)? = null,
     onNavigateBack: () -> Unit
 ) {
 
@@ -96,10 +95,10 @@ fun ReceiptTopBar(
                     showActionPopup = false
                 },
                 onFirstItemClick = {
-                    onUpdateBookmark.invoke()
+                    onUpdateBookmark?.invoke()
                 },
                 onSecondItemClick = {
-                    onDelete.invoke()
+                    onDelete?.invoke()
                 }
             )
         }
