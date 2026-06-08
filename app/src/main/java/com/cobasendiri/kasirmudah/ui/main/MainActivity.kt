@@ -4,6 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.cobasendiri.kasirmudah.nav.Screen
+import com.cobasendiri.kasirmudah.ui.receipt.draft.ReceiptDraftScreen
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 
 class MainActivity : ComponentActivity() {
@@ -12,8 +17,24 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            val rootNavController = rememberNavController()
+
             KasirMudahTheme {
-                MainContent()
+                NavHost(
+                    navController = rootNavController,
+                    startDestination = Screen.MainTabs
+                ){
+                    composable<Screen.MainTabs> {
+                        MainTabScreen{
+                            rootNavController.navigate(Screen.ReceiptDraft)
+                        }
+                    }
+                    composable<Screen.ReceiptDraft> {
+                        ReceiptDraftScreen{
+                            rootNavController.popBackStack()
+                        }
+                    }
+                }
             }
         }
     }

@@ -2,7 +2,9 @@ package com.cobasendiri.kasirmudah.ui.receipt.draft
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -41,29 +42,32 @@ import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReceiptDraftContent(
+    innerPadding: PaddingValues,
     state: ReceiptDraftState,
     event: (ReceiptDraftEvent) -> Unit
 ){
-    Scaffold(
-        topBar = {
-            ReceiptTopBar(
-                showMenuIcon = false,
-                onNavigateBack = {
-                    event.invoke(ReceiptDraftEvent.OnNavigateBack)
-                }
-            )
-        }
-    ) { innerPadding ->
+
+    val topPadding = innerPadding.calculateTopPadding()
+
+    Box(Modifier.fillMaxSize()
+        .background(Surface)
+    ){
+        ReceiptTopBar(
+            statusBarHeight = topPadding,
+            showMenuIcon = false,
+            onNavigateBack = {
+                event.invoke(ReceiptDraftEvent.OnNavigateBack)
+            }
+        )
+
         val formattedTotal = remember(state.totalTransaction) {
             "Rp ${state.totalTransaction.toString().decimalFormat()},00"
         }
 
         val scrollState = rememberScrollState()
 
-        Column(Modifier.padding(innerPadding)
-            .fillMaxSize()
-            .background(Surface)
-            .padding(vertical = 16.dp, horizontal = 24.dp)
+        Column(Modifier.padding(horizontal = 24.dp)
+            .padding(top = 80.dp + topPadding, bottom = 16.dp)
         ){
             Column(
                 modifier = Modifier
@@ -179,6 +183,7 @@ fun ReceiptItem(
 @Composable
 fun ReceiptContentPrev(){
     ReceiptDraftContent(
+        innerPadding = PaddingValues(0.dp),
         ReceiptDraftState(
             shopName = "Toko Madura A",
             transactionShopItems = MutableList(6) {

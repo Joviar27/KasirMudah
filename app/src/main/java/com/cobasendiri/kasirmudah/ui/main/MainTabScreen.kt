@@ -18,14 +18,16 @@ import androidx.navigation.compose.rememberNavController
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.nav.FloatingNavItem
 import com.cobasendiri.kasirmudah.nav.Screen
-import com.cobasendiri.kasirmudah.ui.profile.ProfileScreen
-import com.cobasendiri.kasirmudah.ui.shop.ShopScreen
 import com.cobasendiri.kasirmudah.ui.component.FloatingNavigationBar
 import com.cobasendiri.kasirmudah.ui.history.TransactionHistoryScreen
+import com.cobasendiri.kasirmudah.ui.profile.ProfileScreen
+import com.cobasendiri.kasirmudah.ui.shop.ShopScreen
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 
 @Composable
-fun MainContent(){
+fun MainTabScreen(
+    onNavigateToReceiptDraft: () -> Unit
+) {
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -64,7 +66,9 @@ fun MainContent(){
             startDestination = Screen.Shop
         ){
             composable<Screen.Shop>{
-                ShopScreen(innerPadding)
+                ShopScreen(innerPadding){
+                    onNavigateToReceiptDraft.invoke()
+                }
             }
             composable<Screen.History>{
                 TransactionHistoryScreen(innerPadding)
@@ -81,6 +85,6 @@ fun MainContent(){
 @Composable
 fun MainPreview() {
     KasirMudahTheme {
-        MainContent()
+        MainTabScreen(){}
     }
 }

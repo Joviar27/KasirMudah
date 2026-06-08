@@ -81,7 +81,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun ShopScreen(
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    onNavigateToReceiptDraft: () -> Unit
 ){
     val context = LocalContext.current
     val appContext = context.applicationContext
@@ -123,7 +124,7 @@ fun ShopScreen(
                 viewModel.updateFilter(event.newFilter)
             }
             is ShopEvent.OnFinish ->{
-
+                onNavigateToReceiptDraft.invoke()
             }
             is ShopEvent.OnSearch ->{
                 viewModel.updateQuery(event.searchQuery)
