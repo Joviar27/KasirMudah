@@ -1,6 +1,7 @@
 package com.cobasendiri.kasirmudah.ui.receipt.draft 
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -10,7 +11,7 @@ import com.cobasendiri.kasirmudah.ui.ViewModelFactory
 
 @Composable
 fun ReceiptDraftScreen(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
     val appContext = context.applicationContext
@@ -21,6 +22,12 @@ fun ReceiptDraftScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.navigateEvent.collect {
+            onNavigateBack.invoke()
+        }
+    }
+
     Scaffold { innerPadding ->
         ReceiptDraftContent(
             innerPadding = innerPadding,
@@ -29,6 +36,9 @@ fun ReceiptDraftScreen(
             when(event){
                 is ReceiptDraftEvent.OnNavigateBack ->{
                     onNavigateBack.invoke()
+                }
+                is ReceiptDraftEvent.OnSave -> {
+                    viewModel.saveNewTransaction()
                 }
             }
         }

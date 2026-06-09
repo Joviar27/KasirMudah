@@ -30,9 +30,11 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     composable<Screen.ReceiptDraft> {
-                        ReceiptDraftScreen{
-                            rootNavController.popBackStack()
-                        }
+                        ReceiptDraftScreen(
+                            onNavigateBack = {
+                                rootNavController.popBackStack()
+                            }
+                        )
                     }
                 }
             }

@@ -3,11 +3,14 @@ package com.cobasendiri.kasirmudah.di
 import android.content.Context
 import com.cobasendiri.kasirmudah.data.CartRepository
 import com.cobasendiri.kasirmudah.data.ProductRepository
+import com.cobasendiri.kasirmudah.data.TransactionRepository
 import com.cobasendiri.kasirmudah.data.room.CartDao
 import com.cobasendiri.kasirmudah.data.room.ProductDao
 import com.cobasendiri.kasirmudah.data.room.ShopDatabase
+import com.cobasendiri.kasirmudah.data.room.TransactionDao
 import com.cobasendiri.kasirmudah.domain.repository.ICartRepository
 import com.cobasendiri.kasirmudah.domain.repository.IProductRepository
+import com.cobasendiri.kasirmudah.domain.repository.ITransactionRepository
 import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.ClearCartUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DecrementProductUseCase
@@ -17,6 +20,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 
@@ -30,12 +34,20 @@ object Injection {
         return ShopDatabase.getDatabase(context).cartDao()
     }
 
+    private fun provideTransactionDao(context: Context): TransactionDao{
+        return ShopDatabase.getDatabase(context).transactionDao()
+    }
+
     private fun provideProductRepository(context: Context): IProductRepository{
         return ProductRepository.getInstance(provideProductDao(context))
     }
 
     private fun provideCartRepository(context: Context): ICartRepository{
         return CartRepository.getInstance(provideCartDao(context))
+    }
+
+    private fun provideTransactionRepository(context: Context): ITransactionRepository{
+        return TransactionRepository.getInstance(provideTransactionDao(context))
     }
 
     fun provideGetProductListUseCase(context: Context): GetProductLisUseCase{
@@ -80,5 +92,12 @@ object Injection {
 
     fun provideGetReceiptItemsUseCase(context: Context): GetReceiptItemsUseCase{
         return GetReceiptItemsUseCase(provideCartRepository(context))
+    }
+
+    fun provideSaveNewTransactionUseCase(context: Context): SaveNewTransactionUseCase{
+        return SaveNewTransactionUseCase(
+            provideTransactionRepository(context),
+            provideCartRepository(context)
+        )
     }
 }
