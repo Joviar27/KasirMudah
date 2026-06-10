@@ -8,10 +8,16 @@ import androidx.room.TypeConverters
 import com.cobasendiri.kasirmudah.data.converters.TransactionItemConverters
 import com.cobasendiri.kasirmudah.data.entity.CartEntity
 import com.cobasendiri.kasirmudah.data.entity.ProductEntity
+import com.cobasendiri.kasirmudah.data.entity.TransactionBookmarkEntity
 import com.cobasendiri.kasirmudah.data.entity.TransactionEntity
 
 @Database(
-    entities = [ProductEntity::class, CartEntity::class, TransactionEntity::class],
+    entities = [
+        ProductEntity::class,
+        CartEntity::class,
+        TransactionEntity::class,
+        TransactionBookmarkEntity::class
+    ],
     version = 1,
     exportSchema = false
 )

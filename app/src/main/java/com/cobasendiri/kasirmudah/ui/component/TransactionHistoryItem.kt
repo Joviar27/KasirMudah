@@ -30,19 +30,29 @@ import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.White
 import com.cobasendiri.kasirmudah.R
+import com.cobasendiri.kasirmudah.domain.model.TransactionHistory
 import com.cobasendiri.kasirmudah.ui.component.popup.ActionPopup
-import com.cobasendiri.kasirmudah.ui.history.TransactionItemState
+import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.dateFormat
+import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 
 @Composable
 fun TransactionHistoryItem(
     modifier: Modifier = Modifier,
-    state: TransactionItemState,
+    state: TransactionHistory,
     onItemClick: (String) -> Unit,
     onUpdateBookmark: (String) -> Unit,
     onDelete: (String) -> Unit
 ) {
 
     var showActionPopup by remember { mutableStateOf(false) }
+
+    val formattedTotal = remember(state.total) {
+        "Rp ${state.total.toString().decimalFormat()},00"
+    }
+
+    val formattedDate = remember(state.createdAt) {
+        state.createdAt.dateFormat()
+    }
 
     Row(modifier
         .fillMaxWidth()
@@ -61,10 +71,14 @@ fun TransactionHistoryItem(
                 style = KasirMudahTypography.titleMedium
                     .copy(fontWeight = FontWeight.Bold)
             )
+            Text(
+                formattedTotal,
+                style = KasirMudahTypography.bodyLarge
+            )
             Spacer(Modifier.height(8.dp))
             Text(
-                state.createdAt,
-                style = KasirMudahTypography.bodyMedium
+                formattedDate,
+                style = KasirMudahTypography.labelMedium
             )
         }
         if(state.isBookmarked){
@@ -111,10 +125,11 @@ fun TransactionHistoryItem(
 @Composable
 fun TransactionItemPrev() {
     TransactionHistoryItem(
-        state = TransactionItemState(
+        state = TransactionHistory(
             id = "uefwofgew",
             name = "Transaksi 347295793wegwyf",
-            createdAt = "12 Agustus 2026 - 12:53:01",
+            total = 55000L,
+            createdAt = 1755388800,
             isBookmarked = true
         ),
         onItemClick = {},

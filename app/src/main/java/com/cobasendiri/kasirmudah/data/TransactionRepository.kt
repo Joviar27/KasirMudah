@@ -3,13 +3,19 @@ package com.cobasendiri.kasirmudah.data
 import com.cobasendiri.kasirmudah.data.entity.TransactionEntity
 import com.cobasendiri.kasirmudah.data.entity.TransactionEntityItem
 import com.cobasendiri.kasirmudah.data.room.TransactionDao
+import com.cobasendiri.kasirmudah.data.util.CoroutineMapper.mapExceptionFlow
 import com.cobasendiri.kasirmudah.data.util.IdGenerator
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.cobasendiri.kasirmudah.data.util.CoroutineMapper.runMapExceptionSuspending
+import com.cobasendiri.kasirmudah.data.util.DataMapper.mapListToDomain
+import com.cobasendiri.kasirmudah.data.util.DataMapper.mapTransactionHistoryToDomain
+import com.cobasendiri.kasirmudah.domain.model.TransactionHistory
 import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
 import com.cobasendiri.kasirmudah.domain.repository.ITransactionRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 
 class TransactionRepository(
     private val transactionDao: TransactionDao,
@@ -52,6 +58,37 @@ class TransactionRepository(
             )
 
             transactionDao.insertNewTransaction(transaction)
+        }
+    }
+
+    override suspend fun deleteTransaction(
+        transactionId: String
+    ) = withContext(ioDispatcher) {
+        runMapExceptionSuspending {
+            transactionDao.deleteTransaction(transactionId)
+        }
+    }
+
+    override fun getTransactionHistory(timestampFilter: Long): Flow<List<TransactionHistory>?> {
+        return transactionDao.getTransactionHistory(timestampFilter).mapExceptionFlow {
+            it.mapTransactionHistoryToDomain()
+        }.flowOn(ioDispatcher)
+    }
+
+    override fun getBookmarkedTransaction(): Flow<List<TransactionHistory>?> {
+        return transactionDao.getBookmarkedTransaction().mapExceptionFlow{
+            it.mapTransactionHistoryToDomain()
+        }.flowOn(ioDispatcher)
+    }
+
+    override suspend fun updateBookmark(transactionId: String): Boolean {
+        return withContext(ioDispatcher){
+            runMapExceptionSuspending {
+                transactionDao.updateBookmark(
+                    transactionId,
+                    System.currentTimeMillis()/1000
+                )
+            }
         }
     }
 }

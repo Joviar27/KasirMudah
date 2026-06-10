@@ -15,14 +15,18 @@ import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.ClearCartUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DecrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DeleteProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.DeleteTransactionHistoryUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetBookmarkedTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionHistoryUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
 
 object Injection {
 
@@ -99,5 +103,21 @@ object Injection {
             provideTransactionRepository(context),
             provideCartRepository(context)
         )
+    }
+
+    fun provideGetTransactionHistoryUseCase(context: Context): GetTransactionHistoryUseCase{
+        return GetTransactionHistoryUseCase(provideTransactionRepository(context))
+    }
+
+    fun provideGetBookmarkedTransactionUseCase(context: Context): GetBookmarkedTransactionUseCase{
+        return GetBookmarkedTransactionUseCase(provideTransactionRepository(context))
+    }
+
+    fun provideUpdateTransactionBookmarkUseCase(context: Context): UpdateTransactionBookmarkUseCase{
+        return UpdateTransactionBookmarkUseCase(provideTransactionRepository(context))
+    }
+
+    fun provideDeleteTransactionHistoryUseCase(context: Context): DeleteTransactionHistoryUseCase{
+        return DeleteTransactionHistoryUseCase(provideTransactionRepository(context))
     }
 }

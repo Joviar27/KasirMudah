@@ -2,10 +2,12 @@ package com.cobasendiri.kasirmudah.data.util
 
 import com.cobasendiri.kasirmudah.data.entity.ProductEntity
 import com.cobasendiri.kasirmudah.data.result.ProductResult
+import com.cobasendiri.kasirmudah.data.result.TransactionHistoryResult
 import com.cobasendiri.kasirmudah.data.result.TransactionItemResult
 import com.cobasendiri.kasirmudah.domain.model.Product
 import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 import com.cobasendiri.kasirmudah.domain.model.ProductInfo
+import com.cobasendiri.kasirmudah.domain.model.TransactionHistory
 import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
 
 object DataMapper {
@@ -32,16 +34,6 @@ object DataMapper {
         )
     }
 
-    fun List<TransactionItemResult>.mapToDomain(): List<TransactionItemInfo>{
-        return this.map {
-            TransactionItemInfo(
-                name = it.name,
-                count = it.count,
-                itemTotal = it.total
-            )
-        }
-    }
-
     fun Product.mapToEntity(): ProductEntity{
         return ProductEntity(
             id = this.id,
@@ -59,5 +51,27 @@ object DataMapper {
             price = this.price.toLong(),
             colorCode = this.colorCode
         )
+    }
+
+    fun List<TransactionItemResult>.mapToDomain(): List<TransactionItemInfo>{
+        return this.map {
+            TransactionItemInfo(
+                name = it.name,
+                count = it.count,
+                itemTotal = it.total
+            )
+        }
+    }
+
+    fun List<TransactionHistoryResult>.mapTransactionHistoryToDomain(): List<TransactionHistory>{
+        return this.map {
+            TransactionHistory(
+                id = it.id,
+                name = it.name,
+                total = it.total,
+                createdAt = it.createdAt,
+                isBookmarked = it.isBookmarked
+            )
+        }
     }
 }

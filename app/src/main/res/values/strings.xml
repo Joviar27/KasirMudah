@@ -31,6 +31,7 @@
     <!--  Transaction History Screen  -->
     <string name="history">Riwayat Pembelian</string>
     <string name="bookmarked">Ditandai</string>
+    <string name="today">Hari Ini</string>
     <string name="last_week">1 Minggu Terakhir</string>
     <string name="last_month">1 Bulan Terakhir</string>
 
@@ -68,4 +69,7 @@
     <string name="succcess_add">Produk berhasil ditambahkan</string>
     <string name="success_update">Produk berhasil diperbaharui</string>
     <string name="success_delete">Produk berhasil dihapus</string>
+    <string name="success_delete_transaction">Transaksi berhasil dihapus</string>
+    <string name="success_new_bookmark">Transaksi berhasil ditandai</string>
+    <string name="success_remove_bookmark">Tanda transaksi berhasil dihapus</string>
 </resources>
