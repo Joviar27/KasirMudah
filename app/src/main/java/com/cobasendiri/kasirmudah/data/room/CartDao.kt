@@ -7,7 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.cobasendiri.kasirmudah.data.entity.CartEntity
 import com.cobasendiri.kasirmudah.data.result.ProductResult
-import com.cobasendiri.kasirmudah.data.result.ProductTotalResult
+import com.cobasendiri.kasirmudah.data.result.TransactionItemResult
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -61,5 +61,5 @@ interface CartDao {
         FROM products as p
         INNER JOIN carts as c ON p.id = c.productId
     """)
-    suspend fun getProductsTotalAmount(): List<ProductTotalResult>
+    suspend fun getProductsTotalAmount(): List<TransactionItemResult>
 }

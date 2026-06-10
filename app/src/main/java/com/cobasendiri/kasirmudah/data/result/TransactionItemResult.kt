@@ -1,7 +1,7 @@
 package com.cobasendiri.kasirmudah.data.result
 
-data class ProductTotalResult(
+data class TransactionItemResult(
     val name: String,
     val count: Int,
-    val totalAmount: Long
+    val total: Long
 )

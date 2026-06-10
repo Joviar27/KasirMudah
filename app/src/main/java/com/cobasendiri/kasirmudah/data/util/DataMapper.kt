@@ -2,11 +2,11 @@ package com.cobasendiri.kasirmudah.data.util
 
 import com.cobasendiri.kasirmudah.data.entity.ProductEntity
 import com.cobasendiri.kasirmudah.data.result.ProductResult
-import com.cobasendiri.kasirmudah.data.result.ProductTotalResult
+import com.cobasendiri.kasirmudah.data.result.TransactionItemResult
 import com.cobasendiri.kasirmudah.domain.model.Product
 import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 import com.cobasendiri.kasirmudah.domain.model.ProductInfo
-import com.cobasendiri.kasirmudah.domain.model.TransactionReceiptItem
+import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
 
 object DataMapper {
 
@@ -32,12 +32,12 @@ object DataMapper {
         )
     }
 
-    fun List<ProductTotalResult>.mapToDomain(): List<TransactionReceiptItem>{
+    fun List<TransactionItemResult>.mapToDomain(): List<TransactionItemInfo>{
         return this.map {
-            TransactionReceiptItem(
+            TransactionItemInfo(
                 name = it.name,
                 count = it.count,
-                totalAmount = it.totalAmount
+                itemTotal = it.total
             )
         }
     }

@@ -40,7 +40,7 @@ import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
-import com.cobasendiri.kasirmudah.ui.component.TransactionItem
+import com.cobasendiri.kasirmudah.ui.component.TransactionHistoryItem
 import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
@@ -275,7 +275,7 @@ fun TransactionHistoryContent(
                 key = { transactionItemState -> transactionItemState.id }
             ) { item ->
                 Spacer(Modifier.height(16.dp))
-                TransactionItem(
+                TransactionHistoryItem(
                     Modifier.padding(horizontal = 16.dp),
                     state = item,
                     onUpdateBookmark = {

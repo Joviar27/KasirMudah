@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cobasendiri.kasirmudah.R
-import com.cobasendiri.kasirmudah.domain.model.TransactionReceiptItem
+import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
 import com.cobasendiri.kasirmudah.ui.component.ReceiptTopBar
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
@@ -156,10 +156,10 @@ fun ReceiptDraftContent(
 
 @Composable
 fun ReceiptItem(
-    item: TransactionReceiptItem
+    item: TransactionItemInfo
 ){
-    val formattedAmount = remember(item.totalAmount) {
-        "Rp ${item.totalAmount.toString().decimalFormat()},00"
+    val formattedAmount = remember(item.itemTotal) {
+        "Rp ${item.itemTotal.toString().decimalFormat()},00"
     }
 
     Row(Modifier.fillMaxWidth(),
@@ -187,9 +187,9 @@ fun ReceiptContentPrev(){
         ReceiptDraftState(
             shopName = "Toko Madura A",
             transactionShopItems = MutableList(6) {
-                TransactionReceiptItem(
+                TransactionItemInfo(
                     name = "Barang Nomor $it",
-                    totalAmount = 980000,
+                    itemTotal = 980000,
                     count = 5
                 )
             },

@@ -1,5 +1,6 @@
 package com.cobasendiri.kasirmudah.data.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -17,6 +18,7 @@ import androidx.room.PrimaryKey
 )
 data class CartEntity(
     @PrimaryKey
+    @ColumnInfo(name = "product_id")
     val productId: String,
 
     val count: Int

@@ -1,14 +1,14 @@
 package com.cobasendiri.kasirmudah.data
 
 import com.cobasendiri.kasirmudah.data.entity.TransactionEntity
-import com.cobasendiri.kasirmudah.data.entity.TransactionItem
+import com.cobasendiri.kasirmudah.data.entity.TransactionEntityItem
 import com.cobasendiri.kasirmudah.data.room.TransactionDao
 import com.cobasendiri.kasirmudah.data.util.IdGenerator
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.cobasendiri.kasirmudah.data.util.CoroutineMapper.runMapExceptionSuspending
-import com.cobasendiri.kasirmudah.domain.model.TransactionReceiptItem
+import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
 import com.cobasendiri.kasirmudah.domain.repository.ITransactionRepository
 
 class TransactionRepository(
@@ -29,17 +29,17 @@ class TransactionRepository(
     }
 
     override suspend fun insertNewTransaction(
-        draftItems: List<TransactionReceiptItem>,
+        draftItems: List<TransactionItemInfo>,
         draftTotal: Long
     ) = withContext(ioDispatcher){
         runMapExceptionSuspending {
             val id = IdGenerator.generateTransactionId()
             val name = "Transaksi ${id.take(10)}..."
             val items = draftItems.map {
-                TransactionItem(
+                TransactionEntityItem(
                     name = it.name,
                     count = it.count,
-                    total = it.totalAmount
+                    total = it.itemTotal
                 )
             }
 

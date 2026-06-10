@@ -3,7 +3,6 @@ package com.cobasendiri.kasirmudah.ui.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,7 +34,7 @@ import com.cobasendiri.kasirmudah.ui.component.popup.ActionPopup
 import com.cobasendiri.kasirmudah.ui.history.TransactionItemState
 
 @Composable
-fun TransactionItem(
+fun TransactionHistoryItem(
     modifier: Modifier = Modifier,
     state: TransactionItemState,
     onItemClick: (String) -> Unit,
@@ -111,7 +110,7 @@ fun TransactionItem(
 @Preview
 @Composable
 fun TransactionItemPrev() {
-    TransactionItem(
+    TransactionHistoryItem(
         state = TransactionItemState(
             id = "uefwofgew",
             name = "Transaksi 347295793wegwyf",

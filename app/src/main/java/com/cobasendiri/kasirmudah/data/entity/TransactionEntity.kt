@@ -15,13 +15,13 @@ data class TransactionEntity(
     @ColumnInfo(name = "created_at")
     val createdAt: Long,
 
-    val items: List<TransactionItem>,
+    val items: List<TransactionEntityItem>,
 
     val total: Long
 )
 
 @Serializable
-data class TransactionItem(
+data class TransactionEntityItem(
     val name: String,
     val count: Int,
     val total: Long

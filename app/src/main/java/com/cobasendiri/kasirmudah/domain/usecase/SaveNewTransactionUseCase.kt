@@ -19,7 +19,7 @@ class SaveNewTransactionUseCase(
             }
 
             val transactionTotal = cartRepository.getTotalCartAmount().firstOrNull()
-                ?: transactionItems.sumOf { it.totalAmount }
+                ?: transactionItems.sumOf { it.itemTotal }
 
             if(transactionTotal == 0L){
                 throw KasirMudahException.TransactionAmountInvalidError

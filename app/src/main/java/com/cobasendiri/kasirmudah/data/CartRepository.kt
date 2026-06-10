@@ -7,7 +7,7 @@ import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import com.cobasendiri.kasirmudah.domain.repository.ICartRepository
 import com.cobasendiri.kasirmudah.data.util.DataMapper.mapListToDomain
 import com.cobasendiri.kasirmudah.data.util.DataMapper.mapToDomain
-import com.cobasendiri.kasirmudah.domain.model.TransactionReceiptItem
+import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -70,7 +70,7 @@ class CartRepository(
             }
         }
 
-    override suspend fun getProductsTotal(): List<TransactionReceiptItem> {
+    override suspend fun getProductsTotal(): List<TransactionItemInfo> {
         return withContext(ioDispatcher) {
             runMapExceptionSuspending {
                 cartDao.getProductsTotalAmount().mapToDomain()

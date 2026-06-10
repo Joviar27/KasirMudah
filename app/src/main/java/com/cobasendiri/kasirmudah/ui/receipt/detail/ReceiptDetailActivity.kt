@@ -9,8 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.cobasendiri.kasirmudah.domain.model.TransactionReceipt
-import com.cobasendiri.kasirmudah.domain.model.TransactionReceiptItem
-import com.cobasendiri.kasirmudah.ui.receipt.draft.ReceiptDraftEvent
+import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 
 class ReceiptDetailActivity: ComponentActivity() {
@@ -29,7 +28,7 @@ class ReceiptDetailActivity: ComponentActivity() {
                         transactionCreatedAt = dummyReceipt.createdAt,
                         transactionId = dummyReceipt.id,
                         transactionShopItems = dummyReceipt.shopItems,
-                        totalTransaction = dummyReceipt.totalTransaction
+                        totalTransaction = dummyReceipt.transactionTotal
                     )
                 )
             }
@@ -53,13 +52,13 @@ class ReceiptDetailActivity: ComponentActivity() {
             id = "4shisefhw48t4",
             createdAt = "12 Agustus 2026 - 12:53:01",
             shopItems = MutableList(6){
-                TransactionReceiptItem(
+                TransactionItemInfo(
                     name = "Barang Nomor $it",
-                    totalAmount = 980000,
+                    itemTotal = 980000,
                     count = 5
                 )
             },
-            totalTransaction = 1500225
+            transactionTotal = 1500225
         )
     }
 }

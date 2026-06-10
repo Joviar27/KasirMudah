@@ -1,7 +1,7 @@
 package com.cobasendiri.kasirmudah.domain.model
 
-data class TransactionReceiptItem(
+data class TransactionItemInfo(
     val name: String,
     val count: Int,
-    val totalAmount: Long
+    val itemTotal: Long
 )
