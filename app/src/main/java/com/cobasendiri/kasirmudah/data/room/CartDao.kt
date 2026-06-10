@@ -16,14 +16,14 @@ interface CartDao {
     @Query("""
         SELECT p.*, c.count
         FROM products as p
-        INNER JOIN carts as c ON p.id = c.productId
+        INNER JOIN carts as c ON p.id = c.product_id
     """)
     fun getAllCartProducts(): Flow<List<ProductResult>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addToCart(cart: CartEntity): Long
 
-    @Query("UPDATE carts SET count = count + 1 WHERE productId = :productId ")
+    @Query("UPDATE carts SET count = count + 1 WHERE product_id = :productId ")
     suspend fun incrementProduct(productId: String)
 
     @Transaction
@@ -34,10 +34,10 @@ interface CartDao {
         }
     }
 
-    @Query("UPDATE carts SET count = MAX(0, count - 1) WHERE productId = :productId ")
+    @Query("UPDATE carts SET count = MAX(0, count - 1) WHERE product_id = :productId ")
     suspend fun decrementProduct(productId: String)
 
-    @Query("DELETE FROM carts WHERE productId = :productId AND count <= 0")
+    @Query("DELETE FROM carts WHERE product_id = :productId AND count <= 0")
     suspend fun removeFromCartIfCountZero(productId: String)
 
     @Transaction
@@ -49,7 +49,7 @@ interface CartDao {
     @Query("""
         SELECT SUM (p.price * c.count)
         FROM products AS p
-        INNER JOIN carts AS C ON p.id = c.productId
+        INNER JOIN carts AS C ON p.id = c.product_id
     """)
     fun getTotalCartAmount(): Flow<Long?>
 
@@ -57,9 +57,9 @@ interface CartDao {
     suspend fun deleteAllCart()
 
     @Query("""
-        SELECT p.name, c.count, (p.price * c.count) AS totalAmount
+        SELECT p.name, c.count, (p.price * c.count) AS total
         FROM products as p
-        INNER JOIN carts as c ON p.id = c.productId
+        INNER JOIN carts as c ON p.id = c.product_id
     """)
     suspend fun getProductsTotalAmount(): List<TransactionItemResult>
 }
