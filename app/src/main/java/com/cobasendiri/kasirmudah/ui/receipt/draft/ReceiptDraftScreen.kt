@@ -8,6 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cobasendiri.kasirmudah.ui.ViewModelFactory
+import kotlinx.coroutines.delay
 
 @Composable
 fun ReceiptDraftScreen(
@@ -25,6 +26,13 @@ fun ReceiptDraftScreen(
     LaunchedEffect(Unit) {
         viewModel.navigateEvent.collect {
             onNavigateBack.invoke()
+        }
+    }
+
+    state.uiMessage?.let { uiMessage ->
+        LaunchedEffect(uiMessage.getMessageId()) {
+            delay(3000L)
+            viewModel.uiMessageShown()
         }
     }
 

@@ -7,6 +7,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
 import com.cobasendiri.kasirmudah.nav.Screen
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
+import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,5 +63,13 @@ class ReceiptDraftViewModel(
         viewModelScope.launch {
             clearCartUseCase.invoke()
         }
+    }
+
+    override fun showUiMessage(message: UiMessage) {
+        _state.update { it.copy(uiMessage = message) }
+    }
+
+    override fun uiMessageShown() {
+        _state.update { it.copy(uiMessage = null) }
     }
 }
