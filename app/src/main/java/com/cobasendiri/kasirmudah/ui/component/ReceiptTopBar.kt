@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,7 +39,6 @@ import com.cobasendiri.kasirmudah.ui.theme.Primary
 @Composable
 fun ReceiptTopBar(
     modifier: Modifier = Modifier,
-    statusBarHeight: Dp = 0.dp,
     showMenuIcon: Boolean = false,
     isBookmarked: Boolean = false,
     onUpdateBookmark: (() -> Unit)? = null,
@@ -49,10 +49,9 @@ fun ReceiptTopBar(
     var showActionPopup by remember { mutableStateOf(false) }
 
     Row(modifier.fillMaxWidth()
-        .height(64.dp + statusBarHeight)
         .background(Primary)
-        .padding(horizontal = 16.dp)
-        .padding(top = 16.dp+statusBarHeight, bottom = 16.dp),
+        .statusBarsPadding()
+        .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
