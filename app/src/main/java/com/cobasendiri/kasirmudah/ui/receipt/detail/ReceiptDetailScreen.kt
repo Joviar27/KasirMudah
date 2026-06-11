@@ -10,6 +10,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cobasendiri.kasirmudah.ui.ViewModelFactory
 import com.cobasendiri.kasirmudah.ui.component.ReceiptTopBar
+import kotlinx.coroutines.delay
 
 @Composable
 fun ReceiptDetailScreen(
@@ -28,6 +29,19 @@ fun ReceiptDetailScreen(
     LaunchedEffect(transactionId) {
         viewmodel.getTransaction(transactionId)
         viewmodel.getIsBookmarked(transactionId)
+    }
+
+    LaunchedEffect(Unit) {
+        viewmodel.navigateBackEvent.collect {
+            onNavigateBack.invoke()
+        }
+    }
+
+    state.uiMessage?.let { uiMessage ->
+        LaunchedEffect(uiMessage.getMessageId()) {
+            delay(3000L)
+            viewmodel.uiMessageShown()
+        }
     }
 
     Scaffold(

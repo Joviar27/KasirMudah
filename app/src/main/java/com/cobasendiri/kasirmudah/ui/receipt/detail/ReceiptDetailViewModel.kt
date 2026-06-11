@@ -7,10 +7,13 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetIsTransactionBookmarkedUseCa
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
+import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
 import com.cobasendiri.kasirmudah.ui.utils.UiMessageUtil.asUiMessage
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -23,6 +26,9 @@ class ReceiptDetailViewModel(
 
     private val _state = MutableStateFlow(ReceiptDetailState())
     val state: StateFlow<ReceiptDetailState> get() = _state
+
+    private val _navigateBackEvent = Channel<Unit>()
+    val navigateBackEvent = _navigateBackEvent.receiveAsFlow()
 
     fun getTransaction(transactionId: String){
         viewModelScope.launch {
@@ -65,8 +71,7 @@ class ReceiptDetailViewModel(
     fun deleteTransaction(transactionId: String){
         viewModelScope.launch {
             deleteTransactionHistoryUseCase.invoke(transactionId).handleResult{
-                showUiMessage(R.string.success_delete_transaction.asUiMessage(UiMessageType.SUCCESS))
-                dismissConfirmDeleteDialog()
+                _navigateBackEvent.trySend(Unit)
             }
         }
     }
@@ -77,5 +82,13 @@ class ReceiptDetailViewModel(
 
     fun dismissConfirmDeleteDialog(){
         _state.update { it.copy(showConfirmDeleteDialog = null) }
+    }
+
+    override fun showUiMessage(message: UiMessage) {
+        _state.update { it.copy(uiMessage = message) }
+    }
+
+    override fun uiMessageShown() {
+        _state.update { it.copy(uiMessage = null) }
     }
 }
