@@ -1,9 +1,4 @@
 package com.cobasendiri.kasirmudah.ui.receipt.detail
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -30,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,16 +32,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
-import com.cobasendiri.kasirmudah.ui.component.UiMessageBar
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
 import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
-import com.cobasendiri.kasirmudah.ui.theme.Negative
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
-import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
-import com.cobasendiri.kasirmudah.ui.theme.Tertiary
-import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
 import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.dateFormat
 import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 
@@ -59,8 +47,6 @@ fun ReceiptDetailContent(
     state: ReceiptDetailState,
     event: (ReceiptDetailEvent) -> Unit
 ){
-    val context = LocalContext.current
-
     val formattedTotal = remember(state.totalTransaction) {
         "Rp ${state.totalTransaction.toString().decimalFormat()},00"
     }
@@ -175,28 +161,6 @@ fun ReceiptDetailContent(
                 onConfirm = {
                     event.invoke(ReceiptDetailEvent.OnDelete(transactionId))
                 }
-            )
-        }
-        AnimatedVisibility(
-            visible = state.uiMessage != null,
-            enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
-            exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut(),
-            modifier = Modifier.align(Alignment.TopCenter)
-        ) {
-            val icon = when(state.uiMessage?.type){
-                UiMessageType.SUCCESS -> painterResource(R.drawable.ic_check_24_white)
-                UiMessageType.ERROR -> painterResource(R.drawable.ic_error_24_white)
-                else -> painterResource(R.drawable.ic_info_outline_24_white)
-            }
-            val color = when(state.uiMessage?.type){
-                UiMessageType.SUCCESS -> Primary
-                UiMessageType.ERROR -> Negative
-                else -> Tertiary
-            }
-            UiMessageBar(
-                imageStart = icon,
-                imageBackground = color,
-                message = state.uiMessage?.asString(context) ?: ""
             )
         }
     }
