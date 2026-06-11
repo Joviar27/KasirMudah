@@ -64,7 +64,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun TransactionHistoryScreen(
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    onNavigateToDetail: (String) -> Unit
 ){
     val context = LocalContext.current
     val appContext = context.applicationContext
@@ -101,6 +102,9 @@ fun TransactionHistoryScreen(
             }
             is TransactionHistoryEvent.OnFilterChange ->{
                 viewModel.updateFilter(event.newFilter)
+            }
+            is TransactionHistoryEvent.OnNavigateToDetail ->{
+                onNavigateToDetail.invoke(event.transactionId)
             }
         }
     }
@@ -258,7 +262,7 @@ fun TransactionHistoryContent(
                         event.invoke(TransactionHistoryEvent.OnShowConfirmDeleteDialog(it))
                     },
                     onItemClick = {
-                        //Navigate to transaction detail page
+                        event.invoke(TransactionHistoryEvent.OnNavigateToDetail(it))
                     }
                 )
             }

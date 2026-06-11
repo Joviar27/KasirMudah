@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -26,7 +27,7 @@ import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 
 @Composable
 fun MainTabScreen(
-    onNavigateToReceiptDraft: () -> Unit
+    rootNavController: NavController
 ) {
     val navController = rememberNavController()
 
@@ -67,11 +68,13 @@ fun MainTabScreen(
         ){
             composable<Screen.Shop>{
                 ShopScreen(innerPadding){
-                    onNavigateToReceiptDraft.invoke()
+                    rootNavController.navigate(Screen.ReceiptDraft)
                 }
             }
             composable<Screen.History>{
-                TransactionHistoryScreen(innerPadding)
+                TransactionHistoryScreen(innerPadding){
+                    rootNavController.navigate(Screen.ReceiptDetail(it))
+                }
             }
             composable<Screen.Profile>{
                 ProfileScreen(innerPadding)
@@ -85,6 +88,6 @@ fun MainTabScreen(
 @Composable
 fun MainPreview() {
     KasirMudahTheme {
-        MainTabScreen(){}
+        MainTabScreen(rememberNavController())
     }
 }

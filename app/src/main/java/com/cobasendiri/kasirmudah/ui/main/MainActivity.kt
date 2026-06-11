@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.cobasendiri.kasirmudah.nav.Screen
 import com.cobasendiri.kasirmudah.ui.receipt.detail.ReceiptDetailScreen
 import com.cobasendiri.kasirmudah.ui.receipt.draft.ReceiptDraftScreen
@@ -26,9 +27,7 @@ class MainActivity : ComponentActivity() {
                     startDestination = Screen.MainTabs
                 ){
                     composable<Screen.MainTabs> {
-                        MainTabScreen{
-                            rootNavController.navigate(Screen.ReceiptDraft)
-                        }
+                        MainTabScreen(rootNavController)
                     }
                     composable<Screen.ReceiptDraft> {
                         ReceiptDraftScreen(
@@ -37,12 +36,11 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
-                    composable<Screen.ReceiptDetail> {
-                        ReceiptDetailScreen(
-                            onNavigateBack = {
-                                rootNavController.popBackStack()
-                            }
-                        )
+                    composable<Screen.ReceiptDetail> { backStackEntry ->
+                        val args = backStackEntry.toRoute<Screen.ReceiptDetail>()
+                        ReceiptDetailScreen(args.transactionId){
+                            rootNavController.popBackStack()
+                        }
                     }
                 }
             }

@@ -42,7 +42,7 @@
 
     <!--  Receipt Page  -->
     <string name="receipt_title">Nota Pembelian</string>
-    <string name="transaction_id">Nomor Pembelian: %1$s</string>
+    <string name="transaction_id">Nomor Pembelian:\n%1$s</string>
     <string name="price">Harga</string>
     <string name="name_count">%1$s (%2$sX)</string>
     <string name="total">Total</string>

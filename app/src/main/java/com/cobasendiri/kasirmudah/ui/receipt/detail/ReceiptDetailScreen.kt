@@ -2,40 +2,43 @@ package com.cobasendiri.kasirmudah.ui.receipt.detail
 
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
-import com.cobasendiri.kasirmudah.domain.model.TransactionReceipt
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.cobasendiri.kasirmudah.ui.ViewModelFactory
 import com.cobasendiri.kasirmudah.ui.component.ReceiptTopBar
 
 @Composable
 fun ReceiptDetailScreen(
+    transactionId: String,
     onNavigateBack: () -> Unit
 ) {
-    val dummyReceipt = remember { generateDummyReceipt() }
+    val context = LocalContext.current
+    val applicationContext = context.applicationContext
 
-    var dummyState by remember {
-        mutableStateOf(
-            ReceiptDetailState(
-                shopName = "Toko Madura A",
-                transactionCreatedAt = dummyReceipt.createdAt,
-                transactionId = dummyReceipt.id,
-                transactionShopItems = dummyReceipt.shopItems,
-                totalTransaction = dummyReceipt.transactionTotal
-            )
-        )
+    val viewmodel: ReceiptDetailViewModel = viewModel(
+        factory = ViewModelFactory.getInstance(applicationContext)
+    )
+
+    val state by viewmodel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(transactionId) {
+        viewmodel.getTransaction(transactionId)
     }
 
     Scaffold(
         topBar = {
             ReceiptTopBar(
                 showMenuIcon = true,
+                isBookmarked = state.isBookmarked,
                 onUpdateBookmark = {
+                    viewmodel.updateBookmark(state.transactionId)
                 },
                 onDelete = {
+                    viewmodel.showConfirmDeleteDialog(state.transactionId)
                 },
                 onNavigateBack = onNavigateBack
             )
@@ -43,13 +46,17 @@ fun ReceiptDetailScreen(
     ) { innerPadding ->
         ReceiptDetailContent(
             innerPadding,
-            dummyState
+            state
         ) { event ->
             when (event) {
-                is ReceiptDetailEvent.OnShowConfirmDeleteDialog -> {
-                }
-
                 is ReceiptDetailEvent.OnDismissConfirmDeleteDialog -> {
+                    viewmodel.dismissConfirmDeleteDialog()
+                }
+                is ReceiptDetailEvent.OnDelete ->{
+                    viewmodel.deleteTransaction(event.transactionId)
+                }
+                is ReceiptDetailEvent.OnDownload ->{
+                    //Download receipt
                 }
             }
         }
@@ -59,20 +66,5 @@ fun ReceiptDetailScreen(
 @Preview
 @Composable
 fun ReceiptDetailScreenPrev() {
-    ReceiptDetailScreen{}
-}
-
-fun generateDummyReceipt() : TransactionReceipt{
-    return TransactionReceipt(
-        id = "4shisefhw48t4",
-        createdAt = 1755388800,
-        shopItems = MutableList(6){
-            TransactionItemInfo(
-                name = "Barang Nomor $it",
-                itemTotal = 980000,
-                count = 5
-            )
-        },
-        transactionTotal = 1500225
-    )
+    ReceiptDetailScreen(""){}
 }

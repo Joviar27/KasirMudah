@@ -22,6 +22,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionHistoryUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
@@ -119,5 +120,9 @@ object Injection {
 
     fun provideDeleteTransactionHistoryUseCase(context: Context): DeleteTransactionHistoryUseCase{
         return DeleteTransactionHistoryUseCase(provideTransactionRepository(context))
+    }
+
+    fun provideGetTransactionUseCase(context: Context): GetTransactionUseCase{
+        return GetTransactionUseCase(provideTransactionRepository(context))
     }
 }

@@ -20,5 +20,7 @@ sealed interface Screen {
     object ReceiptDraft: Screen
 
     @Serializable
-    object ReceiptDetail: Screen
+    data class ReceiptDetail(
+        val transactionId: String
+    ): Screen
 }

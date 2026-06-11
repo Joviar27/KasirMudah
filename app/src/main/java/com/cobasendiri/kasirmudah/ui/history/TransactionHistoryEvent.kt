@@ -22,4 +22,8 @@ interface TransactionHistoryEvent {
     data class OnFilterChange(
         val newFilter: TransactionFilter
     ): TransactionHistoryEvent
+
+    data class OnNavigateToDetail(
+        val transactionId: String
+    ): TransactionHistoryEvent
 }

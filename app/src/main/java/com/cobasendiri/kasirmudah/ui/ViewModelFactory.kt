@@ -15,12 +15,14 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionHistoryUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
 import com.cobasendiri.kasirmudah.ui.history.TransactionHistoryViewModel
+import com.cobasendiri.kasirmudah.ui.receipt.detail.ReceiptDetailViewModel
 import com.cobasendiri.kasirmudah.ui.receipt.draft.ReceiptDraftViewModel
 import com.cobasendiri.kasirmudah.ui.shop.ShopViewModel
 
@@ -40,7 +42,8 @@ class ViewModelFactory(
     private val getTransactionHistoryUseCase: GetTransactionHistoryUseCase,
     private val getBookmarkedTransactionUseCase: GetBookmarkedTransactionUseCase,
     private val updateTransactionBookmarkUseCase: UpdateTransactionBookmarkUseCase,
-    private val deleteTransactionHistoryUseCase: DeleteTransactionHistoryUseCase
+    private val deleteTransactionHistoryUseCase: DeleteTransactionHistoryUseCase,
+    private val getTransactionUseCase: GetTransactionUseCase
 ) : ViewModelProvider.Factory {
 
     companion object {
@@ -65,7 +68,8 @@ class ViewModelFactory(
                     Injection.provideGetTransactionHistoryUseCase(context),
                     Injection.provideGetBookmarkedTransactionUseCase(context),
                     Injection.provideUpdateTransactionBookmarkUseCase(context),
-                    Injection.provideDeleteTransactionHistoryUseCase(context)
+                    Injection.provideDeleteTransactionHistoryUseCase(context),
+                    Injection.provideGetTransactionUseCase(context)
                 ).also { instance = it }
             }
         }
@@ -86,6 +90,10 @@ class ViewModelFactory(
         }else if(modelClass.isAssignableFrom(TransactionHistoryViewModel::class.java)){
             return TransactionHistoryViewModel(getTransactionHistoryUseCase,
                 getBookmarkedTransactionUseCase, updateTransactionBookmarkUseCase,
+                deleteTransactionHistoryUseCase
+            ) as T
+        }else if(modelClass.isAssignableFrom(ReceiptDetailViewModel::class.java)){
+            return ReceiptDetailViewModel(getTransactionUseCase, updateTransactionBookmarkUseCase,
                 deleteTransactionHistoryUseCase
             ) as T
         }
