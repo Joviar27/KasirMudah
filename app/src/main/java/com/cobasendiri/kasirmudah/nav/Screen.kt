@@ -18,4 +18,7 @@ sealed interface Screen {
 
     @Serializable
     object ReceiptDraft: Screen
+
+    @Serializable
+    object ReceiptDetail: Screen
 }

@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.cobasendiri.kasirmudah.nav.Screen
+import com.cobasendiri.kasirmudah.ui.receipt.detail.ReceiptDetailScreen
 import com.cobasendiri.kasirmudah.ui.receipt.draft.ReceiptDraftScreen
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 
@@ -31,6 +32,13 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<Screen.ReceiptDraft> {
                         ReceiptDraftScreen(
+                            onNavigateBack = {
+                                rootNavController.popBackStack()
+                            }
+                        )
+                    }
+                    composable<Screen.ReceiptDetail> {
+                        ReceiptDetailScreen(
                             onNavigateBack = {
                                 rootNavController.popBackStack()
                             }

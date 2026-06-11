@@ -2,7 +2,9 @@ package com.cobasendiri.kasirmudah.ui.receipt.detail
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -30,47 +31,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
-import com.cobasendiri.kasirmudah.ui.component.ReceiptTopBar
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
 import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
+import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.dateFormat
 import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReceiptDetailContent(
+    innerPadding: PaddingValues,
     state: ReceiptDetailState,
     event: (ReceiptDetailEvent) -> Unit
 ){
-    Scaffold(
-        topBar = {
-            ReceiptTopBar(
-                showMenuIcon = true,
-                onUpdateBookmark = {
-                    event.invoke(ReceiptDetailEvent.OnUpdateBookmark(state.transactionId))
-                },
-                onDelete = {
-                    event.invoke(ReceiptDetailEvent.OnShowConfirmDeleteDialog(state.transactionId))
-                },
-                onNavigateBack = {
-                    event.invoke(ReceiptDetailEvent.OnNavigateBack)
-                }
-            )
-        }
-    ) { innerPadding ->
-        val formattedTotal = remember(state.totalTransaction) {
-            "Rp ${state.totalTransaction.toString().decimalFormat()},00"
-        }
+    val formattedTotal = remember(state.totalTransaction) {
+        "Rp ${state.totalTransaction.toString().decimalFormat()},00"
+    }
 
-        val scrollState = rememberScrollState()
+    val formattedDate = remember(state.transactionCreatedAt) {
+        state.transactionCreatedAt.dateFormat()
+    }
 
-        Column(Modifier.padding(innerPadding)
-            .fillMaxSize()
-            .background(Surface)
-            .padding(vertical = 16.dp, horizontal = 24.dp)
-        ){
+    val scrollState = rememberScrollState()
+
+    Box(Modifier.fillMaxSize()
+        .background(Surface)
+        .padding(innerPadding)
+    ){
+        Column(Modifier.padding(horizontal = 24.dp, vertical = 16.dp)){
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -94,7 +84,7 @@ fun ReceiptDetailContent(
                     style = KasirMudahTypography.titleLarge
                 )
                 Text(
-                    text = state.transactionCreatedAt,
+                    text = formattedDate,
                     style = KasirMudahTypography.bodyLarge
                 )
                 Spacer(Modifier.height(4.dp))
@@ -203,9 +193,10 @@ fun ReceiptItem(
 @Composable
 fun ReceiptContentPrev(){
     ReceiptDetailContent(
+        PaddingValues(0.dp),
         ReceiptDetailState(
             shopName = "Toko Madura A",
-            transactionCreatedAt = "12 Agustus 2026 - 12:53:01",
+            transactionCreatedAt = 1755388800,
             transactionId = "4shisefhw48t4",
             transactionShopItems = MutableList(6) {
                 TransactionItemInfo(
