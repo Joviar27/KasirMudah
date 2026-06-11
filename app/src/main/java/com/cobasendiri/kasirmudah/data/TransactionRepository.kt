@@ -91,6 +91,11 @@ class TransactionRepository(
         }.flowOn(ioDispatcher)
     }
 
+    override fun getIsBookmarked(transactionId: String): Flow<Boolean> {
+        return transactionDao.isBookmarked(transactionId)
+            .mapExceptionFlow().flowOn(ioDispatcher)
+    }
+
     override suspend fun updateBookmark(transactionId: String): Boolean {
         return withContext(ioDispatcher){
             runMapExceptionSuspending {

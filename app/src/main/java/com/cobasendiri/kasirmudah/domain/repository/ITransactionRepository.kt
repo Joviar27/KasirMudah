@@ -1,6 +1,5 @@
 package com.cobasendiri.kasirmudah.domain.repository
 
-import com.cobasendiri.kasirmudah.data.entity.TransactionEntity
 import com.cobasendiri.kasirmudah.domain.model.TransactionHistory
 import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
 import com.cobasendiri.kasirmudah.domain.model.TransactionReceipt
@@ -22,6 +21,8 @@ interface ITransactionRepository {
     suspend fun getTransaction(transactionId: String): TransactionReceipt
 
     fun getBookmarkedTransaction(): Flow<List<TransactionHistory>?>
+
+    fun getIsBookmarked(transactionId: String): Flow<Boolean>
 
     suspend fun updateBookmark(transactionId: String): Boolean
 

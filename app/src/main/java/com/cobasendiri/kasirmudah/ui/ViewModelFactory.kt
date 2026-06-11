@@ -11,6 +11,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.DeleteProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DeleteTransactionHistoryUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetBookmarkedTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetIsTransactionBookmarkedUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
@@ -43,7 +44,8 @@ class ViewModelFactory(
     private val getBookmarkedTransactionUseCase: GetBookmarkedTransactionUseCase,
     private val updateTransactionBookmarkUseCase: UpdateTransactionBookmarkUseCase,
     private val deleteTransactionHistoryUseCase: DeleteTransactionHistoryUseCase,
-    private val getTransactionUseCase: GetTransactionUseCase
+    private val getTransactionUseCase: GetTransactionUseCase,
+    private val getIsTransactionBookmarkedUseCase: GetIsTransactionBookmarkedUseCase
 ) : ViewModelProvider.Factory {
 
     companion object {
@@ -69,7 +71,8 @@ class ViewModelFactory(
                     Injection.provideGetBookmarkedTransactionUseCase(context),
                     Injection.provideUpdateTransactionBookmarkUseCase(context),
                     Injection.provideDeleteTransactionHistoryUseCase(context),
-                    Injection.provideGetTransactionUseCase(context)
+                    Injection.provideGetTransactionUseCase(context),
+                    Injection.provideGetIsTransactionBookmarkedUseCase(context)
                 ).also { instance = it }
             }
         }
@@ -93,8 +96,8 @@ class ViewModelFactory(
                 deleteTransactionHistoryUseCase
             ) as T
         }else if(modelClass.isAssignableFrom(ReceiptDetailViewModel::class.java)){
-            return ReceiptDetailViewModel(getTransactionUseCase, updateTransactionBookmarkUseCase,
-                deleteTransactionHistoryUseCase
+            return ReceiptDetailViewModel(getTransactionUseCase, getIsTransactionBookmarkedUseCase,
+                updateTransactionBookmarkUseCase, deleteTransactionHistoryUseCase
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

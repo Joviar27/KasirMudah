@@ -9,6 +9,7 @@ import com.cobasendiri.kasirmudah.data.entity.TransactionBookmarkEntity
 import com.cobasendiri.kasirmudah.data.entity.TransactionEntity
 import com.cobasendiri.kasirmudah.data.result.TransactionHistoryResult
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 @Dao
 interface TransactionDao {
@@ -38,16 +39,11 @@ interface TransactionDao {
     @Query("DELETE FROM transactions WHERE id = :transactionId")
     fun deleteTransaction(transactionId: String)
 
-    @Query("""
-        SELECT t.*, (b.transaction_id IS NOT NULL) as isBookmarked
-        FROM transactions as t
-        LEFT JOIN transaction_bookmark as b ON t.id = b.transaction_id
-        WHERE t.id = :transactionId
-    """)
-    suspend fun getTransaction(transactionId: String): TransactionEntity
+    @Query("SELECT *FROM transactions as t WHERE t.id = :transactionId")
+    fun getTransaction(transactionId: String): TransactionEntity
 
     @Query("SELECT EXISTS(SELECT 1 FROM transaction_bookmark WHERE transaction_id = :transactionId)")
-    suspend fun isBookmarked(transactionId: String): Boolean
+    fun isBookmarked(transactionId: String): Flow<Boolean>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addBookmark(bookmark: TransactionBookmarkEntity)
@@ -57,7 +53,7 @@ interface TransactionDao {
 
     @Transaction
     suspend fun updateBookmark(transactionId: String, timestamp: Long): Boolean{
-        return if(isBookmarked(transactionId)){
+        return if(isBookmarked(transactionId).firstOrNull() == true){
             removeBookmark(transactionId)
             false
         }else{

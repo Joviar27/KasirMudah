@@ -27,6 +27,7 @@ fun ReceiptDetailScreen(
 
     LaunchedEffect(transactionId) {
         viewmodel.getTransaction(transactionId)
+        viewmodel.getIsBookmarked(transactionId)
     }
 
     Scaffold(

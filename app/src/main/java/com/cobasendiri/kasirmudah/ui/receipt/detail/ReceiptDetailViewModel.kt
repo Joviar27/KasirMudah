@@ -3,6 +3,7 @@ package com.cobasendiri.kasirmudah.ui.receipt.detail
 import androidx.lifecycle.viewModelScope
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.usecase.DeleteTransactionHistoryUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetIsTransactionBookmarkedUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 
 class ReceiptDetailViewModel(
     private val getTransactionUseCase: GetTransactionUseCase,
+    private val getIsTransactionBookmarkedUseCase: GetIsTransactionBookmarkedUseCase,
     private val updateTransactionBookmarkUseCase: UpdateTransactionBookmarkUseCase,
     private val deleteTransactionHistoryUseCase: DeleteTransactionHistoryUseCase
 ): BaseViewModel() {
@@ -32,6 +34,16 @@ class ReceiptDetailViewModel(
                         transactionShopItems = receipt.shopItems,
                         totalTransaction = receipt.transactionTotal
                     )
+                }
+            }
+        }
+    }
+
+    fun getIsBookmarked(transactionId: String){
+        viewModelScope.launch {
+            getIsTransactionBookmarkedUseCase.invoke(transactionId).collect {
+                it.handleResult{ isBookmarked ->
+                    _state.update { it.copy(isBookmarked = isBookmarked) }
                 }
             }
         }

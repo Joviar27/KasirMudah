@@ -18,6 +18,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.DeleteProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DeleteTransactionHistoryUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetBookmarkedTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetIsTransactionBookmarkedUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
@@ -124,5 +125,9 @@ object Injection {
 
     fun provideGetTransactionUseCase(context: Context): GetTransactionUseCase{
         return GetTransactionUseCase(provideTransactionRepository(context))
+    }
+
+    fun provideGetIsTransactionBookmarkedUseCase(context: Context): GetIsTransactionBookmarkedUseCase{
+        return GetIsTransactionBookmarkedUseCase(provideTransactionRepository(context))
     }
 }
