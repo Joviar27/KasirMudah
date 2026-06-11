@@ -2,6 +2,10 @@ package com.cobasendiri.kasirmudah.domain.exception
 
 sealed class KasirMudahException() : Exception() {
 
+    data object TransactionAmountInvalidError : KasirMudahException() {
+        private fun readResolve(): Any = TransactionAmountInvalidError
+    }
+
     data object DatabaseError : KasirMudahException() {
         private fun readResolve(): Any = DatabaseError
     }
@@ -11,4 +15,5 @@ sealed class KasirMudahException() : Exception() {
     }
 
     data class UnknownError(val originalMessage: String?) : KasirMudahException()
+
 }

@@ -1,5 +1,10 @@
 package com.cobasendiri.kasirmudah.ui.history
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -12,18 +17,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
@@ -34,120 +39,72 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.cobasendiri.kasirmudah.domain.model.Transaction
-import com.cobasendiri.kasirmudah.domain.model.TransactionShopItem
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
+import com.cobasendiri.kasirmudah.ui.ViewModelFactory
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
-import com.cobasendiri.kasirmudah.ui.component.TransactionItem
+import com.cobasendiri.kasirmudah.ui.component.TransactionHistoryItem
+import com.cobasendiri.kasirmudah.ui.component.UiMessageBar
 import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
+import com.cobasendiri.kasirmudah.ui.theme.Negative
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.Secondary
+import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
+import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
+import kotlinx.coroutines.delay
 
 @Composable
 fun TransactionHistoryScreen(
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    onNavigateToDetail: (String) -> Unit
 ){
-    //Dummy before viewmodel
-    val bookmarked = rememberSaveable { mutableListOf<String>() }
-    val transactionList = rememberSaveable { generateDummyTransactionItemList() }
+    val context = LocalContext.current
+    val appContext = context.applicationContext
 
-    var dummyState by remember { mutableStateOf(
-        TransactionHistoryState(
-            filter = TransactionFilter.FILTER_ALL,
-            showConfirmDeleteDialog = null,
-            transactionList = transactionList.map {
-                TransactionItemState(
-                    id = it.id,
-                    name = it.name,
-                    createdAt = it.createdAt,
-                    isBookmarked = false
-                )
-            }
-        )
-    ) }
+    val viewModel: TransactionHistoryViewModel = viewModel(
+        factory = ViewModelFactory.getInstance(appContext)
+    )
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    state.uiMessage?.let { uiMessage ->
+        LaunchedEffect(uiMessage.getMessageId()) {
+            delay(3000L)
+            viewModel.uiMessageShown()
+        }
+    }
 
     TransactionHistoryContent(
         innerPadding,
-        dummyState
+        state
     ){ event ->
         when(event){
             is TransactionHistoryEvent.OnUpdateBookmark ->{
-                val isBookmarked = bookmarked.contains(event.transactionId)
-                if(isBookmarked){
-                    bookmarked.remove(event.transactionId)
-                }else{
-                    bookmarked.add(event.transactionId)
-                }
-
-                dummyState = dummyState.copy(
-                    transactionList = dummyState.transactionList.map {
-                        TransactionItemState(
-                            id = it.id,
-                            name = it.name,
-                            createdAt = it.createdAt,
-                            isBookmarked = bookmarked.contains(it.id)
-                        )
-                    }
-                )
-
+                viewModel.updateBookmark(event.transactionId)
             }
             is TransactionHistoryEvent.OnDelete ->{
-                transactionList.removeIf { it.id == event.transactionId }
-                bookmarked.remove(event.transactionId)
-
-                dummyState = dummyState.copy(
-                    transactionList =  transactionList.map {
-                        TransactionItemState(
-                            id = it.id,
-                            name = it.name,
-                            createdAt = it.createdAt,
-                            isBookmarked = bookmarked.contains(it.id)
-                        )
-                    }
-                )
+                viewModel.deleteTransaction(event.transactionId)
             }
             is TransactionHistoryEvent.OnShowConfirmDeleteDialog ->{
-                dummyState = dummyState.copy(
-                    showConfirmDeleteDialog = event.transactionId
-                )
+                viewModel.showConfirmDeleteDialog(event.transactionId)
             }
             is TransactionHistoryEvent.OnDismissConfirmDeleteDialog -> {
-                dummyState = dummyState.copy(
-                    showConfirmDeleteDialog = null
-                )
+                viewModel.dismissConfirmDeleteDialog()
             }
             is TransactionHistoryEvent.OnFilterChange ->{
-                dummyState = dummyState.copy(
-                    filter = event.newFilter
-                )
-
-                dummyState = when(event.newFilter){
-                    TransactionFilter.FILTER_BOOKMARKED -> {
-                        dummyState.copy(
-                            transactionList = dummyState.transactionList.filter {
-                                bookmarked.contains(it.id)
-                            }
-                        )
-                    }
-                    else ->{
-                        dummyState.copy(
-                            transactionList = transactionList.map {
-                                TransactionItemState(
-                                    id = it.id,
-                                    name = it.name,
-                                    createdAt = it.createdAt,
-                                    isBookmarked = bookmarked.contains(it.id)
-                                )
-                            }
-                        )
-                    }
-                }
+                viewModel.updateFilter(event.newFilter)
+            }
+            is TransactionHistoryEvent.OnNavigateToDetail ->{
+                onNavigateToDetail.invoke(event.transactionId)
             }
         }
     }
@@ -159,6 +116,8 @@ fun TransactionHistoryContent(
     state: TransactionHistoryState,
     event: (TransactionHistoryEvent) -> Unit
 ){
+    val context = LocalContext.current
+
     val listState = rememberLazyListState()
     val filterScrollState = rememberScrollState()
 
@@ -258,6 +217,15 @@ fun TransactionHistoryContent(
                             )
                         }
                         FilterChip(
+                            text = stringResource(R.string.today),
+                            filter = TransactionFilter.FILTER_TODAY,
+                            isSelected = state.filter == TransactionFilter.FILTER_TODAY
+                        ) {
+                            event.invoke(
+                                TransactionHistoryEvent.OnFilterChange(it)
+                            )
+                        }
+                        FilterChip(
                             text = stringResource(R.string.last_week),
                             filter = TransactionFilter.FILTER_LAST_WEEK,
                             isSelected = state.filter == TransactionFilter.FILTER_LAST_WEEK
@@ -284,7 +252,7 @@ fun TransactionHistoryContent(
                 key = { transactionItemState -> transactionItemState.id }
             ) { item ->
                 Spacer(Modifier.height(16.dp))
-                TransactionItem(
+                TransactionHistoryItem(
                     Modifier.padding(horizontal = 16.dp),
                     state = item,
                     onUpdateBookmark = {
@@ -294,7 +262,7 @@ fun TransactionHistoryContent(
                         event.invoke(TransactionHistoryEvent.OnShowConfirmDeleteDialog(it))
                     },
                     onItemClick = {
-                        //Navigate to transaction detail page
+                        event.invoke(TransactionHistoryEvent.OnNavigateToDetail(it))
                     }
                 )
             }
@@ -314,25 +282,32 @@ fun TransactionHistoryContent(
                 onCancel = { event.invoke(dismissEvent) },
                 onConfirm = {
                     event.invoke(TransactionHistoryEvent.OnDelete(itemId))
-                    event.invoke(dismissEvent)
                 }
             )
         }
-    }
-}
-
-fun generateDummyTransactionItemList() : MutableList<Transaction>{
-    return MutableList(20){
-        Transaction(
-            id = "4shisefhw48t4$it",
-            name = "transaksi-4shisefhw48t4$it",
-            createdAt = "12 Agustus 2026 - 12:53:01",
-            shopItems = MutableList(6){
-                TransactionShopItem(
-                    itemName = "Barang Nomor $it",
-                    totalPrice = "Rp 863.000,00"
-                )
+        AnimatedVisibility(
+            visible = state.uiMessage != null,
+            enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
+            exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut(),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .statusBarsPadding()
+        ) {
+            val icon = when(state.uiMessage?.type){
+                UiMessageType.SUCCESS -> painterResource(R.drawable.ic_check_24_white)
+                UiMessageType.ERROR -> painterResource(R.drawable.ic_error_24_white)
+                else -> painterResource(R.drawable.ic_info_outline_24_white)
             }
-        )
+            val color = when(state.uiMessage?.type){
+                UiMessageType.SUCCESS -> Primary
+                UiMessageType.ERROR -> Negative
+                else -> Tertiary
+            }
+            UiMessageBar(
+                imageStart = icon,
+                imageBackground = color,
+                message = state.uiMessage?.asString(context) ?: ""
+            )
+        }
     }
 }

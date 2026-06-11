@@ -62,8 +62,16 @@ val KasirMudahTypography = Typography(
     ),//14.sp
     bodySmall = baseline.bodySmall.copy(fontFamily = poppinsFontFamily),
     labelLarge = baseline.labelLarge.copy(fontFamily = poppinsFontFamily),
-    labelMedium = baseline.labelMedium.copy(fontFamily = poppinsFontFamily),
-    labelSmall = baseline.labelSmall.copy(fontFamily = poppinsFontFamily),
+    labelMedium = baseline.labelMedium.copy(
+        fontFamily = poppinsFontFamily,
+        fontWeight = FontWeight.Normal,
+        color = OnPrimary
+    ),//12.sp
+    labelSmall = baseline.labelSmall.copy(
+        fontFamily = poppinsFontFamily,
+        fontWeight = FontWeight.Light,
+        color = OnPrimary
+    ),//11.sp
 )
 
 // Set of Material typography styles to start with

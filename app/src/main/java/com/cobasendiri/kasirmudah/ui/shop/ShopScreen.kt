@@ -76,12 +76,12 @@ import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
-import com.cobasendiri.kasirmudah.ui.utils.ToastUtil.showToast
 import kotlinx.coroutines.delay
 
 @Composable
 fun ShopScreen(
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    onNavigateToReceiptDraft: () -> Unit
 ){
     val context = LocalContext.current
     val appContext = context.applicationContext
@@ -123,7 +123,7 @@ fun ShopScreen(
                 viewModel.updateFilter(event.newFilter)
             }
             is ShopEvent.OnFinish ->{
-
+                onNavigateToReceiptDraft.invoke()
             }
             is ShopEvent.OnSearch ->{
                 viewModel.updateQuery(event.searchQuery)
@@ -428,7 +428,6 @@ fun ShopContent(
                 onCancel = { event.invoke(dismissEvent) },
                 onConfirm = {
                     event.invoke(ShopEvent.OnDeleteProduct(itemId))
-                    event.invoke(dismissEvent)
                 }
             )
         }

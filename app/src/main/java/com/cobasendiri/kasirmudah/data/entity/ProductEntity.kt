@@ -1,5 +1,6 @@
 package com.cobasendiri.kasirmudah.data.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -13,5 +14,6 @@ data class ProductEntity(
 
     val price: Long,
 
+    @ColumnInfo(name = "color_code")
     val colorCode: Long
 )

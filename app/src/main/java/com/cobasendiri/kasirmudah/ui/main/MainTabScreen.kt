@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -18,14 +19,16 @@ import androidx.navigation.compose.rememberNavController
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.nav.FloatingNavItem
 import com.cobasendiri.kasirmudah.nav.Screen
-import com.cobasendiri.kasirmudah.ui.profile.ProfileScreen
-import com.cobasendiri.kasirmudah.ui.shop.ShopScreen
 import com.cobasendiri.kasirmudah.ui.component.FloatingNavigationBar
 import com.cobasendiri.kasirmudah.ui.history.TransactionHistoryScreen
+import com.cobasendiri.kasirmudah.ui.profile.ProfileScreen
+import com.cobasendiri.kasirmudah.ui.shop.ShopScreen
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 
 @Composable
-fun MainContent(){
+fun MainTabScreen(
+    rootNavController: NavController
+) {
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -64,10 +67,14 @@ fun MainContent(){
             startDestination = Screen.Shop
         ){
             composable<Screen.Shop>{
-                ShopScreen(innerPadding)
+                ShopScreen(innerPadding){
+                    rootNavController.navigate(Screen.ReceiptDraft)
+                }
             }
             composable<Screen.History>{
-                TransactionHistoryScreen(innerPadding)
+                TransactionHistoryScreen(innerPadding){
+                    rootNavController.navigate(Screen.ReceiptDetail(it))
+                }
             }
             composable<Screen.Profile>{
                 ProfileScreen(innerPadding)
@@ -81,6 +88,6 @@ fun MainContent(){
 @Composable
 fun MainPreview() {
     KasirMudahTheme {
-        MainContent()
+        MainTabScreen(rememberNavController())
     }
 }

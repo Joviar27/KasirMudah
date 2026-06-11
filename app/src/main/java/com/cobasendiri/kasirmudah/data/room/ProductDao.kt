@@ -15,7 +15,7 @@ interface ProductDao {
     @Query("""
         SELECT p.*, IFNULL(c.count,0) as count
         FROM products as p
-        LEFT JOIN carts as c ON p.id = c.productId
+        LEFT JOIN carts as c ON p.id = c.product_id
     """)
     fun getAllProducts() : Flow<List<ProductResult>>
 
@@ -25,7 +25,7 @@ interface ProductDao {
     @Update
     suspend fun updateProduct(product: ProductEntity)
 
-    @Query("UPDATE products SET colorCode = :newColor WHERE id = :productId")
+    @Query("UPDATE products SET color_code = :newColor WHERE id = :productId")
     suspend fun updateProductColorCode(productId: String, newColor: Long)
 
     @Query("DELETE FROM products WHERE id = :id")

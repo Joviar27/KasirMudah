@@ -6,20 +6,22 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "carts",
+    tableName = "transaction_bookmark",
     foreignKeys = [
         ForeignKey(
-            entity = ProductEntity::class,
+            entity = TransactionEntity::class,
             parentColumns = ["id"],
-            childColumns = ["product_id"],
+            childColumns = ["transaction_id"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
-data class CartEntity(
-    @PrimaryKey
-    @ColumnInfo(name = "product_id")
-    val productId: String,
+data class TransactionBookmarkEntity (
 
-    val count: Int
+    @PrimaryKey
+    @ColumnInfo(name = "transaction_id")
+    val transactionId: String,
+
+    @ColumnInfo(name = "bookmarked_at")
+    val bookmarkedAt: Long
 )

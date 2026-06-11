@@ -3,21 +3,32 @@ package com.cobasendiri.kasirmudah.di
 import android.content.Context
 import com.cobasendiri.kasirmudah.data.CartRepository
 import com.cobasendiri.kasirmudah.data.ProductRepository
+import com.cobasendiri.kasirmudah.data.TransactionRepository
 import com.cobasendiri.kasirmudah.data.room.CartDao
 import com.cobasendiri.kasirmudah.data.room.ProductDao
 import com.cobasendiri.kasirmudah.data.room.ShopDatabase
+import com.cobasendiri.kasirmudah.data.room.TransactionDao
 import com.cobasendiri.kasirmudah.domain.repository.ICartRepository
 import com.cobasendiri.kasirmudah.domain.repository.IProductRepository
+import com.cobasendiri.kasirmudah.domain.repository.ITransactionRepository
 import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.ClearCartUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DecrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DeleteProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.DeleteTransactionHistoryUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetBookmarkedTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetIsTransactionBookmarkedUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionHistoryUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
 
 object Injection {
 
@@ -29,12 +40,20 @@ object Injection {
         return ShopDatabase.getDatabase(context).cartDao()
     }
 
+    private fun provideTransactionDao(context: Context): TransactionDao{
+        return ShopDatabase.getDatabase(context).transactionDao()
+    }
+
     private fun provideProductRepository(context: Context): IProductRepository{
         return ProductRepository.getInstance(provideProductDao(context))
     }
 
     private fun provideCartRepository(context: Context): ICartRepository{
         return CartRepository.getInstance(provideCartDao(context))
+    }
+
+    private fun provideTransactionRepository(context: Context): ITransactionRepository{
+        return TransactionRepository.getInstance(provideTransactionDao(context))
     }
 
     fun provideGetProductListUseCase(context: Context): GetProductLisUseCase{
@@ -75,5 +94,40 @@ object Injection {
 
     fun provideDeleteProductUseCase(context: Context): DeleteProductUseCase{
         return DeleteProductUseCase(provideProductRepository(context))
+    }
+
+    fun provideGetReceiptItemsUseCase(context: Context): GetReceiptItemsUseCase{
+        return GetReceiptItemsUseCase(provideCartRepository(context))
+    }
+
+    fun provideSaveNewTransactionUseCase(context: Context): SaveNewTransactionUseCase{
+        return SaveNewTransactionUseCase(
+            provideTransactionRepository(context),
+            provideCartRepository(context)
+        )
+    }
+
+    fun provideGetTransactionHistoryUseCase(context: Context): GetTransactionHistoryUseCase{
+        return GetTransactionHistoryUseCase(provideTransactionRepository(context))
+    }
+
+    fun provideGetBookmarkedTransactionUseCase(context: Context): GetBookmarkedTransactionUseCase{
+        return GetBookmarkedTransactionUseCase(provideTransactionRepository(context))
+    }
+
+    fun provideUpdateTransactionBookmarkUseCase(context: Context): UpdateTransactionBookmarkUseCase{
+        return UpdateTransactionBookmarkUseCase(provideTransactionRepository(context))
+    }
+
+    fun provideDeleteTransactionHistoryUseCase(context: Context): DeleteTransactionHistoryUseCase{
+        return DeleteTransactionHistoryUseCase(provideTransactionRepository(context))
+    }
+
+    fun provideGetTransactionUseCase(context: Context): GetTransactionUseCase{
+        return GetTransactionUseCase(provideTransactionRepository(context))
+    }
+
+    fun provideGetIsTransactionBookmarkedUseCase(context: Context): GetIsTransactionBookmarkedUseCase{
+        return GetIsTransactionBookmarkedUseCase(provideTransactionRepository(context))
     }
 }
