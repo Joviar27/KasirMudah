@@ -10,9 +10,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.cobasendiri.kasirmudah.data.util.CoroutineMapper.runMapExceptionSuspending
 import com.cobasendiri.kasirmudah.data.util.DataMapper.mapListToDomain
+import com.cobasendiri.kasirmudah.data.util.DataMapper.mapToTransactionReceipt
 import com.cobasendiri.kasirmudah.data.util.DataMapper.mapTransactionHistoryToDomain
 import com.cobasendiri.kasirmudah.domain.model.TransactionHistory
 import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
+import com.cobasendiri.kasirmudah.domain.model.TransactionReceipt
 import com.cobasendiri.kasirmudah.domain.repository.ITransactionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -73,6 +75,14 @@ class TransactionRepository(
         return transactionDao.getTransactionHistory(timestampFilter).mapExceptionFlow {
             it.mapTransactionHistoryToDomain()
         }.flowOn(ioDispatcher)
+    }
+
+    override suspend fun getTransaction(transactionId: String): TransactionReceipt {
+        return withContext(ioDispatcher) {
+            runMapExceptionSuspending {
+                transactionDao.getTransaction(transactionId).mapToTransactionReceipt()
+            }
+        }
     }
 
     override fun getBookmarkedTransaction(): Flow<List<TransactionHistory>?> {

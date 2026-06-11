@@ -32,12 +32,19 @@ interface TransactionDao {
         FROM transactions as t
         INNER JOIN transaction_bookmark as b ON t.id = b.transaction_id
         ORDER BY b.bookmarked_at DESC
-    """
-    )
+    """)
     fun getBookmarkedTransaction(): Flow<List<TransactionHistoryResult>>
 
     @Query("DELETE FROM transactions WHERE id = :transactionId")
     fun deleteTransaction(transactionId: String)
+
+    @Query("""
+        SELECT t.*, (b.transaction_id IS NOT NULL) as isBookmarked
+        FROM transactions as t
+        LEFT JOIN transaction_bookmark as b ON t.id = b.transaction_id
+        WHERE t.id = :transactionId
+    """)
+    suspend fun getTransaction(transactionId: String): TransactionEntity
 
     @Query("SELECT EXISTS(SELECT 1 FROM transaction_bookmark WHERE transaction_id = :transactionId)")
     suspend fun isBookmarked(transactionId: String): Boolean
