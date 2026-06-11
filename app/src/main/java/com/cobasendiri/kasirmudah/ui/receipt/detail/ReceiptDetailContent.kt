@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
+import com.cobasendiri.kasirmudah.ui.component.ReceiptItem
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
 import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
@@ -165,31 +166,6 @@ fun ReceiptDetailContent(
         }
     }
 }
-
-@Composable
-fun ReceiptItem(
-    item: TransactionItemInfo
-){
-    val formattedAmount = remember(item.itemTotal) {
-        "Rp ${item.itemTotal.toString().decimalFormat()},00"
-    }
-
-    Row(Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = stringResource(R.string.name_count, item.name, item.count),
-            style = KasirMudahTypography.labelMedium
-        )
-        Text(
-            text = formattedAmount,
-            style = KasirMudahTypography.labelMedium.copy(
-                fontWeight = FontWeight.SemiBold
-            )
-        )
-    }
-}
-
 
 @Preview(showBackground = true)
 @Composable
