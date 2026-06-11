@@ -28,7 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cobasendiri.kasirmudah.ui.theme.White
 import com.cobasendiri.kasirmudah.R
+import com.cobasendiri.kasirmudah.ui.theme.Grey
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
+import com.cobasendiri.kasirmudah.ui.theme.LightGrey
 import com.cobasendiri.kasirmudah.ui.theme.Secondary
 import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 
@@ -62,25 +64,25 @@ fun TotalItem(
             )
         }
         Spacer(Modifier.width(8.dp))
-        if(totalAmount>0){
-            Column(Modifier
-                .wrapContentSize()
-                .clip(RoundedCornerShape(16.dp))
-                .background(Secondary)
-                .clickable(onClick = onClickDone)
-                .padding(vertical = 8.dp, horizontal = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    stringResource(R.string.done),
-                    style = KasirMudahTypography.titleMedium
-                )
-                Spacer(Modifier.height(4.dp))
-                Image(
-                    painterResource(R.drawable.ic_right_arrow_white_round),
-                    contentDescription = null
-                )
-            }
+        Column(Modifier
+            .wrapContentSize()
+            .clip(RoundedCornerShape(16.dp))
+            .background(if (totalAmount > 0) Secondary else LightGrey)
+            .clickable(onClick = {
+                if (totalAmount>0) onClickDone
+            })
+            .padding(vertical = 8.dp, horizontal = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                stringResource(R.string.done),
+                style = KasirMudahTypography.titleMedium
+            )
+            Spacer(Modifier.height(4.dp))
+            Image(
+                painterResource(R.drawable.ic_right_arrow_white_round),
+                contentDescription = null
+            )
         }
     }
 }

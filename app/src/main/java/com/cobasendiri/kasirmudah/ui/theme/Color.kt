@@ -2,6 +2,7 @@ package com.cobasendiri.kasirmudah.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val LightGrey = Color(0xFFD2D2D2)
 val Grey = Color(0xFF8E8E8E)
 
 val White = Color(0xFFFFFFFF)
