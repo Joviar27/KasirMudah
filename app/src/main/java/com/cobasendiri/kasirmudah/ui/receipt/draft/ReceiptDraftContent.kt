@@ -38,7 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.TransactionItemInfo
-import com.cobasendiri.kasirmudah.ui.component.ReceiptTopBar
+import com.cobasendiri.kasirmudah.ui.component.ReceiptItem
 import com.cobasendiri.kasirmudah.ui.component.UiMessageBar
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
@@ -61,8 +61,6 @@ fun ReceiptDraftContent(
 
     val context = LocalContext.current
 
-    val topPadding = innerPadding.calculateTopPadding()
-
     val formattedTotal = remember(state.totalTransaction) {
         "Rp ${state.totalTransaction.toString().decimalFormat()},00"
     }
@@ -71,18 +69,9 @@ fun ReceiptDraftContent(
 
     Box(Modifier.fillMaxSize()
         .background(Surface)
+        .padding(innerPadding)
     ){
-        ReceiptTopBar(
-            statusBarHeight = topPadding,
-            showMenuIcon = false,
-            onNavigateBack = {
-                event.invoke(ReceiptDraftEvent.OnNavigateBack)
-            }
-        )
-
-        Column(Modifier.padding(horizontal = 24.dp)
-            .padding(top = 80.dp + topPadding, bottom = 16.dp)
-        ){
+        Column(Modifier.padding(vertical = 16.dp, horizontal = 24.dp)){
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -191,31 +180,6 @@ fun ReceiptDraftContent(
         }
     }
 }
-
-@Composable
-fun ReceiptItem(
-    item: TransactionItemInfo
-){
-    val formattedAmount = remember(item.itemTotal) {
-        "Rp ${item.itemTotal.toString().decimalFormat()},00"
-    }
-
-    Row(Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = stringResource(R.string.name_count, item.name, item.count),
-            style = KasirMudahTypography.labelMedium
-        )
-        Text(
-            text = formattedAmount,
-            style = KasirMudahTypography.labelMedium.copy(
-                fontWeight = FontWeight.SemiBold
-            )
-        )
-    }
-}
-
 
 @Preview(showBackground = true)
 @Composable

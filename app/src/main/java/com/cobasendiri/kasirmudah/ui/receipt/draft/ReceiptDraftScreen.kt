@@ -5,9 +5,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cobasendiri.kasirmudah.ui.ViewModelFactory
+import com.cobasendiri.kasirmudah.ui.component.ReceiptTopBar
 import kotlinx.coroutines.delay
 
 @Composable
@@ -36,7 +38,14 @@ fun ReceiptDraftScreen(
         }
     }
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = {
+            ReceiptTopBar(
+                showMenuIcon = false,
+                onNavigateBack = onNavigateBack
+            )
+        }
+    ) { innerPadding ->
         ReceiptDraftContent(
             innerPadding = innerPadding,
             state = state
