@@ -429,7 +429,6 @@ fun ShopContent(
                 onCancel = { event.invoke(dismissEvent) },
                 onConfirm = {
                     event.invoke(ShopEvent.OnDeleteProduct(itemId))
-                    event.invoke(dismissEvent)
                 }
             )
         }

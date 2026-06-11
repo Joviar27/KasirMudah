@@ -282,7 +282,6 @@ fun TransactionHistoryContent(
                 onCancel = { event.invoke(dismissEvent) },
                 onConfirm = {
                     event.invoke(TransactionHistoryEvent.OnDelete(itemId))
-                    event.invoke(dismissEvent)
                 }
             )
         }
