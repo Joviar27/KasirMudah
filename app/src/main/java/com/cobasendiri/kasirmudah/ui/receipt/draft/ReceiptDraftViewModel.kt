@@ -52,6 +52,7 @@ class ReceiptDraftViewModel(
     fun saveNewTransaction(){
         viewModelScope.launch {
             saveNewTransactionUseCase.invoke().handleResult{
+                _navigateBackEvent.trySend(Unit)
                 clearCart()
             }
         }
