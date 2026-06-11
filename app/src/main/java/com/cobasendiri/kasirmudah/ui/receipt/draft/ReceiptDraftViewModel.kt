@@ -5,7 +5,6 @@ import com.cobasendiri.kasirmudah.domain.usecase.ClearCartUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
-import com.cobasendiri.kasirmudah.nav.Screen
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import kotlinx.coroutines.channels.Channel
@@ -26,8 +25,8 @@ class ReceiptDraftViewModel(
     private val _state = MutableStateFlow(ReceiptDraftState())
     val state: StateFlow<ReceiptDraftState> get() = _state
 
-    private val _navigateEvent = Channel<Screen>()
-    val navigateEvent = _navigateEvent.receiveAsFlow()
+    private val _navigateBackEvent = Channel<Unit>()
+    val navigateBackEvent = _navigateBackEvent.receiveAsFlow()
 
     init {
         getReceiptItems()
@@ -53,7 +52,6 @@ class ReceiptDraftViewModel(
     fun saveNewTransaction(){
         viewModelScope.launch {
             saveNewTransactionUseCase.invoke().handleResult{
-                _navigateEvent.trySend(Screen.History)
                 clearCart()
             }
         }

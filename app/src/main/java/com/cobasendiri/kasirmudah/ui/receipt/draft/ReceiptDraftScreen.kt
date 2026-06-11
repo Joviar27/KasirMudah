@@ -5,7 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cobasendiri.kasirmudah.ui.ViewModelFactory
@@ -26,7 +25,7 @@ fun ReceiptDraftScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.navigateEvent.collect {
+        viewModel.navigateBackEvent.collect {
             onNavigateBack.invoke()
         }
     }
