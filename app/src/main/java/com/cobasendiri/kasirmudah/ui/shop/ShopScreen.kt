@@ -76,7 +76,6 @@ import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
-import com.cobasendiri.kasirmudah.ui.utils.ToastUtil.showToast
 import kotlinx.coroutines.delay
 
 @Composable

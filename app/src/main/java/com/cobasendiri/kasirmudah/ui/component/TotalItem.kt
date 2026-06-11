@@ -62,23 +62,25 @@ fun TotalItem(
             )
         }
         Spacer(Modifier.width(8.dp))
-        Column(Modifier
-            .wrapContentSize()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Secondary)
-            .clickable(onClick = onClickDone)
-            .padding(vertical = 8.dp, horizontal = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                stringResource(R.string.done),
-                style = KasirMudahTypography.titleMedium
-            )
-            Spacer(Modifier.height(4.dp))
-            Image(
-                painterResource(R.drawable.ic_right_arrow_white_round),
-                contentDescription = null
-            )
+        if(totalAmount>0){
+            Column(Modifier
+                .wrapContentSize()
+                .clip(RoundedCornerShape(16.dp))
+                .background(Secondary)
+                .clickable(onClick = onClickDone)
+                .padding(vertical = 8.dp, horizontal = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    stringResource(R.string.done),
+                    style = KasirMudahTypography.titleMedium
+                )
+                Spacer(Modifier.height(4.dp))
+                Image(
+                    painterResource(R.drawable.ic_right_arrow_white_round),
+                    contentDescription = null
+                )
+            }
         }
     }
 }
