@@ -50,6 +50,12 @@ fun EditProfileDialog(
         mutableStateOf(shopProfile)
     }
 
+    val isNextButtonEnabled = remember(shopProfileDraft.shopName){
+        shopProfileDraft.shopName.let {
+            it.isNotBlank() && it.firstOrNull()?.isWhitespace() == false
+        }
+    }
+
     BaseDialog(
         onDismiss = onDismiss
     ) {
@@ -104,7 +110,8 @@ fun EditProfileDialog(
                 Spacer(Modifier.width(8.dp))
                 RoundedPrimaryButton(
                     modifier = Modifier.width(140.dp),
-                    text = stringResource(R.string.save)
+                    text = stringResource(R.string.save),
+                    isEnabled = isNextButtonEnabled
                 ) {
                     onSave.invoke(shopProfileDraft)
                 }
