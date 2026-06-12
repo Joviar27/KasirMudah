@@ -1,7 +1,5 @@
 package com.cobasendiri.kasirmudah.ui.profile
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -59,12 +57,6 @@ fun ProfileScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val imageLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri ->
-        viewModel.updateSelectedImage(uri?.toString() ?: "")
-    }
-
     ProfileScreenContent(
         innerPadding,
         state
@@ -81,9 +73,6 @@ fun ProfileScreen(
             }
             is ProfileEvent.OnDismissUnavailableDialog ->{
                 viewModel.dismissUnavailableDialog()
-            }
-            is ProfileEvent.OnLaunchImagePicker ->{
-                imageLauncher.launch("image/*")
             }
             is ProfileEvent.OnEditProfile ->{
                 viewModel.saveShopProfile(event.newShopProfile)
@@ -183,9 +172,6 @@ fun ProfileScreenContent(
             val dismissEditDialogEvent = ProfileEvent.OnDismissEditProfileDialog
             EditProfileDialog(
                 state.showEditProfileDialog,
-                onPickImage = {
-                    event.invoke(ProfileEvent.OnLaunchImagePicker)
-                },
                 onDismiss = { event.invoke(dismissEditDialogEvent) },
                 onCancel = { event.invoke(dismissEditDialogEvent) },
                 onSave = {

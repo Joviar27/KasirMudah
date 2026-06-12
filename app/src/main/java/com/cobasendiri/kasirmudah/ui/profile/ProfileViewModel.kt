@@ -1,12 +1,10 @@
 package com.cobasendiri.kasirmudah.ui.profile
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.cobasendiri.kasirmudah.domain.model.ShopProfile
 import com.cobasendiri.kasirmudah.domain.usecase.GetShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.SaveShopProfileUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
-import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -51,13 +49,6 @@ class ProfileViewModel(
     fun dismissEditProfileDialog(){
         _state.update {
             it.copy(showEditProfileDialog = null)
-        }
-    }
-
-    fun updateSelectedImage(shopImage: String){
-        _state.update {
-            val tempShopProfile = it.shopProfile.copy(shopImage = shopImage)
-            it.copy(showEditProfileDialog = tempShopProfile)
         }
     }
 
