@@ -119,7 +119,7 @@ fun EditProfileDialogPrev() {
     EditProfileDialog(
         ShopProfile(
             "Toko Madura A",
-            null
+            ""
         ),
         {null},{},{},{}
     )

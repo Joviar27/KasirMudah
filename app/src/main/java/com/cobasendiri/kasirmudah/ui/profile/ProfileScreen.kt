@@ -17,9 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,13 +26,17 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.ShopProfile
+import com.cobasendiri.kasirmudah.ui.ViewModelFactory
 import com.cobasendiri.kasirmudah.ui.component.ProfileMenuItem
 import com.cobasendiri.kasirmudah.ui.component.dialog.EditProfileDialog
 import com.cobasendiri.kasirmudah.ui.component.dialog.InformationConfirmDialog
@@ -48,59 +50,43 @@ import com.cobasendiri.kasirmudah.ui.theme.White
 fun ProfileScreen(
     innerPadding: PaddingValues
 ){
+    val context = LocalContext.current
+    val appContext = context.applicationContext
 
-    var dummyState by remember { mutableStateOf(
-        ProfileState(
-            shopProfile = ShopProfile(
-                shopName = "Toko Madura A",
-                shopImage = null
-            ),
-            showEditProfileDialog = null,
-            showUnavailableDialog = false
-        )
-    ) }
+    val viewModel: ProfileViewModel = viewModel(
+        factory = ViewModelFactory.getInstance(appContext)
+    )
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val imageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
-        dummyState = dummyState.copy(
-            showEditProfileDialog = dummyState.showEditProfileDialog?.copy(
-                shopImage = uri?.toString()
-            )
-        )
+        viewModel.updateSelectedImage(uri?.toString() ?: "")
     }
 
     ProfileScreenContent(
         innerPadding,
-        dummyState
+        state
     ){ event ->
         when(event){
             is ProfileEvent.OnShowEditProfileDialog ->{
-                dummyState = dummyState.copy(
-                    showEditProfileDialog = event.shopProfile
-                )
+                viewModel.showEditProfileDialog(event.shopProfile)
             }
             is ProfileEvent.OnDismissEditProfileDialog ->{
-                dummyState = dummyState.copy(
-                    showEditProfileDialog = null
-                )
+                viewModel.dismissEditProfileDialog()
             }
             is ProfileEvent.OnShowUnavailableDialog ->{
-                dummyState = dummyState.copy(
-                    showUnavailableDialog = true
-                )
+                viewModel.showUnavailableDialog()
             }
             is ProfileEvent.OnDismissUnavailableDialog ->{
-                dummyState = dummyState.copy(
-                    showUnavailableDialog = false                )
+                viewModel.dismissUnavailableDialog()
             }
             is ProfileEvent.OnLaunchImagePicker ->{
                 imageLauncher.launch("image/*")
             }
             is ProfileEvent.OnEditProfile ->{
-                dummyState = dummyState.copy(
-                    shopProfile = event.newShopProfile
-                )
+                viewModel.saveShopProfile(event.newShopProfile)
             }
         }
     }
@@ -151,7 +137,7 @@ fun ProfileScreenContent(
                 modifier = Modifier.size(130.dp)
                     .clip(CircleShape)
                     .background(White),
-                model = state.shopProfile.shopImage,
+                model = state.shopProfile.shopImage.takeIf { it.isNotBlank() },
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 fallback = painterResource(R.drawable.ic_person_padded),
@@ -159,7 +145,8 @@ fun ProfileScreenContent(
             )
             Spacer(Modifier.height(16.dp))
             Text(
-                text = state.shopProfile.shopName ?: stringResource(R.string.default_shop_name),
+                text = state.shopProfile.shopName.takeIf { it.isNotBlank() }
+                    ?: stringResource(R.string.default_shop_name),
                 style = KasirMudahTypography.titleLarge
             )
             Spacer(Modifier.height(24.dp))
@@ -203,7 +190,6 @@ fun ProfileScreenContent(
                 onCancel = { event.invoke(dismissEditDialogEvent) },
                 onSave = {
                     event.invoke(ProfileEvent.OnEditProfile(it))
-                    event.invoke(dismissEditDialogEvent)
                 }
             )
         }
@@ -229,7 +215,7 @@ fun ProfileScreenPrev(){
             state = ProfileState(
                 ShopProfile(
                     "Toko Madura A",
-                    null
+                    ""
                 ),
                 showEditProfileDialog = null,
                 showUnavailableDialog = false
