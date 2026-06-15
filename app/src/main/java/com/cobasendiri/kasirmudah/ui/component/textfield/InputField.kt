@@ -73,27 +73,20 @@ fun InputField(
             singleLine = true,
             maxLines = 1,
             decorationBox = { innerTextField ->
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Max)
+                Box(Modifier.fillMaxWidth()
                     .background(background, RoundedCornerShape(16.dp))
-                    .border(1.dp, borderColor, RoundedCornerShape(16.dp)),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(Modifier
-                        .width(IntrinsicSize.Max)
-                        .padding(vertical = 16.dp)
-                        .padding(start = 16.dp)
-                    ){
-                        if (value.isEmpty()) {
-                            Text(
-                                label,
-                                style = KasirMudahTypography.bodyLarge
-                                    .copy(color = OnPrimary.copy(alpha = 0.5f))
-                            )
-                        }
-                        innerTextField()
+                    .border(1.dp, borderColor, RoundedCornerShape(16.dp))
+                    .padding(vertical = 16.dp)
+                    .padding(start = 16.dp),
+                ){
+                    if (value.isEmpty()) {
+                        Text(
+                            label,
+                            style = KasirMudahTypography.bodyLarge
+                                .copy(color = OnPrimary.copy(alpha = 0.5f))
+                        )
                     }
+                    innerTextField()
                 }
             },
             onValueChange = {
