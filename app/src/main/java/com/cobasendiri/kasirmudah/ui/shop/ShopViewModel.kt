@@ -10,6 +10,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.DecrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.DeleteProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
@@ -37,7 +38,8 @@ class ShopViewModel(
     private val incrementProductUseCase: IncrementProductUseCase,
     private val decrementProductUseCase: DecrementProductUseCase,
     private val clearCartUseCase: ClearCartUseCase,
-    private val deleteProductUseCase: DeleteProductUseCase
+    private val deleteProductUseCase: DeleteProductUseCase,
+    private val getShopProfileUseCase: GetShopProfileUseCase
 ): BaseViewModel() {
 
     private val _state = MutableStateFlow(ShopState())
@@ -46,6 +48,7 @@ class ShopViewModel(
     init {
         loadProductList()
         getTotalCartAmount()
+        getShopProfile()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -89,6 +92,21 @@ class ShopViewModel(
                         totalAmount = totalAmount ?: 0L,
                         isFloatingActionVisible = totalAmount != null && totalAmount > 0L
                     ) }
+                }
+            }
+        }
+    }
+
+    private fun getShopProfile(){
+        viewModelScope.launch {
+            getShopProfileUseCase.invoke().collect {
+                it.handleResult{ shopProfile ->
+                    _state.update {
+                        it.copy(
+                            shopName = shopProfile.shopName,
+                            date = System.currentTimeMillis()/1000
+                        )
+                    }
                 }
             }
         }

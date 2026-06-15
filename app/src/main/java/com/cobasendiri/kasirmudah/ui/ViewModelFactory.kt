@@ -91,7 +91,7 @@ class ViewModelFactory(
             return ShopViewModel(getProductLisUseCase, getCartListUseCase, addProductUseCase,
                 updateProductUseCase, updateProductColorCodeUseCase, getTotalCartAmountUseCase,
                 incrementProductUseCase, decrementProductUseCase, clearCartUseCase,
-                deleteProductUseCase
+                deleteProductUseCase, getShopProfileUseCase
             ) as T
         }else if(modelClass.isAssignableFrom(ReceiptDraftViewModel::class.java)){
             return ReceiptDraftViewModel(getReceiptItemsUseCase, getTotalCartAmountUseCase,
