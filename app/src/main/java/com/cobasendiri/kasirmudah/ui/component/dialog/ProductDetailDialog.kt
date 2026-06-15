@@ -34,10 +34,11 @@ import androidx.compose.ui.window.PopupProperties
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.Product
 import com.cobasendiri.kasirmudah.domain.model.ProductDraft
-import com.cobasendiri.kasirmudah.ui.component.InputField
+import com.cobasendiri.kasirmudah.ui.component.textfield.InputField
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
 import com.cobasendiri.kasirmudah.ui.component.popup.ColorCodePopup
+import com.cobasendiri.kasirmudah.ui.component.textfield.CurrencyInputField
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
@@ -105,10 +106,9 @@ fun ProductDetailDialog(
                 productDraft = productDraft.copy(name = it)
             }
             Spacer(Modifier.height(16.dp))
-            InputField(
+            CurrencyInputField(
                 label = stringResource(R.string.item_price),
                 value = productDraft.price,
-                currencyMode = true,
                 maxCharacter = 15
             ) {
                 productDraft = productDraft.copy(price = it)

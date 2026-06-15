@@ -53,7 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.cobasendiri.kasirmudah.ui.component.InputField
+import com.cobasendiri.kasirmudah.ui.component.textfield.InputField
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
@@ -77,7 +77,6 @@ import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
 import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.dateFormat
-import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 import kotlinx.coroutines.delay
 
 @Composable

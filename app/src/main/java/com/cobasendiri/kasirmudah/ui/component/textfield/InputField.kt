@@ -1,4 +1,4 @@
-package com.cobasendiri.kasirmudah.ui.component
+package com.cobasendiri.kasirmudah.ui.component.textfield
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,7 +17,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,8 +36,6 @@ import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
-import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
-import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.rawFormat
 
 @Composable
 fun InputField(
@@ -47,7 +43,6 @@ fun InputField(
     label: String,
     value: String = "",
     maxCharacter: Int = 40,
-    currencyMode: Boolean = false,
     background: Color = Surface,
     showTopLabel: Boolean = true,
     onValueChange: (String) -> Unit
@@ -73,7 +68,7 @@ fun InputField(
                 .onFocusChanged{
                     isFocused = it.isFocused
                 },
-            value = if(currencyMode) value.decimalFormat() else value,
+            value = value,
             textStyle = KasirMudahTypography.bodyLarge,
             singleLine = true,
             maxLines = 1,
@@ -85,18 +80,6 @@ fun InputField(
                     .border(1.dp, borderColor, RoundedCornerShape(16.dp)),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if(currencyMode){
-                        Text(
-                            modifier = Modifier.padding(16.dp),
-                            text = "Rp",
-                            style = KasirMudahTypography.bodyLarge
-                        )
-                        VerticalDivider(
-                            Modifier.fillMaxHeight(),
-                            thickness = 1.dp,
-                            color = borderColor
-                        )
-                    }
                     Box(Modifier
                         .width(IntrinsicSize.Max)
                         .padding(vertical = 16.dp)
@@ -111,26 +94,15 @@ fun InputField(
                         }
                         innerTextField()
                     }
-                    if(currencyMode && value.isNotEmpty()){
-                        Text(
-                            ",00",
-                            style = KasirMudahTypography.bodyLarge
-                        )
-                    }
                 }
             },
             onValueChange = {
-                val newValue = if(currencyMode) it.rawFormat() else it
                 if(it.length <= maxCharacter){
-                    onValueChange(newValue)
+                    onValueChange(it)
                 }
             },
             keyboardOptions = KeyboardOptions(
-                keyboardType = when{
-                    currencyMode == true -> KeyboardType.Number
-                    else -> KeyboardType.Text
-                    //Can add more condition
-                },
+                keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
@@ -150,8 +122,7 @@ fun InputFieldPrev() {
     ){
         InputField(
             label = "Template Barang Pertama",
-            value = "Nama Barang",
-            currencyMode = true
+            value = "Nama Barang"
         ){}
     }
 }
