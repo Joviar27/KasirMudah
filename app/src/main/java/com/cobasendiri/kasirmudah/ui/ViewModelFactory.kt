@@ -95,7 +95,7 @@ class ViewModelFactory(
             ) as T
         }else if(modelClass.isAssignableFrom(ReceiptDraftViewModel::class.java)){
             return ReceiptDraftViewModel(getReceiptItemsUseCase, getTotalCartAmountUseCase,
-                saveNewTransactionUseCase, clearCartUseCase
+                saveNewTransactionUseCase, clearCartUseCase, getShopProfileUseCase
             ) as T
         }else if(modelClass.isAssignableFrom(TransactionHistoryViewModel::class.java)){
             return TransactionHistoryViewModel(getTransactionHistoryUseCase,
