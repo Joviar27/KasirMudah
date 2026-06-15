@@ -1,5 +1,6 @@
 package com.cobasendiri.kasirmudah.ui.component.dialog
 
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,10 +63,21 @@ fun EditProfileDialog(
         }
     }
 
+    val context = LocalContext.current
+    val applicationContext = context.applicationContext
+
     val imageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
-        shopImageDraft = uri?.toString() ?: ""
+        shopImageDraft = uri?.let {
+            val contentResolver = applicationContext.contentResolver
+            val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
+
+            val result = runCatching {
+                contentResolver.takePersistableUriPermission(it, takeFlags)
+            }
+            if(result.isSuccess) it.toString() else ""
+        } ?: ""
     }
 
     BaseDialog(
