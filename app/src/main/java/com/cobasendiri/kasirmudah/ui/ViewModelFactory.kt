@@ -104,7 +104,8 @@ class ViewModelFactory(
             ) as T
         }else if(modelClass.isAssignableFrom(ReceiptDetailViewModel::class.java)){
             return ReceiptDetailViewModel(getTransactionUseCase, getIsTransactionBookmarkedUseCase,
-                updateTransactionBookmarkUseCase, deleteTransactionHistoryUseCase
+                updateTransactionBookmarkUseCase, deleteTransactionHistoryUseCase, 
+                getShopProfileUseCase
             ) as T
         }else if(modelClass.isAssignableFrom(ProfileViewModel::class.java)){
             return ProfileViewModel(getShopProfileUseCase, saveShopProfileUseCase) as T

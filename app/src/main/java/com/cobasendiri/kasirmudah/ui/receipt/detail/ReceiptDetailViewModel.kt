@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.usecase.DeleteTransactionHistoryUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetIsTransactionBookmarkedUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
@@ -21,7 +22,8 @@ class ReceiptDetailViewModel(
     private val getTransactionUseCase: GetTransactionUseCase,
     private val getIsTransactionBookmarkedUseCase: GetIsTransactionBookmarkedUseCase,
     private val updateTransactionBookmarkUseCase: UpdateTransactionBookmarkUseCase,
-    private val deleteTransactionHistoryUseCase: DeleteTransactionHistoryUseCase
+    private val deleteTransactionHistoryUseCase: DeleteTransactionHistoryUseCase,
+    private val getShopProfileUseCase: GetShopProfileUseCase
 ): BaseViewModel() {
 
     private val _state = MutableStateFlow(ReceiptDetailState())
@@ -38,7 +40,8 @@ class ReceiptDetailViewModel(
                         transactionId = receipt.id,
                         transactionCreatedAt = receipt.createdAt,
                         transactionShopItems = receipt.shopItems,
-                        totalTransaction = receipt.transactionTotal
+                        totalTransaction = receipt.transactionTotal,
+                        shopName = receipt.shopName
                     )
                 }
             }
