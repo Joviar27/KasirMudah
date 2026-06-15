@@ -38,7 +38,8 @@ class TransactionRepository(
 
     override suspend fun insertNewTransaction(
         draftItems: List<TransactionItemInfo>,
-        draftTotal: Long
+        draftTotal: Long,
+        shopName: String
     ) = withContext(ioDispatcher){
         runMapExceptionSuspending {
             val id = IdGenerator.generateTransactionId()
@@ -54,6 +55,7 @@ class TransactionRepository(
             val transaction = TransactionEntity(
                 id = id,
                 name = name,
+                shopName = shopName,
                 createdAt = System.currentTimeMillis()/1000,
                 items = items,
                 total = draftTotal

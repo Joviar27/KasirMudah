@@ -116,7 +116,8 @@ object Injection {
     fun provideSaveNewTransactionUseCase(context: Context): SaveNewTransactionUseCase{
         return SaveNewTransactionUseCase(
             provideTransactionRepository(context),
-            provideCartRepository(context)
+            provideCartRepository(context),
+            provideProfileRepository(context)
         )
     }
 

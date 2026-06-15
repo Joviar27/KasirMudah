@@ -12,6 +12,9 @@ data class TransactionEntity(
 
     val name: String,
 
+    @ColumnInfo(name = "shop_name")
+    val shopName: String,
+
     @ColumnInfo(name = "created_at")
     val createdAt: Long,
 

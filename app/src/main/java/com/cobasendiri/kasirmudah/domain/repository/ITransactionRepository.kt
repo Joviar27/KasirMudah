@@ -9,7 +9,8 @@ interface ITransactionRepository {
 
     suspend fun insertNewTransaction(
         draftItems: List<TransactionItemInfo>,
-        draftTotal: Long
+        draftTotal: Long,
+        shopName: String
     )
 
     suspend fun deleteTransaction(transactionId: String)
