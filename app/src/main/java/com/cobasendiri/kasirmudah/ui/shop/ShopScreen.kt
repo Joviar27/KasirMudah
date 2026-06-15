@@ -76,6 +76,8 @@ import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
+import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.dateFormat
+import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 import kotlinx.coroutines.delay
 
 @Composable
@@ -182,6 +184,10 @@ fun ShopContent(
         }
     }
 
+    val formattedDate = remember(state.date) {
+        state.date.dateFormat(shortFormat = true)
+    }
+
     Box(Modifier
         .fillMaxSize()
         .background(Surface)
@@ -242,7 +248,7 @@ fun ShopContent(
                         style = KasirMudahTypography.titleLarge
                     )
                     Text(
-                        text = state.date,
+                        text = formattedDate,
                         style = KasirMudahTypography.bodyLarge
                     )
                 }
@@ -467,7 +473,7 @@ fun ShopContentPreview(){
             innerPadding = PaddingValues(bottom = 60.dp),
             state = ShopState(
                 shopName = "Toko Madura A",
-                date = "24 Januari 2026",
+                date = 0L,
                 totalAmount = 1575000L,
                 shopItemList = generateDummyShopItemList().map {
                     ProductInfo(

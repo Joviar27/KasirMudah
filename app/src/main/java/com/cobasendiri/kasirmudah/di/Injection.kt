@@ -3,13 +3,16 @@ package com.cobasendiri.kasirmudah.di
 import android.content.Context
 import com.cobasendiri.kasirmudah.data.CartRepository
 import com.cobasendiri.kasirmudah.data.ProductRepository
+import com.cobasendiri.kasirmudah.data.ProfileRepository
 import com.cobasendiri.kasirmudah.data.TransactionRepository
+import com.cobasendiri.kasirmudah.data.datastore.DataStoreManager
 import com.cobasendiri.kasirmudah.data.room.CartDao
 import com.cobasendiri.kasirmudah.data.room.ProductDao
 import com.cobasendiri.kasirmudah.data.room.ShopDatabase
 import com.cobasendiri.kasirmudah.data.room.TransactionDao
 import com.cobasendiri.kasirmudah.domain.repository.ICartRepository
 import com.cobasendiri.kasirmudah.domain.repository.IProductRepository
+import com.cobasendiri.kasirmudah.domain.repository.IProfileRepository
 import com.cobasendiri.kasirmudah.domain.repository.ITransactionRepository
 import com.cobasendiri.kasirmudah.domain.usecase.AddProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.ClearCartUseCase
@@ -21,11 +24,13 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetIsTransactionBookmarkedUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionHistoryUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.SaveShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
@@ -44,6 +49,10 @@ object Injection {
         return ShopDatabase.getDatabase(context).transactionDao()
     }
 
+    private fun provideDataStoreManager(context: Context): DataStoreManager{
+        return DataStoreManager.getInstance(context)
+    }
+
     private fun provideProductRepository(context: Context): IProductRepository{
         return ProductRepository.getInstance(provideProductDao(context))
     }
@@ -54,6 +63,10 @@ object Injection {
 
     private fun provideTransactionRepository(context: Context): ITransactionRepository{
         return TransactionRepository.getInstance(provideTransactionDao(context))
+    }
+
+    private fun provideProfileRepository(context: Context): IProfileRepository{
+        return ProfileRepository.getInstance(provideDataStoreManager(context))
     }
 
     fun provideGetProductListUseCase(context: Context): GetProductLisUseCase{
@@ -103,7 +116,8 @@ object Injection {
     fun provideSaveNewTransactionUseCase(context: Context): SaveNewTransactionUseCase{
         return SaveNewTransactionUseCase(
             provideTransactionRepository(context),
-            provideCartRepository(context)
+            provideCartRepository(context),
+            provideProfileRepository(context)
         )
     }
 
@@ -129,5 +143,13 @@ object Injection {
 
     fun provideGetIsTransactionBookmarkedUseCase(context: Context): GetIsTransactionBookmarkedUseCase{
         return GetIsTransactionBookmarkedUseCase(provideTransactionRepository(context))
+    }
+
+    fun provideGetShopProfileUseCase(context: Context): GetShopProfileUseCase{
+        return GetShopProfileUseCase(provideProfileRepository(context))
+    }
+
+    fun provideSaveShopProfileUseCase(context: Context): SaveShopProfileUseCase{
+        return SaveShopProfileUseCase(provideProfileRepository(context))
     }
 }

@@ -8,6 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.cobasendiri.kasirmudah.ui.theme.Grey
+import com.cobasendiri.kasirmudah.ui.theme.LightGrey
+import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.White
 
@@ -21,7 +24,9 @@ fun RoundedPrimaryButton(
     RoundedButton(
         modifier = modifier,
         text = text,
-        backgroundColor = Primary,
+        backgroundColor = if(isEnabled) Primary else LightGrey,
+        textColor = if(isEnabled) OnPrimary else Grey,
+        borderColor = if(isEnabled) OnPrimary else Grey,
         isEnabled = isEnabled,
         onClick = onClick
     )

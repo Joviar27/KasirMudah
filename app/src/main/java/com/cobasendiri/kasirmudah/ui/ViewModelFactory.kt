@@ -14,15 +14,18 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetCartListUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetIsTransactionBookmarkedUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetProductLisUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionHistoryUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.SaveShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
 import com.cobasendiri.kasirmudah.ui.history.TransactionHistoryViewModel
+import com.cobasendiri.kasirmudah.ui.profile.ProfileViewModel
 import com.cobasendiri.kasirmudah.ui.receipt.detail.ReceiptDetailViewModel
 import com.cobasendiri.kasirmudah.ui.receipt.draft.ReceiptDraftViewModel
 import com.cobasendiri.kasirmudah.ui.shop.ShopViewModel
@@ -45,7 +48,9 @@ class ViewModelFactory(
     private val updateTransactionBookmarkUseCase: UpdateTransactionBookmarkUseCase,
     private val deleteTransactionHistoryUseCase: DeleteTransactionHistoryUseCase,
     private val getTransactionUseCase: GetTransactionUseCase,
-    private val getIsTransactionBookmarkedUseCase: GetIsTransactionBookmarkedUseCase
+    private val getIsTransactionBookmarkedUseCase: GetIsTransactionBookmarkedUseCase,
+    private val getShopProfileUseCase: GetShopProfileUseCase,
+    private val saveShopProfileUseCase: SaveShopProfileUseCase
 ) : ViewModelProvider.Factory {
 
     companion object {
@@ -72,7 +77,9 @@ class ViewModelFactory(
                     Injection.provideUpdateTransactionBookmarkUseCase(context),
                     Injection.provideDeleteTransactionHistoryUseCase(context),
                     Injection.provideGetTransactionUseCase(context),
-                    Injection.provideGetIsTransactionBookmarkedUseCase(context)
+                    Injection.provideGetIsTransactionBookmarkedUseCase(context),
+                    Injection.provideGetShopProfileUseCase(context),
+                    Injection.provideSaveShopProfileUseCase(context)
                 ).also { instance = it }
             }
         }
@@ -84,11 +91,11 @@ class ViewModelFactory(
             return ShopViewModel(getProductLisUseCase, getCartListUseCase, addProductUseCase,
                 updateProductUseCase, updateProductColorCodeUseCase, getTotalCartAmountUseCase,
                 incrementProductUseCase, decrementProductUseCase, clearCartUseCase,
-                deleteProductUseCase
+                deleteProductUseCase, getShopProfileUseCase
             ) as T
         }else if(modelClass.isAssignableFrom(ReceiptDraftViewModel::class.java)){
             return ReceiptDraftViewModel(getReceiptItemsUseCase, getTotalCartAmountUseCase,
-                saveNewTransactionUseCase, clearCartUseCase
+                saveNewTransactionUseCase, clearCartUseCase, getShopProfileUseCase
             ) as T
         }else if(modelClass.isAssignableFrom(TransactionHistoryViewModel::class.java)){
             return TransactionHistoryViewModel(getTransactionHistoryUseCase,
@@ -97,8 +104,11 @@ class ViewModelFactory(
             ) as T
         }else if(modelClass.isAssignableFrom(ReceiptDetailViewModel::class.java)){
             return ReceiptDetailViewModel(getTransactionUseCase, getIsTransactionBookmarkedUseCase,
-                updateTransactionBookmarkUseCase, deleteTransactionHistoryUseCase
+                updateTransactionBookmarkUseCase, deleteTransactionHistoryUseCase, 
+                getShopProfileUseCase
             ) as T
+        }else if(modelClass.isAssignableFrom(ProfileViewModel::class.java)){
+            return ProfileViewModel(getShopProfileUseCase, saveShopProfileUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

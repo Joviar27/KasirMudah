@@ -30,6 +30,11 @@ object ErrorMessageMapper {
                     getRandomId, UiMessageType.ERROR, R.string.error_transaction_amount_invalid
                 )
             }
+            is KasirMudahException.InvalidInputError ->{
+                UiMessage.StringResource(
+                    getRandomId, UiMessageType.ERROR, R.string.error_input_invalid
+                )
+            }
             else -> UiMessage.DynamicString(
                 getRandomId, UiMessageType.ERROR, this.message ?: "Something went wrong"
             )

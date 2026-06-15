@@ -6,6 +6,10 @@ sealed class KasirMudahException() : Exception() {
         private fun readResolve(): Any = TransactionAmountInvalidError
     }
 
+    data object InvalidInputError : KasirMudahException() {
+        private fun readResolve(): Any = InvalidInputError
+    }
+
     data object DatabaseError : KasirMudahException() {
         private fun readResolve(): Any = DatabaseError
     }

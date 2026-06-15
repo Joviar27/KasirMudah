@@ -79,4 +79,7 @@ dependencies {
 
     //ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // Preferences DataStore
+    implementation(libs.androidx.datastore.preferences)
 }

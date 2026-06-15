@@ -14,10 +14,11 @@ object FormatUtil{
         return this.replace(".", "")
     }
 
-    fun Long.dateFormat(): String{
+    fun Long.dateFormat(shortFormat: Boolean = false): String{
         return try {
+            val format = if(shortFormat) "dd MMMM yyyy" else "dd MMMM yyyy - HH:mm:ss"
             val date = Date(this * 1000)
-            val formatter = SimpleDateFormat("dd MMMM yyyy - HH:mm:ss", Locale("id", "ID"))
+            val formatter = SimpleDateFormat(format, Locale("id", "ID"))
             formatter.timeZone = TimeZone.getTimeZone("Asia/Jakarta")
             return formatter.format(date)
         }catch (e: Exception){

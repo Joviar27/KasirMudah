@@ -52,7 +52,7 @@
     <string name="edit_shop_profile">Edit Profil Toko</string>
     <string name="shop_name">Nama toko</string>
 
-    <string name="default_shop_name">Tokomu</string>
+    <string name="default_shop_name">Nama Tokomu</string>
 
     <!-- Unavailable dialog   -->
     <string name="close">Tutup</string>
@@ -64,6 +64,7 @@
     <string name="error_database">Gagal melakukan perubahan data</string>
     <string name="error_full_storage">Penyimpanan perangkat penuh</string>
     <string name="error_transaction_amount_invalid">Nominal transaksi tidak valid</string>
+    <string name="error_input_invalid">Input tidak valid</string>
 
     <!--  Success Message  -->
     <string name="succcess_add">Produk berhasil ditambahkan</string>

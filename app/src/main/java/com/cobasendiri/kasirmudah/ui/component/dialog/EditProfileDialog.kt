@@ -1,5 +1,8 @@
 package com.cobasendiri.kasirmudah.ui.component.dialog
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,14 +44,40 @@ import com.cobasendiri.kasirmudah.ui.theme.White
 @Composable
 fun EditProfileDialog(
     shopProfile: ShopProfile,
-    onPickImage: () -> Unit,
     onDismiss: () -> Unit,
     onCancel: () -> Unit,
     onSave: (ShopProfile) -> Unit
 ) {
 
-    var shopProfileDraft by remember(shopProfile) {
-        mutableStateOf(shopProfile)
+    var shopNameDraft by remember(shopProfile.shopName) {
+        mutableStateOf((shopProfile.shopName))
+    }
+
+    var shopImageDraft by remember(shopProfile.shopImage) {
+        mutableStateOf((shopProfile.shopImage))
+    }
+
+    val isNextButtonEnabled = remember(shopNameDraft){
+        shopNameDraft.let {
+            it.isNotBlank() && it.firstOrNull()?.isWhitespace() == false
+        }
+    }
+
+    val context = LocalContext.current
+    val applicationContext = context.applicationContext
+
+    val imageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        shopImageDraft = uri?.let {
+            val contentResolver = applicationContext.contentResolver
+            val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
+
+            val result = runCatching {
+                contentResolver.takePersistableUriPermission(it, takeFlags)
+            }
+            if(result.isSuccess) it.toString() else ""
+        } ?: ""
     }
 
     BaseDialog(
@@ -66,7 +96,7 @@ fun EditProfileDialog(
                     modifier = Modifier.size(120.dp)
                         .clip(CircleShape)
                         .background(Surface),
-                    model = shopProfileDraft.shopImage,
+                    model = shopImageDraft,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     fallback = painterResource(R.drawable.ic_person_padded),
@@ -77,7 +107,7 @@ fun EditProfileDialog(
                         .clip(CircleShape)
                         .background(OnPrimary)
                         .clickable{
-                            onPickImage.invoke()
+                            imageLauncher.launch("image/*")
                         }
                         .padding(8.dp)
                         .align(Alignment.TopEnd),
@@ -88,10 +118,10 @@ fun EditProfileDialog(
             Spacer(Modifier.height(24.dp))
             InputField(
                 label = stringResource(R.string.shop_name),
-                initialValue = shopProfileDraft.shopName ?: "",
+                initialValue = shopNameDraft,
                 maxCharacter = 35
             ) {
-                shopProfileDraft = shopProfileDraft.copy(shopName = it)
+                shopNameDraft = it
             }
             Spacer(Modifier.height(24.dp))
             Row {
@@ -104,9 +134,10 @@ fun EditProfileDialog(
                 Spacer(Modifier.width(8.dp))
                 RoundedPrimaryButton(
                     modifier = Modifier.width(140.dp),
-                    text = stringResource(R.string.save)
+                    text = stringResource(R.string.save),
+                    isEnabled = isNextButtonEnabled
                 ) {
-                    onSave.invoke(shopProfileDraft)
+                    onSave.invoke(ShopProfile(shopNameDraft,shopImageDraft))
                 }
             }
         }
@@ -119,8 +150,8 @@ fun EditProfileDialogPrev() {
     EditProfileDialog(
         ShopProfile(
             "Toko Madura A",
-            null
+            ""
         ),
-        {null},{},{},{}
+        {null},{},{}
     )
 }

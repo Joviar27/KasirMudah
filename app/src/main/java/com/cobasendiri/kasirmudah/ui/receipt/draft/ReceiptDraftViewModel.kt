@@ -3,6 +3,7 @@ package com.cobasendiri.kasirmudah.ui.receipt.draft
 import androidx.lifecycle.viewModelScope
 import com.cobasendiri.kasirmudah.domain.usecase.ClearCartUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.GetShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
@@ -19,7 +20,8 @@ class ReceiptDraftViewModel(
     private val getReceiptItemsUseCase: GetReceiptItemsUseCase,
     private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase,
     private val saveNewTransactionUseCase: SaveNewTransactionUseCase,
-    private val clearCartUseCase: ClearCartUseCase
+    private val clearCartUseCase: ClearCartUseCase,
+    private val getShopProfileUseCase: GetShopProfileUseCase
 ): BaseViewModel() {
 
     private val _state = MutableStateFlow(ReceiptDraftState())
@@ -31,6 +33,7 @@ class ReceiptDraftViewModel(
     init {
         getReceiptItems()
         getReceiptTotalAmount()
+        getShopProfile()
     }
 
     private fun getReceiptItems(){
@@ -45,6 +48,18 @@ class ReceiptDraftViewModel(
         viewModelScope.launch {
             getTotalCartAmountUseCase.invoke().firstOrNull()?.handleResult{ total ->
                 _state.update { it.copy(totalTransaction = total ?: 0) }
+            }
+        }
+    }
+
+    private fun getShopProfile(){
+        viewModelScope.launch {
+            getShopProfileUseCase.invoke().collect {
+                it.handleResult{ shopProfile ->
+                    _state.update {
+                        it.copy(shopName = shopProfile.shopName)
+                    }
+                }
             }
         }
     }
