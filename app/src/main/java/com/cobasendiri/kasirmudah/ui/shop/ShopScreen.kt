@@ -288,6 +288,7 @@ fun ShopContent(
                         InputField(
                             Modifier.weight(4f),
                             stringResource(R.string.search),
+                            value = state.searchQuery,
                             background = White,
                             maxCharacter = 22,
                             showTopLabel = false

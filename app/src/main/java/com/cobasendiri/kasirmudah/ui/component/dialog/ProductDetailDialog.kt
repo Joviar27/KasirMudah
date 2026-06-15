@@ -99,7 +99,7 @@ fun ProductDetailDialog(
             Spacer(Modifier.height(24.dp))
             InputField(
                 label = stringResource(R.string.item_name),
-                initialValue = productDraft.name,
+                value = productDraft.name,
                 maxCharacter = 35
             ) {
                 productDraft = productDraft.copy(name = it)
@@ -107,7 +107,7 @@ fun ProductDetailDialog(
             Spacer(Modifier.height(16.dp))
             InputField(
                 label = stringResource(R.string.item_price),
-                initialValue = productDraft.price,
+                value = productDraft.price,
                 currencyMode = true,
                 maxCharacter = 15
             ) {

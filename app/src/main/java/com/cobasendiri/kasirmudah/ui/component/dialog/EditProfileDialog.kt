@@ -118,7 +118,7 @@ fun EditProfileDialog(
             Spacer(Modifier.height(24.dp))
             InputField(
                 label = stringResource(R.string.shop_name),
-                initialValue = shopNameDraft,
+                value = shopNameDraft,
                 maxCharacter = 35
             ) {
                 shopNameDraft = it

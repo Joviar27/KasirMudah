@@ -45,7 +45,7 @@ import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.rawFormat
 fun InputField(
     modifier: Modifier = Modifier,
     label: String,
-    initialValue: String = "",
+    value: String = "",
     maxCharacter: Int = 40,
     currencyMode: Boolean = false,
     background: Color = Surface,
@@ -53,9 +53,6 @@ fun InputField(
     onValueChange: (String) -> Unit
 ) {
     var isFocused by remember { mutableStateOf(false) }
-    var searchQuery by remember(initialValue) {
-        mutableStateOf(initialValue)
-    }
 
     val borderColor by animateColorAsState(
         targetValue = if (isFocused) OnPrimaryVariant else Tertiary,
@@ -76,7 +73,7 @@ fun InputField(
                 .onFocusChanged{
                     isFocused = it.isFocused
                 },
-            value = if(currencyMode) searchQuery.decimalFormat() else searchQuery,
+            value = if(currencyMode) value.decimalFormat() else value,
             textStyle = KasirMudahTypography.bodyLarge,
             singleLine = true,
             maxLines = 1,
@@ -105,7 +102,7 @@ fun InputField(
                         .padding(vertical = 16.dp)
                         .padding(start = 16.dp)
                     ){
-                        if (searchQuery.isEmpty()) {
+                        if (value.isEmpty()) {
                             Text(
                                 label,
                                 style = KasirMudahTypography.bodyLarge
@@ -114,7 +111,7 @@ fun InputField(
                         }
                         innerTextField()
                     }
-                    if(currencyMode && searchQuery.isNotEmpty()){
+                    if(currencyMode && value.isNotEmpty()){
                         Text(
                             ",00",
                             style = KasirMudahTypography.bodyLarge
@@ -125,8 +122,7 @@ fun InputField(
             onValueChange = {
                 val newValue = if(currencyMode) it.rawFormat() else it
                 if(it.length <= maxCharacter){
-                    searchQuery = newValue
-                    onValueChange(searchQuery)
+                    onValueChange(newValue)
                 }
             },
             keyboardOptions = KeyboardOptions(
@@ -154,7 +150,7 @@ fun InputFieldPrev() {
     ){
         InputField(
             label = "Template Barang Pertama",
-            initialValue = "Nama Barang",
+            value = "Nama Barang",
             currencyMode = true
         ){}
     }
