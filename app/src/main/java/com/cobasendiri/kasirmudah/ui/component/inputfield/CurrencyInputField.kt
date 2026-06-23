@@ -1,4 +1,4 @@
-package com.cobasendiri.kasirmudah.ui.component
+package com.cobasendiri.kasirmudah.ui.component.inputfield
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -29,8 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
@@ -42,19 +44,31 @@ import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.rawFormat
 
 @Composable
-fun InputField(
+fun CurrencyInputField(
     modifier: Modifier = Modifier,
     label: String,
-    initialValue: String = "",
+    value: String = "",
     maxCharacter: Int = 40,
-    currencyMode: Boolean = false,
     background: Color = Surface,
     showTopLabel: Boolean = true,
     onValueChange: (String) -> Unit
 ) {
     var isFocused by remember { mutableStateOf(false) }
-    var searchQuery by remember(initialValue) {
-        mutableStateOf(initialValue)
+
+    val textFieldValue by remember(value){
+        mutableStateOf(TextFieldValue(value, TextRange(value.length)))
+    }
+
+    val formattedInput = remember(textFieldValue){
+        val formattedInput = textFieldValue.text.decimalFormat()
+        val lengthDiff = formattedInput.length - textFieldValue.text.length
+        val newCursorPosition = (textFieldValue.selection.end + lengthDiff)
+            .coerceIn(0, formattedInput.length)
+
+        TextFieldValue(
+            text = formattedInput,
+            selection = TextRange(newCursorPosition)
+        )
     }
 
     val borderColor by animateColorAsState(
@@ -76,7 +90,7 @@ fun InputField(
                 .onFocusChanged{
                     isFocused = it.isFocused
                 },
-            value = if(currencyMode) searchQuery.decimalFormat() else searchQuery,
+            value = formattedInput,
             textStyle = KasirMudahTypography.bodyLarge,
             singleLine = true,
             maxLines = 1,
@@ -88,24 +102,22 @@ fun InputField(
                     .border(1.dp, borderColor, RoundedCornerShape(16.dp)),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if(currencyMode){
-                        Text(
-                            modifier = Modifier.padding(16.dp),
-                            text = "Rp",
-                            style = KasirMudahTypography.bodyLarge
-                        )
-                        VerticalDivider(
-                            Modifier.fillMaxHeight(),
-                            thickness = 1.dp,
-                            color = borderColor
-                        )
-                    }
+                    Text(
+                        modifier = Modifier.padding(16.dp),
+                        text = "Rp",
+                        style = KasirMudahTypography.bodyLarge
+                    )
+                    VerticalDivider(
+                        Modifier.fillMaxHeight(),
+                        thickness = 1.dp,
+                        color = borderColor
+                    )
                     Box(Modifier
                         .width(IntrinsicSize.Max)
                         .padding(vertical = 16.dp)
                         .padding(start = 16.dp)
                     ){
-                        if (searchQuery.isEmpty()) {
+                        if (value.isEmpty()) {
                             Text(
                                 label,
                                 style = KasirMudahTypography.bodyLarge
@@ -114,7 +126,7 @@ fun InputField(
                         }
                         innerTextField()
                     }
-                    if(currencyMode && searchQuery.isNotEmpty()){
+                    if(value.isNotEmpty()){
                         Text(
                             ",00",
                             style = KasirMudahTypography.bodyLarge
@@ -123,18 +135,13 @@ fun InputField(
                 }
             },
             onValueChange = {
-                val newValue = if(currencyMode) it.rawFormat() else it
-                if(it.length <= maxCharacter){
-                    searchQuery = newValue
-                    onValueChange(searchQuery)
+                val newValue = it.text.rawFormat()
+                if(textFieldValue.text.length <= maxCharacter){
+                    onValueChange(newValue)
                 }
             },
             keyboardOptions = KeyboardOptions(
-                keyboardType = when{
-                    currencyMode == true -> KeyboardType.Number
-                    else -> KeyboardType.Text
-                    //Can add more condition
-                },
+                keyboardType =  KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
@@ -148,14 +155,13 @@ fun InputField(
 
 @Preview(showBackground = true)
 @Composable
-fun InputFieldPrev() {
+fun CurrencyInputFieldPrev() {
     Box(Modifier.padding(16.dp)
         .fillMaxWidth()
     ){
-        InputField(
+        CurrencyInputField(
             label = "Template Barang Pertama",
-            initialValue = "Nama Barang",
-            currencyMode = true
+            value = "5000",
         ){}
     }
 }

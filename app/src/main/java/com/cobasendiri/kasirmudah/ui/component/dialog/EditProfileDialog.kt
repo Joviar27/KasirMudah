@@ -34,7 +34,7 @@ import coil.compose.AsyncImage
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.ShopProfile
-import com.cobasendiri.kasirmudah.ui.component.InputField
+import com.cobasendiri.kasirmudah.ui.component.inputfield.InputField
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedOutlinedButton
 import com.cobasendiri.kasirmudah.ui.component.button.RoundedPrimaryButton
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
@@ -118,7 +118,7 @@ fun EditProfileDialog(
             Spacer(Modifier.height(24.dp))
             InputField(
                 label = stringResource(R.string.shop_name),
-                initialValue = shopNameDraft,
+                value = shopNameDraft,
                 maxCharacter = 35
             ) {
                 shopNameDraft = it
