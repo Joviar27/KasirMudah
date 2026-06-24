@@ -61,7 +61,10 @@ class ShopViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     fun updateFilter(newFilter: ShopFilter) {
         _state.update {
-            it.copy(filter = newFilter)
+            it.copy(
+                filter = newFilter,
+                showEmptyListView = false
+            )
         }
     }
 
@@ -78,7 +81,10 @@ class ShopViewModel(
                     }
                 }.collect { result ->
                     result.handleResult { products ->
-                        _state.update { it.copy(shopItemList = products) }
+                        _state.update { it.copy(
+                            shopItemList = products,
+                            showEmptyListView = products.isEmpty()
+                        ) }
                     }
                 }
         }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -187,10 +188,12 @@ fun ShopContent(
         state.date.dateFormat(shortFormat = true)
     }
 
-    Box(Modifier
+    BoxWithConstraints(Modifier
         .fillMaxSize()
         .background(Surface)
     ) {
+        val availableHeight = maxHeight
+
         //Top decoration view
         Box(modifier = Modifier
             .fillMaxWidth()
@@ -335,6 +338,34 @@ fun ShopContent(
                                 ShopEvent.OnFilterChange(it)
                             )
                         }
+                    }
+                }
+            }
+            if(state.showEmptyListView){
+                item{
+                    Column(Modifier.height(availableHeight*0.4f)
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val titleRes = if(state.filter == ShopFilter.FILTER_ALL) {
+                            R.string.products_empty_title
+                        }else{
+                            R.string.cart_empty_title
+                        }
+                        val subTitleRes = if(state.filter == ShopFilter.FILTER_ALL) {
+                            R.string.products_empty_subtitle
+                        }else{
+                            R.string.cart_empty_subtitle
+                        }
+                        Text(
+                            text = stringResource(titleRes),
+                            style = KasirMudahTypography.titleMedium
+                        )
+                        Text(
+                            text = stringResource(subTitleRes),
+                            style = KasirMudahTypography.bodyMedium
+                        )
                     }
                 }
             }

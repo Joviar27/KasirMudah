@@ -9,6 +9,10 @@
     <string name="delete">Hapus</string>
     <string name="all">Semua</string>
     <string name="cart">Keranjang</string>
+    <string name="products_empty_title">Belum ada produk disini</string>
+    <string name="products_empty_subtitle">Segera tambahkan produk baru!</string>
+    <string name="cart_empty_title">Belum ada produk di keranjang</string>
+    <string name="cart_empty_subtitle">Segera masukkan produk ke keranjang!</string>
 
     <!--  Item Edit Dialog  -->
     <string name="edit_item">Edit Barang</string>
