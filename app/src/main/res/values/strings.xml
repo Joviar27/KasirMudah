@@ -38,6 +38,10 @@
     <string name="today">Hari Ini</string>
     <string name="last_week">1 Minggu Terakhir</string>
     <string name="last_month">1 Bulan Terakhir</string>
+    <string name="history_empty_title">Belum ada pembelian pada periode ini</string>
+    <string name="history_empty_subtitle">Mulai simpan pembelian sekarang!</string>
+    <string name="bookmark_empty_title">Belum ada pembelian yang tandai</string>
+    <string name="bookmark_empty_subtitle">Mulai tandai pembelian sekarang!</string>
 
     <!--  Profile Screen  -->
     <string name="menu_edit_profile">Edit Profil Toko</string>
