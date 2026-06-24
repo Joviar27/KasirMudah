@@ -9,6 +9,10 @@
     <string name="delete">Hapus</string>
     <string name="all">Semua</string>
     <string name="cart">Keranjang</string>
+    <string name="products_empty_title">Belum ada barang disini</string>
+    <string name="products_empty_subtitle">Segera tambahkan barang baru!</string>
+    <string name="cart_empty_title">Belum ada barang di keranjang</string>
+    <string name="cart_empty_subtitle">Segera masukkan barang ke keranjang!</string>
 
     <!--  Item Edit Dialog  -->
     <string name="edit_item">Edit Barang</string>
@@ -34,6 +38,10 @@
     <string name="today">Hari Ini</string>
     <string name="last_week">1 Minggu Terakhir</string>
     <string name="last_month">1 Bulan Terakhir</string>
+    <string name="history_empty_title">Belum ada pembelian pada periode ini</string>
+    <string name="history_empty_subtitle">Mulai simpan pembelian sekarang!</string>
+    <string name="bookmark_empty_title">Belum ada pembelian yang tandai</string>
+    <string name="bookmark_empty_subtitle">Mulai tandai pembelian sekarang!</string>
 
     <!--  Profile Screen  -->
     <string name="menu_edit_profile">Edit Profil Toko</string>

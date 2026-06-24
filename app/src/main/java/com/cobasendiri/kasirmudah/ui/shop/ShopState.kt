@@ -16,4 +16,5 @@ data class ShopState(
     val showEditProductDialog: Product? = null,
     val showAddProductDialog: Boolean = false,
     val showConfirmDeleteDialog: String? = null,
+    val showEmptyListView: Boolean = false
 )

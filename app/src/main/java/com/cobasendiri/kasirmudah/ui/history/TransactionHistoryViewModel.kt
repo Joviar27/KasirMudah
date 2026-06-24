@@ -35,7 +35,10 @@ class TransactionHistoryViewModel(
 
     fun updateFilter(newFilter: TransactionFilter) {
         _state.update {
-            it.copy(filter = newFilter)
+            it.copy(
+                filter = newFilter,
+                showEmptyListView = false
+            )
         }
     }
 
@@ -51,7 +54,10 @@ class TransactionHistoryViewModel(
                     }
                 }.collect {
                     it.handleResult{ transactions ->
-                        _state.update { it.copy(transactionList = transactions) }
+                        _state.update { it.copy(
+                            transactionList = transactions,
+                            showEmptyListView = transactions.isEmpty()
+                        ) }
                     }
                 }
         }
