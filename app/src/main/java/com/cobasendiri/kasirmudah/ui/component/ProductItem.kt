@@ -171,7 +171,7 @@ fun Counter(
             )
         }
         Box(Modifier
-            .width(22.dp)
+            .width(24.dp)
             .background(Surface, RoundedCornerShape(4.dp))
             .padding(2.dp),
             contentAlignment = Alignment.Center
@@ -187,7 +187,9 @@ fun Counter(
             .border(1.dp, OnPrimaryVariant, CircleShape)
             .padding(1.dp)
             .clickable {
-                onIncrease.invoke()
+                if(count<99){
+                    onIncrease.invoke()
+                }
             }
         ){
             Image(
