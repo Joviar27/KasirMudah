@@ -1,5 +1,7 @@
 package com.cobasendiri.kasirmudah.ui.receipt.detail
 
+import android.graphics.Bitmap
+
 interface ReceiptDetailEvent {
 
     data class OnDelete(
@@ -8,5 +10,8 @@ interface ReceiptDetailEvent {
 
     data object OnDismissConfirmDeleteDialog: ReceiptDetailEvent
 
-    data object OnDownload: ReceiptDetailEvent
+    data class OnDownload(
+        val receiptBitmap: Bitmap,
+        val fileName: String
+    ): ReceiptDetailEvent
 }

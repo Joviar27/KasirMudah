@@ -20,10 +20,14 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,6 +44,7 @@ import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.dateFormat
 import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,6 +63,9 @@ fun ReceiptDetailContent(
 
     val scrollState = rememberScrollState()
 
+    val coroutineScope = rememberCoroutineScope()
+    val graphicsLayer = rememberGraphicsLayer()
+
     Box(Modifier.fillMaxSize()
         .background(Surface)
         .padding(innerPadding)
@@ -67,9 +75,13 @@ fun ReceiptDetailContent(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
+                    .verticalScroll(scrollState)
+                    .drawWithContent {
+                        graphicsLayer.record { this@drawWithContent.drawContent() }
+                        drawContent()
+                    }
                     .clip(RoundedCornerShape(16.dp))
                     .background(Color.White)
-                    .verticalScroll(scrollState)
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -144,9 +156,14 @@ fun ReceiptDetailContent(
             }
             Spacer(Modifier.height(16.dp))
             RoundedPrimaryButton(
+                isEnabled = !state.processing,
                 text = stringResource(R.string.download_receipt)
             ) {
-                event.invoke(ReceiptDetailEvent.OnDownload)
+                coroutineScope.launch {
+                    val imageBitmap = graphicsLayer.toImageBitmap()
+                    val androidBitmap = imageBitmap.asAndroidBitmap()
+                    event.invoke(ReceiptDetailEvent.OnDownload(androidBitmap, state.transactionName))
+                }
             }
         }
         if(state.showConfirmDeleteDialog != null){

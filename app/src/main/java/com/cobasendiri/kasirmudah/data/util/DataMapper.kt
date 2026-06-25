@@ -80,6 +80,7 @@ object DataMapper {
     fun TransactionEntity.mapToTransactionReceipt(): TransactionReceipt{
         return TransactionReceipt(
             id = this.id,
+            name = this.name,
             shopName = this.shopName,
             createdAt = this.createdAt,
             shopItems = this.items.map {

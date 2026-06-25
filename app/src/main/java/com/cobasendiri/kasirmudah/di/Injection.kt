@@ -34,6 +34,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.SaveShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
+import com.cobasendiri.kasirmudah.utils.GallerySaver
 
 object Injection {
 
@@ -151,5 +152,9 @@ object Injection {
 
     fun provideSaveShopProfileUseCase(context: Context): SaveShopProfileUseCase{
         return SaveShopProfileUseCase(provideProfileRepository(context))
+    }
+
+    fun provideGallerySaver(context: Context): GallerySaver{
+        return GallerySaver(context)
     }
 }
