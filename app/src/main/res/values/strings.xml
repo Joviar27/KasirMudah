@@ -82,5 +82,5 @@
     <string name="success_delete_transaction">Transaksi berhasil dihapus</string>
     <string name="success_new_bookmark">Transaksi berhasil ditandai</string>
     <string name="success_remove_bookmark">Tanda transaksi berhasil dihapus</string>
-    <string name="success_save_receipt">Nota pembelian berhasil diunduh</string>
+    <string name="success_save_receipt">Nota pembelian diunduh ke galeri</string>
 </resources>
