@@ -113,7 +113,7 @@ fun ReceiptDetailScreen(
                     viewmodel.deleteTransaction(event.transactionId)
                 }
                 is ReceiptDetailEvent.OnDownload ->{
-                    //Download receipt
+                    viewmodel.downloadReceipt(event.receiptBitmap, event.fileName)
                 }
             }
         }

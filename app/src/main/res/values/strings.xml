@@ -73,6 +73,7 @@
     <string name="error_full_storage">Penyimpanan perangkat penuh</string>
     <string name="error_transaction_amount_invalid">Nominal transaksi tidak valid</string>
     <string name="error_input_invalid">Input tidak valid</string>
+    <string name="error_save_receipt">Gagal mengunduh nota pembelian</string>
 
     <!--  Success Message  -->
     <string name="succcess_add">Produk berhasil ditambahkan</string>
@@ -81,4 +82,5 @@
     <string name="success_delete_transaction">Transaksi berhasil dihapus</string>
     <string name="success_new_bookmark">Transaksi berhasil ditandai</string>
     <string name="success_remove_bookmark">Tanda transaksi berhasil dihapus</string>
+    <string name="success_save_receipt">Nota pembelian berhasil diunduh</string>
 </resources>

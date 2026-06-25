@@ -29,6 +29,7 @@ import com.cobasendiri.kasirmudah.ui.profile.ProfileViewModel
 import com.cobasendiri.kasirmudah.ui.receipt.detail.ReceiptDetailViewModel
 import com.cobasendiri.kasirmudah.ui.receipt.draft.ReceiptDraftViewModel
 import com.cobasendiri.kasirmudah.ui.shop.ShopViewModel
+import com.cobasendiri.kasirmudah.ui.utils.GallerySaver
 
 class ViewModelFactory(
     private val getProductLisUseCase: GetProductLisUseCase,
@@ -50,7 +51,8 @@ class ViewModelFactory(
     private val getTransactionUseCase: GetTransactionUseCase,
     private val getIsTransactionBookmarkedUseCase: GetIsTransactionBookmarkedUseCase,
     private val getShopProfileUseCase: GetShopProfileUseCase,
-    private val saveShopProfileUseCase: SaveShopProfileUseCase
+    private val saveShopProfileUseCase: SaveShopProfileUseCase,
+    private val gallerySaver: GallerySaver
 ) : ViewModelProvider.Factory {
 
     companion object {
@@ -79,7 +81,8 @@ class ViewModelFactory(
                     Injection.provideGetTransactionUseCase(context),
                     Injection.provideGetIsTransactionBookmarkedUseCase(context),
                     Injection.provideGetShopProfileUseCase(context),
-                    Injection.provideSaveShopProfileUseCase(context)
+                    Injection.provideSaveShopProfileUseCase(context),
+                    Injection.provideGallerySaver(context)
                 ).also { instance = it }
             }
         }
@@ -104,8 +107,7 @@ class ViewModelFactory(
             ) as T
         }else if(modelClass.isAssignableFrom(ReceiptDetailViewModel::class.java)){
             return ReceiptDetailViewModel(getTransactionUseCase, getIsTransactionBookmarkedUseCase,
-                updateTransactionBookmarkUseCase, deleteTransactionHistoryUseCase, 
-                getShopProfileUseCase
+                updateTransactionBookmarkUseCase, deleteTransactionHistoryUseCase, gallerySaver
             ) as T
         }else if(modelClass.isAssignableFrom(ProfileViewModel::class.java)){
             return ProfileViewModel(getShopProfileUseCase, saveShopProfileUseCase) as T

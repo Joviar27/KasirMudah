@@ -1,29 +1,32 @@
 package com.cobasendiri.kasirmudah.ui.receipt.detail
 
+import android.graphics.Bitmap
 import androidx.lifecycle.viewModelScope
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.usecase.DeleteTransactionHistoryUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetIsTransactionBookmarkedUseCase
-import com.cobasendiri.kasirmudah.domain.usecase.GetShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
+import com.cobasendiri.kasirmudah.ui.utils.GallerySaver
 import com.cobasendiri.kasirmudah.ui.utils.UiMessageUtil.asUiMessage
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class ReceiptDetailViewModel(
     private val getTransactionUseCase: GetTransactionUseCase,
     private val getIsTransactionBookmarkedUseCase: GetIsTransactionBookmarkedUseCase,
     private val updateTransactionBookmarkUseCase: UpdateTransactionBookmarkUseCase,
     private val deleteTransactionHistoryUseCase: DeleteTransactionHistoryUseCase,
-    private val getShopProfileUseCase: GetShopProfileUseCase
+    private val gallerySaver: GallerySaver
 ): BaseViewModel() {
 
     private val _state = MutableStateFlow(ReceiptDetailState())
@@ -38,10 +41,12 @@ class ReceiptDetailViewModel(
                 _state.update {
                     it.copy(
                         transactionId = receipt.id,
+                        transactionName = receipt.name,
                         transactionCreatedAt = receipt.createdAt,
                         transactionShopItems = receipt.shopItems,
                         totalTransaction = receipt.transactionTotal,
-                        shopName = receipt.shopName
+                        shopName = receipt.shopName,
+                        processing = false
                     )
                 }
             }
@@ -85,6 +90,26 @@ class ReceiptDetailViewModel(
 
     fun dismissConfirmDeleteDialog(){
         _state.update { it.copy(showConfirmDeleteDialog = null) }
+    }
+
+    fun downloadReceipt(bitmap: Bitmap, filename: String) {
+        viewModelScope.launch {
+            _state.update { it.copy(processing = true) }
+
+            val successSaveReceipt = gallerySaver.saveBitmapToGallery(bitmap, filename)
+            val uiMessage = if(successSaveReceipt){
+                R.string.success_save_receipt.asUiMessage(UiMessageType.SUCCESS)
+            }else{
+                R.string.error_save_receipt.asUiMessage(UiMessageType.ERROR)
+            }
+            showUiMessage(uiMessage)
+
+            //Avoid multiple download
+            _state.update {
+                delay(500)
+                it.copy(processing = false)
+            }
+        }
     }
 
     override fun showUiMessage(message: UiMessage) {
