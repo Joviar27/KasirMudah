@@ -1,4 +1,4 @@
-package com.cobasendiri.kasirmudah.ui.utils
+package com.cobasendiri.kasirmudah.utils
 
 import android.content.ContentValues
 import android.content.Context

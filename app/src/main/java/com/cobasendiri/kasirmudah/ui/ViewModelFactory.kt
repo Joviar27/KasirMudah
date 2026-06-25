@@ -29,7 +29,7 @@ import com.cobasendiri.kasirmudah.ui.profile.ProfileViewModel
 import com.cobasendiri.kasirmudah.ui.receipt.detail.ReceiptDetailViewModel
 import com.cobasendiri.kasirmudah.ui.receipt.draft.ReceiptDraftViewModel
 import com.cobasendiri.kasirmudah.ui.shop.ShopViewModel
-import com.cobasendiri.kasirmudah.ui.utils.GallerySaver
+import com.cobasendiri.kasirmudah.utils.GallerySaver
 
 class ViewModelFactory(
     private val getProductLisUseCase: GetProductLisUseCase,
