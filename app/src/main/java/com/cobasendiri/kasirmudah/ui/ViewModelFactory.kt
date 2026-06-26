@@ -20,7 +20,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionHistoryUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
-import com.cobasendiri.kasirmudah.domain.usecase.SaveShopProfileUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.UpdateShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
@@ -53,7 +53,7 @@ class ViewModelFactory(
     private val getTransactionUseCase: GetTransactionUseCase,
     private val getIsTransactionBookmarkedUseCase: GetIsTransactionBookmarkedUseCase,
     private val getShopProfileUseCase: GetShopProfileUseCase,
-    private val saveShopProfileUseCase: SaveShopProfileUseCase,
+    private val updateShopProfileUseCase: UpdateShopProfileUseCase,
     private val gallerySaver: GallerySaver
 ) : ViewModelProvider.Factory {
 
@@ -84,7 +84,7 @@ class ViewModelFactory(
                     Injection.provideGetTransactionUseCase(context),
                     Injection.provideGetIsTransactionBookmarkedUseCase(context),
                     Injection.provideGetShopProfileUseCase(context),
-                    Injection.provideSaveShopProfileUseCase(context),
+                    Injection.provideUpdateShopProfileUseCase(context),
                     Injection.provideGallerySaver(context)
                 ).also { instance = it }
             }
@@ -113,7 +113,7 @@ class ViewModelFactory(
                 updateTransactionBookmarkUseCase, deleteTransactionHistoryUseCase, gallerySaver
             ) as T
         }else if(modelClass.isAssignableFrom(ProfileViewModel::class.java)){
-            return ProfileViewModel(getShopProfileUseCase, saveShopProfileUseCase) as T
+            return ProfileViewModel(getShopProfileUseCase, updateShopProfileUseCase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

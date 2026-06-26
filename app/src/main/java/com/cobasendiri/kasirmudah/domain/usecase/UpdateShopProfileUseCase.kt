@@ -5,7 +5,7 @@ import com.cobasendiri.kasirmudah.domain.exception.KasirMudahException
 import com.cobasendiri.kasirmudah.domain.model.ShopProfile
 import com.cobasendiri.kasirmudah.domain.repository.IProfileRepository
 
-class SaveShopProfileUseCase(
+class UpdateShopProfileUseCase(
     private val profileRepository: IProfileRepository
 ) {
     suspend fun invoke(shopProfile: ShopProfile): Result<Unit> {

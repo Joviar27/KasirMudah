@@ -3,7 +3,7 @@ package com.cobasendiri.kasirmudah.ui.profile
 import androidx.lifecycle.viewModelScope
 import com.cobasendiri.kasirmudah.domain.model.ShopProfile
 import com.cobasendiri.kasirmudah.domain.usecase.GetShopProfileUseCase
-import com.cobasendiri.kasirmudah.domain.usecase.SaveShopProfileUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.UpdateShopProfileUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val getShopProfileUseCase: GetShopProfileUseCase,
-    private val saveShopProfileUseCase: SaveShopProfileUseCase
+    private val updateShopProfileUseCase: UpdateShopProfileUseCase
 ): BaseViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())
@@ -34,7 +34,7 @@ class ProfileViewModel(
 
     fun saveShopProfile(shopProfile: ShopProfile){
         viewModelScope.launch {
-            saveShopProfileUseCase.invoke(shopProfile).handleResult{
+            updateShopProfileUseCase.invoke(shopProfile).handleResult{
                 dismissEditProfileDialog()
             }
         }

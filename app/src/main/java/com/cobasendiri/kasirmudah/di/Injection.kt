@@ -30,7 +30,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionHistoryUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
-import com.cobasendiri.kasirmudah.domain.usecase.SaveShopProfileUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.UpdateShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
@@ -155,8 +155,8 @@ object Injection {
         return GetShopProfileUseCase(provideProfileRepository(context))
     }
 
-    fun provideSaveShopProfileUseCase(context: Context): SaveShopProfileUseCase{
-        return SaveShopProfileUseCase(provideProfileRepository(context))
+    fun provideUpdateShopProfileUseCase(context: Context): UpdateShopProfileUseCase{
+        return UpdateShopProfileUseCase(provideProfileRepository(context))
     }
 
     fun provideGallerySaver(context: Context): GallerySaver{
