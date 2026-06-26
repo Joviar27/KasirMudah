@@ -10,9 +10,13 @@ class UpdateShopProfileUseCase(
 ) {
     suspend fun invoke(shopProfile: ShopProfile): Result<Unit> {
         return try {
-            if(shopProfile.shopName.isBlank()){
+            val isNameValid = shopProfile.let {
+                it.shopName.isNotBlank() && it.shopName.firstOrNull()?.isWhitespace() == false
+            }
+            if(!isNameValid){
                 throw KasirMudahException.InvalidInputError
             }
+
             val result = profileRepository.saveShopProfile(shopProfile)
             Result.Success(result)
         }catch (e: KasirMudahException){
