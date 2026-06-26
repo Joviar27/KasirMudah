@@ -27,4 +27,5 @@ interface ITransactionRepository {
 
     suspend fun updateBookmark(transactionId: String): Boolean
 
+    suspend fun updateName(transactionId: String, newName: String)
 }
