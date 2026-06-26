@@ -33,6 +33,12 @@ fun EditTransactionDialog(
 
     var nameDraft by remember { mutableStateOf(name) }
 
+    val isSaveButtonEnabled = remember(nameDraft){
+        nameDraft.let {
+            it.isNotBlank() && it.firstOrNull()?.isWhitespace() == false
+        }
+    }
+
     BaseDialog(onDismiss = onDismiss) {
         Column(Modifier.background(White),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -59,7 +65,8 @@ fun EditTransactionDialog(
                 Spacer(Modifier.width(8.dp))
                 RoundedPrimaryButton(
                     modifier = Modifier.width(140.dp),
-                    text = stringResource(R.string.save)
+                    text = stringResource(R.string.save),
+                    isEnabled = isSaveButtonEnabled
                 ) {
                     onSave.invoke(nameDraft)
                 }
