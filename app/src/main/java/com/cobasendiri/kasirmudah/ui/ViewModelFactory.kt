@@ -19,7 +19,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionHistoryUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.IncrementProductUseCase
-import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.AddTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
@@ -44,7 +44,7 @@ class ViewModelFactory(
     private val getCartListUseCase: GetCartListUseCase,
     private val deleteProductUseCase: DeleteProductUseCase,
     private val getReceiptItemsUseCase: GetReceiptItemsUseCase,
-    private val saveNewTransactionUseCase: SaveNewTransactionUseCase,
+    private val addTransactionUseCase: AddTransactionUseCase,
     private val getTransactionHistoryUseCase: GetTransactionHistoryUseCase,
     private val getBookmarkedTransactionUseCase: GetBookmarkedTransactionUseCase,
     private val updateTransactionBookmarkUseCase: UpdateTransactionBookmarkUseCase,
@@ -75,7 +75,7 @@ class ViewModelFactory(
                     Injection.provideGetCartListUseCase(context),
                     Injection.provideDeleteProductUseCase(context),
                     Injection.provideGetReceiptItemsUseCase(context),
-                    Injection.provideSaveNewTransactionUseCase(context),
+                    Injection.provideAddTransactionUseCase(context),
                     Injection.provideGetTransactionHistoryUseCase(context),
                     Injection.provideGetBookmarkedTransactionUseCase(context),
                     Injection.provideUpdateTransactionBookmarkUseCase(context),
@@ -101,7 +101,7 @@ class ViewModelFactory(
             ) as T
         }else if(modelClass.isAssignableFrom(ReceiptDraftViewModel::class.java)){
             return ReceiptDraftViewModel(getReceiptItemsUseCase, getTotalCartAmountUseCase,
-                saveNewTransactionUseCase, clearCartUseCase, getShopProfileUseCase
+                addTransactionUseCase, clearCartUseCase, getShopProfileUseCase
             ) as T
         }else if(modelClass.isAssignableFrom(TransactionHistoryViewModel::class.java)){
             return TransactionHistoryViewModel(getTransactionHistoryUseCase,

@@ -7,7 +7,7 @@ import com.cobasendiri.kasirmudah.domain.repository.IProfileRepository
 import com.cobasendiri.kasirmudah.domain.repository.ITransactionRepository
 import kotlinx.coroutines.flow.firstOrNull
 
-class SaveNewTransactionUseCase(
+class AddTransactionUseCase(
     private val transactionRepository: ITransactionRepository,
     private val cartRepository: ICartRepository,
     private val profileRepository: IProfileRepository
