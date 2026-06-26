@@ -88,4 +88,5 @@
     <string name="success_remove_bookmark">Tanda transaksi berhasil dihapus</string>
     <string name="success_update_transaction_name">Transaksi berhasil diperbaharui</string>
     <string name="success_save_receipt">Nota pembelian diunduh ke galeri</string>
+    <string name="success_update_shop_profile">Profil toko berhasil diperbaharui</string>
 </resources>

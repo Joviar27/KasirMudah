@@ -1,10 +1,5 @@
 package com.cobasendiri.kasirmudah.ui.history
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -41,27 +35,24 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.cobasendiri.kasirmudah.ui.theme.Primary
-import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.ui.ViewModelFactory
+import com.cobasendiri.kasirmudah.ui.animation.AlertBarAnimatedVisibility
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
 import com.cobasendiri.kasirmudah.ui.component.TransactionHistoryItem
-import com.cobasendiri.kasirmudah.ui.component.UiMessageBar
+import com.cobasendiri.kasirmudah.ui.component.alertbar.UiMessageBar
 import com.cobasendiri.kasirmudah.ui.component.dialog.EditTransactionDialog
 import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
-import com.cobasendiri.kasirmudah.ui.theme.Negative
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
+import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Secondary
-import com.cobasendiri.kasirmudah.ui.theme.Tertiary
+import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
-import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
 import kotlinx.coroutines.delay
 
 @Composable
@@ -342,29 +333,10 @@ fun TransactionHistoryContent(
                 }
             )
         }
-        AnimatedVisibility(
-            visible = state.uiMessage != null,
-            enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
-            exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut(),
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .statusBarsPadding()
-        ) {
-            val icon = when(state.uiMessage?.type){
-                UiMessageType.SUCCESS -> painterResource(R.drawable.ic_check_24_white)
-                UiMessageType.ERROR -> painterResource(R.drawable.ic_error_24_white)
-                else -> painterResource(R.drawable.ic_info_outline_24_white)
+        AlertBarAnimatedVisibility(state.uiMessage != null) {
+            state.uiMessage?.let {
+                UiMessageBar(it)
             }
-            val color = when(state.uiMessage?.type){
-                UiMessageType.SUCCESS -> Primary
-                UiMessageType.ERROR -> Negative
-                else -> Tertiary
-            }
-            UiMessageBar(
-                imageStart = icon,
-                imageBackground = color,
-                message = state.uiMessage?.asString(context) ?: ""
-            )
         }
     }
 }

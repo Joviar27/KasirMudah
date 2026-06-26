@@ -35,7 +35,9 @@ import coil.compose.AsyncImage
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.ShopProfile
 import com.cobasendiri.kasirmudah.ui.ViewModelFactory
+import com.cobasendiri.kasirmudah.ui.animation.AlertBarAnimatedVisibility
 import com.cobasendiri.kasirmudah.ui.component.ProfileMenuItem
+import com.cobasendiri.kasirmudah.ui.component.alertbar.UiMessageBar
 import com.cobasendiri.kasirmudah.ui.component.dialog.EditProfileDialog
 import com.cobasendiri.kasirmudah.ui.component.dialog.InformationConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
@@ -188,6 +190,12 @@ fun ProfileScreenContent(
                 onDismiss = { event.invoke(dismissUnavailableDialog) },
                 onConfirm = { event.invoke(dismissUnavailableDialog) }
             )
+        }
+
+        AlertBarAnimatedVisibility(state.uiMessage != null) {
+            state.uiMessage?.let {
+                UiMessageBar(it)
+            }
         }
     }
 }
