@@ -61,4 +61,7 @@ interface TransactionDao {
             true
         }
     }
+
+    @Query("UPDATE transactions SET name = :newName WHERE id = :transactionId")
+    suspend fun updateName(transactionId: String, newName: String)
 }

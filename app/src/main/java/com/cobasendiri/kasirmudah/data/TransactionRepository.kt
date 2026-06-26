@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.cobasendiri.kasirmudah.data.util.CoroutineMapper.runMapExceptionSuspending
-import com.cobasendiri.kasirmudah.data.util.DataMapper.mapListToDomain
 import com.cobasendiri.kasirmudah.data.util.DataMapper.mapToTransactionReceipt
 import com.cobasendiri.kasirmudah.data.util.DataMapper.mapTransactionHistoryToDomain
 import com.cobasendiri.kasirmudah.domain.model.TransactionHistory
@@ -43,7 +42,7 @@ class TransactionRepository(
     ) = withContext(ioDispatcher){
         runMapExceptionSuspending {
             val id = IdGenerator.generateTransactionId()
-            val name = "Transaksi ${id.take(10)}..."
+            val name = "Transaksi ${id.takeLast(10)}${id.take(10)}"
             val items = draftItems.map {
                 TransactionEntityItem(
                     name = it.name,
@@ -105,6 +104,14 @@ class TransactionRepository(
                     transactionId,
                     System.currentTimeMillis()/1000
                 )
+            }
+        }
+    }
+
+    override suspend fun updateName(transactionId: String, newName: String) {
+        return withContext(ioDispatcher) {
+            runMapExceptionSuspending {
+                transactionDao.updateName(transactionId, newName)
             }
         }
     }
