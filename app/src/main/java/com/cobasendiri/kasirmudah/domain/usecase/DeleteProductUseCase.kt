@@ -2,7 +2,6 @@ package com.cobasendiri.kasirmudah.domain.usecase
 
 import com.cobasendiri.kasirmudah.domain.Result
 import com.cobasendiri.kasirmudah.domain.exception.KasirMudahException
-import com.cobasendiri.kasirmudah.domain.model.Product
 import com.cobasendiri.kasirmudah.domain.repository.IProductRepository
 
 class DeleteProductUseCase(

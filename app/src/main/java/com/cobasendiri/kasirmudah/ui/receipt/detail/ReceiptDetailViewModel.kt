@@ -10,8 +10,8 @@ import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCas
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
-import com.cobasendiri.kasirmudah.utils.GallerySaver
 import com.cobasendiri.kasirmudah.ui.utils.UiMessageUtil.asUiMessage
+import com.cobasendiri.kasirmudah.utils.GallerySaver
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 class ReceiptDetailViewModel(
     private val getTransactionUseCase: GetTransactionUseCase,

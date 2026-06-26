@@ -21,10 +21,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
-import com.cobasendiri.kasirmudah.ui.theme.Negative
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
-import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
-import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.White
 
 
