@@ -66,6 +66,19 @@ fun ProductDetailDialog(
 
     var showColorCodePopup by remember { mutableStateOf(false) }
 
+    val isNameValid = remember(productDraft.name){
+        productDraft.let {
+            it.name.isNotBlank() && it.name.firstOrNull()?.isWhitespace() == false
+        }
+    }
+
+    val isPriceValid = remember(productDraft.price){
+        productDraft.let {
+            it.price.isNotBlank() && !it.price.contains(" ")
+                    && !it.price.all { it == '0' }
+        }
+    }
+
     BaseDialog(
         onDismiss = onDismiss
     ) {
@@ -123,6 +136,7 @@ fun ProductDetailDialog(
                 }
                 Spacer(Modifier.width(8.dp))
                 RoundedPrimaryButton(
+                    isEnabled = isNameValid && isPriceValid,
                     modifier = Modifier.width(140.dp),
                     text = stringResource(R.string.save)
                 ) {
