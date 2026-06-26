@@ -1,6 +1,5 @@
 package com.cobasendiri.kasirmudah.domain.repository
 
-import com.cobasendiri.kasirmudah.domain.model.Product
 import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import kotlinx.coroutines.flow.Flow

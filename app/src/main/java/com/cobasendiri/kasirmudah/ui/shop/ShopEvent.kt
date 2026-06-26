@@ -1,6 +1,5 @@
 package com.cobasendiri.kasirmudah.ui.shop
 
-import androidx.compose.ui.graphics.Color
 import com.cobasendiri.kasirmudah.domain.model.Product
 import com.cobasendiri.kasirmudah.domain.model.ProductDraft
 

@@ -5,7 +5,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.ClearCartUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetReceiptItemsUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTotalCartAmountUseCase
-import com.cobasendiri.kasirmudah.domain.usecase.SaveNewTransactionUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.AddTransactionUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import kotlinx.coroutines.channels.Channel
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class ReceiptDraftViewModel(
     private val getReceiptItemsUseCase: GetReceiptItemsUseCase,
     private val getTotalCartAmountUseCase: GetTotalCartAmountUseCase,
-    private val saveNewTransactionUseCase: SaveNewTransactionUseCase,
+    private val addTransactionUseCase: AddTransactionUseCase,
     private val clearCartUseCase: ClearCartUseCase,
     private val getShopProfileUseCase: GetShopProfileUseCase
 ): BaseViewModel() {
@@ -66,7 +66,7 @@ class ReceiptDraftViewModel(
 
     fun saveNewTransaction(){
         viewModelScope.launch {
-            saveNewTransactionUseCase.invoke().handleResult{
+            addTransactionUseCase.invoke().handleResult{
                 _navigateBackEvent.trySend(Unit)
                 clearCart()
             }

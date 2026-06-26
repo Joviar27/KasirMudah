@@ -1,6 +1,5 @@
 package com.cobasendiri.kasirmudah.domain.usecase
 
-import com.cobasendiri.kasirmudah.data.TransactionRepository
 import com.cobasendiri.kasirmudah.domain.Result
 import com.cobasendiri.kasirmudah.domain.exception.KasirMudahException
 import com.cobasendiri.kasirmudah.domain.model.TransactionReceipt
