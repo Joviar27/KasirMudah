@@ -43,6 +43,10 @@
     <string name="bookmark_empty_title">Belum ada pembelian yang tandai</string>
     <string name="bookmark_empty_subtitle">Mulai tandai pembelian sekarang!</string>
 
+    <!-- Edit Transaction Dialog -->
+    <string name="edit_transaction">Edit Nama Pembelian</string>
+    <string name="transaction_name">Nama Pembelian</string>
+
     <!--  Profile Screen  -->
     <string name="menu_edit_profile">Edit Profil Toko</string>
     <string name="menu_about_us">Tentang Kami</string>
@@ -82,5 +86,6 @@
     <string name="success_delete_transaction">Transaksi berhasil dihapus</string>
     <string name="success_new_bookmark">Transaksi berhasil ditandai</string>
     <string name="success_remove_bookmark">Tanda transaksi berhasil dihapus</string>
+    <string name="success_update_transaction_name">Transaksi berhasil diperbaharui</string>
     <string name="success_save_receipt">Nota pembelian diunduh ke galeri</string>
 </resources>

@@ -34,6 +34,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.SaveShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionNameUseCase
 import com.cobasendiri.kasirmudah.utils.GallerySaver
 
 object Injection {
@@ -136,6 +137,10 @@ object Injection {
 
     fun provideDeleteTransactionHistoryUseCase(context: Context): DeleteTransactionHistoryUseCase{
         return DeleteTransactionHistoryUseCase(provideTransactionRepository(context))
+    }
+
+    fun provideUpdateTransactionNameUseCase(context: Context): UpdateTransactionNameUseCase{
+        return UpdateTransactionNameUseCase(provideTransactionRepository(context))
     }
 
     fun provideGetTransactionUseCase(context: Context): GetTransactionUseCase{

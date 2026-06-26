@@ -24,6 +24,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.SaveShopProfileUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductColorCodeUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateProductUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionNameUseCase
 import com.cobasendiri.kasirmudah.ui.history.TransactionHistoryViewModel
 import com.cobasendiri.kasirmudah.ui.profile.ProfileViewModel
 import com.cobasendiri.kasirmudah.ui.receipt.detail.ReceiptDetailViewModel
@@ -48,6 +49,7 @@ class ViewModelFactory(
     private val getBookmarkedTransactionUseCase: GetBookmarkedTransactionUseCase,
     private val updateTransactionBookmarkUseCase: UpdateTransactionBookmarkUseCase,
     private val deleteTransactionHistoryUseCase: DeleteTransactionHistoryUseCase,
+    private val updateTransactionNameUseCase: UpdateTransactionNameUseCase,
     private val getTransactionUseCase: GetTransactionUseCase,
     private val getIsTransactionBookmarkedUseCase: GetIsTransactionBookmarkedUseCase,
     private val getShopProfileUseCase: GetShopProfileUseCase,
@@ -78,6 +80,7 @@ class ViewModelFactory(
                     Injection.provideGetBookmarkedTransactionUseCase(context),
                     Injection.provideUpdateTransactionBookmarkUseCase(context),
                     Injection.provideDeleteTransactionHistoryUseCase(context),
+                    Injection.provideUpdateTransactionNameUseCase(context),
                     Injection.provideGetTransactionUseCase(context),
                     Injection.provideGetIsTransactionBookmarkedUseCase(context),
                     Injection.provideGetShopProfileUseCase(context),
@@ -103,7 +106,7 @@ class ViewModelFactory(
         }else if(modelClass.isAssignableFrom(TransactionHistoryViewModel::class.java)){
             return TransactionHistoryViewModel(getTransactionHistoryUseCase,
                 getBookmarkedTransactionUseCase, updateTransactionBookmarkUseCase,
-                deleteTransactionHistoryUseCase
+                deleteTransactionHistoryUseCase, updateTransactionNameUseCase
             ) as T
         }else if(modelClass.isAssignableFrom(ReceiptDetailViewModel::class.java)){
             return ReceiptDetailViewModel(getTransactionUseCase, getIsTransactionBookmarkedUseCase,

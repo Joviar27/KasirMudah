@@ -7,6 +7,7 @@ import com.cobasendiri.kasirmudah.domain.usecase.DeleteTransactionHistoryUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetBookmarkedTransactionUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.GetTransactionHistoryUseCase
 import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionBookmarkUseCase
+import com.cobasendiri.kasirmudah.domain.usecase.UpdateTransactionNameUseCase
 import com.cobasendiri.kasirmudah.ui.BaseViewModel
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessage
 import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
@@ -23,7 +24,8 @@ class TransactionHistoryViewModel(
     private val getTransactionHistoryUseCase: GetTransactionHistoryUseCase,
     private val getBookmarkedTransactionUseCase: GetBookmarkedTransactionUseCase,
     private val updateTransactionBookmarkUseCase: UpdateTransactionBookmarkUseCase,
-    private val deleteTransactionHistoryUseCase: DeleteTransactionHistoryUseCase
+    private val deleteTransactionHistoryUseCase: DeleteTransactionHistoryUseCase,
+    private val updateTransactionNameUseCase: UpdateTransactionNameUseCase
 ): BaseViewModel() {
 
     private val _state = MutableStateFlow(TransactionHistoryState())
@@ -85,6 +87,17 @@ class TransactionHistoryViewModel(
         }
     }
 
+    fun updateTransactionName(transactionId: String, newName: String){
+        viewModelScope.launch {
+            updateTransactionNameUseCase.invoke(transactionId, newName).handleResult{
+                dismissEditDialog()
+
+                val stringRes = R.string.success_update_transaction_name
+                showUiMessage(stringRes.asUiMessage(UiMessageType.SUCCESS))
+            }
+        }
+    }
+
     private fun mapFilter(transactionFilter: TransactionFilter): DateFilter{
         return when(transactionFilter){
             TransactionFilter.FILTER_TODAY -> DateFilter.TODAY
@@ -100,6 +113,14 @@ class TransactionHistoryViewModel(
 
     fun dismissConfirmDeleteDialog(){
         _state.update { it.copy(showConfirmDeleteDialog = null) }
+    }
+
+    fun showEditDialog(transactionId: String, name: String){
+        _state.update { it.copy(showEditDialog = Pair(transactionId, name)) }
+    }
+
+    fun dismissEditDialog(){
+        _state.update { it.copy(showEditDialog = null) }
     }
 
     override fun showUiMessage(message: UiMessage) {

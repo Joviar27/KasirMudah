@@ -8,5 +8,6 @@ data class TransactionHistoryState(
     val transactionList: List<TransactionHistory> = listOf(),
     val uiMessage: UiMessage? = null,
     val showConfirmDeleteDialog: String? = null,
+    val showEditDialog: Pair<String, String>? = null,
     val showEmptyListView: Boolean = false
 )

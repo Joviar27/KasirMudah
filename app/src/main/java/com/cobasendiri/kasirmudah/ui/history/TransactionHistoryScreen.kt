@@ -53,6 +53,7 @@ import com.cobasendiri.kasirmudah.ui.ViewModelFactory
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
 import com.cobasendiri.kasirmudah.ui.component.TransactionHistoryItem
 import com.cobasendiri.kasirmudah.ui.component.UiMessageBar
+import com.cobasendiri.kasirmudah.ui.component.dialog.EditTransactionDialog
 import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 import com.cobasendiri.kasirmudah.ui.theme.Negative
@@ -106,6 +107,15 @@ fun TransactionHistoryScreen(
             }
             is TransactionHistoryEvent.OnNavigateToDetail ->{
                 onNavigateToDetail.invoke(event.transactionId)
+            }
+            is TransactionHistoryEvent.OnShowEditDialog ->{
+                viewModel.showEditDialog(event.transactionId, event.name)
+            }
+            is TransactionHistoryEvent.OnDismissEditDialog ->{
+                viewModel.dismissEditDialog()
+            }
+            is TransactionHistoryEvent.OnUpdateName ->{
+                viewModel.updateTransactionName(event.transactionId, event.updatedName)
             }
         }
     }
@@ -294,12 +304,28 @@ fun TransactionHistoryContent(
                     },
                     onItemClick = {
                         event.invoke(TransactionHistoryEvent.OnNavigateToDetail(it))
+                    },
+                    onEditClick = { transactionId, name ->
+                        event.invoke(TransactionHistoryEvent.OnShowEditDialog(transactionId, name))
                     }
                 )
             }
             item {
                 Spacer(Modifier.height(innerPadding.calculateBottomPadding() + 12.dp))
             }
+        }
+        if(state.showEditDialog != null){
+            val dismissEvent = TransactionHistoryEvent.OnDismissEditDialog
+            val transactionId = state.showEditDialog.first
+            val name = state.showEditDialog.second
+            EditTransactionDialog(
+                name = name,
+                onDismiss = { event.invoke(dismissEvent) },
+                onCancel = { event.invoke(dismissEvent) },
+                onSave = { updatedName ->
+                    event.invoke(TransactionHistoryEvent.OnUpdateName(transactionId, updatedName))
+                }
+            )
         }
         if(state.showConfirmDeleteDialog != null){
             val dismissEvent = TransactionHistoryEvent.OnDismissConfirmDeleteDialog
