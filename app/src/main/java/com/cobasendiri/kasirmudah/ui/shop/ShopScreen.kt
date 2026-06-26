@@ -158,8 +158,6 @@ fun ShopContent(
     event: (ShopEvent) -> Unit
 ){
 
-    val context = LocalContext.current
-
     val listState = rememberLazyListState()
     val topPadding = remember(innerPadding){
         innerPadding.calculateTopPadding()

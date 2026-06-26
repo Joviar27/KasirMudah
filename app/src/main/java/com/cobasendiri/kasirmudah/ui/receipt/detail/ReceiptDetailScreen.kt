@@ -1,33 +1,18 @@
 package com.cobasendiri.kasirmudah.ui.receipt.detail
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.ui.ViewModelFactory
 import com.cobasendiri.kasirmudah.ui.animation.AlertBarAnimatedVisibility
 import com.cobasendiri.kasirmudah.ui.component.ReceiptTopBar
-import com.cobasendiri.kasirmudah.ui.component.alertbar.InformationBar
 import com.cobasendiri.kasirmudah.ui.component.alertbar.UiMessageBar
-import com.cobasendiri.kasirmudah.ui.theme.Negative
-import com.cobasendiri.kasirmudah.ui.theme.Primary
-import com.cobasendiri.kasirmudah.ui.theme.Tertiary
-import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
 import kotlinx.coroutines.delay
 
 @Composable
