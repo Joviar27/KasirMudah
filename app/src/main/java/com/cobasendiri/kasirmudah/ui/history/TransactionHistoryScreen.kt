@@ -50,9 +50,11 @@ import com.cobasendiri.kasirmudah.ui.theme.Primary
 import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.ui.ViewModelFactory
+import com.cobasendiri.kasirmudah.ui.animation.AlertBarAnimatedVisibility
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
 import com.cobasendiri.kasirmudah.ui.component.TransactionHistoryItem
-import com.cobasendiri.kasirmudah.ui.component.UiMessageBar
+import com.cobasendiri.kasirmudah.ui.component.alertbar.InformationBar
+import com.cobasendiri.kasirmudah.ui.component.alertbar.UiMessageBar
 import com.cobasendiri.kasirmudah.ui.component.dialog.EditTransactionDialog
 import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
@@ -342,29 +344,10 @@ fun TransactionHistoryContent(
                 }
             )
         }
-        AnimatedVisibility(
-            visible = state.uiMessage != null,
-            enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
-            exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut(),
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .statusBarsPadding()
-        ) {
-            val icon = when(state.uiMessage?.type){
-                UiMessageType.SUCCESS -> painterResource(R.drawable.ic_check_24_white)
-                UiMessageType.ERROR -> painterResource(R.drawable.ic_error_24_white)
-                else -> painterResource(R.drawable.ic_info_outline_24_white)
+        AlertBarAnimatedVisibility(state.uiMessage != null) {
+            state.uiMessage?.let {
+                UiMessageBar(it)
             }
-            val color = when(state.uiMessage?.type){
-                UiMessageType.SUCCESS -> Primary
-                UiMessageType.ERROR -> Negative
-                else -> Tertiary
-            }
-            UiMessageBar(
-                imageStart = icon,
-                imageBackground = color,
-                message = state.uiMessage?.asString(context) ?: ""
-            )
         }
     }
 }

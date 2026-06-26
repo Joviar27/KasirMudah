@@ -1,4 +1,4 @@
-package com.cobasendiri.kasirmudah.ui.component
+package com.cobasendiri.kasirmudah.ui.component.alertbar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,7 +25,7 @@ import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
 
 @Composable
-fun UiMessageBar(
+fun InformationBar(
     modifier: Modifier = Modifier,
     imageStart: Painter = painterResource(R.drawable.ic_info_outline_24_white),
     imageBackground: Color = Tertiary,
@@ -56,6 +56,6 @@ fun UiMessageBar(
 
 @Preview
 @Composable
-fun UiMessageBarPrev() {
-    UiMessageBar(message = "Example of a message to be displayed")
+fun InformationBarPrev() {
+    InformationBar(message = "Example of a message to be displayed")
 }

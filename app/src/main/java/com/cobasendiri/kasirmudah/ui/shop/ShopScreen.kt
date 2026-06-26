@@ -1,10 +1,5 @@
 package com.cobasendiri.kasirmudah.ui.shop
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -54,29 +48,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.cobasendiri.kasirmudah.ui.component.inputfield.InputField
-import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
-import com.cobasendiri.kasirmudah.ui.theme.Primary
-import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.domain.model.Product
 import com.cobasendiri.kasirmudah.domain.model.ProductInfo
 import com.cobasendiri.kasirmudah.ui.ViewModelFactory
+import com.cobasendiri.kasirmudah.ui.animation.AlertBarAnimatedVisibility
 import com.cobasendiri.kasirmudah.ui.component.FilterChip
 import com.cobasendiri.kasirmudah.ui.component.FloatingAction
 import com.cobasendiri.kasirmudah.ui.component.ProductItem
-import com.cobasendiri.kasirmudah.ui.component.dialog.ProductDetailDialog
 import com.cobasendiri.kasirmudah.ui.component.TotalItem
-import com.cobasendiri.kasirmudah.ui.component.UiMessageBar
+import com.cobasendiri.kasirmudah.ui.component.alertbar.UiMessageBar
 import com.cobasendiri.kasirmudah.ui.component.dialog.NegativeConfirmDialog
+import com.cobasendiri.kasirmudah.ui.component.dialog.ProductDetailDialog
+import com.cobasendiri.kasirmudah.ui.component.inputfield.InputField
+import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTheme
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
-import com.cobasendiri.kasirmudah.ui.theme.Negative
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimary
 import com.cobasendiri.kasirmudah.ui.theme.OnPrimaryVariant
+import com.cobasendiri.kasirmudah.ui.theme.Primary
+import com.cobasendiri.kasirmudah.ui.theme.Surface
 import com.cobasendiri.kasirmudah.ui.theme.Tertiary
 import com.cobasendiri.kasirmudah.ui.theme.TertiaryVariant
 import com.cobasendiri.kasirmudah.ui.theme.White
-import com.cobasendiri.kasirmudah.ui.uimessage.UiMessageType
 import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.dateFormat
 import kotlinx.coroutines.delay
 
@@ -468,30 +461,10 @@ fun ShopContent(
                 }
             )
         }
-
-        AnimatedVisibility(
-            visible = state.uiMessage != null,
-            enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
-            exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut(),
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .statusBarsPadding()
-        ) {
-            val icon = when(state.uiMessage?.type){
-                UiMessageType.SUCCESS -> painterResource(R.drawable.ic_check_24_white)
-                UiMessageType.ERROR -> painterResource(R.drawable.ic_error_24_white)
-                else -> painterResource(R.drawable.ic_info_outline_24_white)
+        AlertBarAnimatedVisibility(state.uiMessage != null) {
+            state.uiMessage?.let {
+                UiMessageBar(it)
             }
-            val color = when(state.uiMessage?.type){
-                UiMessageType.SUCCESS -> Primary
-                UiMessageType.ERROR -> Negative
-                else -> Tertiary
-            }
-            UiMessageBar(
-                imageStart = icon,
-                imageBackground = color,
-                message = state.uiMessage?.asString(context) ?: ""
-            )
         }
     }
 }
