@@ -2,4 +2,14 @@
 <resources>
 
     <style name="Theme.KasirMudah" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.KasirMudah.Splashscreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/ic_km_launcher_background</item>
+
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_km_logo</item>
+
+        <item name="windowSplashScreenAnimationDuration">200</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.KasirMudah</item>
+    </style>
 </resources>
