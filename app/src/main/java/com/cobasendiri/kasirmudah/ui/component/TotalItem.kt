@@ -29,8 +29,9 @@ import androidx.compose.ui.unit.sp
 import com.cobasendiri.kasirmudah.ui.theme.White
 import com.cobasendiri.kasirmudah.R
 import com.cobasendiri.kasirmudah.ui.theme.KasirMudahTypography
+import com.cobasendiri.kasirmudah.ui.theme.LightGrey
 import com.cobasendiri.kasirmudah.ui.theme.Secondary
-import com.cobasendiri.kasirmudah.util.decimalFormat
+import com.cobasendiri.kasirmudah.ui.utils.FormatUtil.decimalFormat
 
 @Composable
 fun TotalItem(
@@ -65,8 +66,10 @@ fun TotalItem(
         Column(Modifier
             .wrapContentSize()
             .clip(RoundedCornerShape(16.dp))
-            .background(Secondary)
-            .clickable(onClick = onClickDone)
+            .background(if (totalAmount > 0) Secondary else LightGrey)
+            .clickable(onClick = {
+                if (totalAmount>0) onClickDone.invoke()
+            })
             .padding(vertical = 8.dp, horizontal = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
